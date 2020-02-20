@@ -1,1 +1,1 @@
-# payment-method-moneytrack
+# payment-method-splitit

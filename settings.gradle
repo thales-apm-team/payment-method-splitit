@@ -1,4 +1,4 @@
-rootProject.name = 'payment-method-moneytrack'
+rootProject.name = 'payment-method-splitit'
 
 if (file('../payline-payment-method-api').exists()) {
     includeBuild '../payline-payment-method-api'

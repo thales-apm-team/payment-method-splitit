@@ -1,1 +1,1 @@
-com.payline.payment.moneytrack.service.impl.PaymentWithRedirectionServiceImpl
+com.payline.payment.splitit.service.impl.PaymentWithRedirectionServiceImpl
