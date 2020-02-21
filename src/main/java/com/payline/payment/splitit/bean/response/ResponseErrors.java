@@ -5,6 +5,18 @@ public class ResponseErrors {
     String message;
     String additionalInfo;
 
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
     public static class ResponseErrorsBuilder {
         String errorCode;
         String message;

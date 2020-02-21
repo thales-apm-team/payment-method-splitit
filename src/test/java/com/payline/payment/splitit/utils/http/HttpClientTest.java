@@ -1,6 +1,7 @@
 package com.payline.payment.splitit.utils.http;
 
 import com.payline.payment.splitit.MockUtils;
+import com.payline.payment.splitit.bean.appel.Initiate;
 import com.payline.payment.splitit.bean.appel.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
@@ -48,5 +49,26 @@ class HttpClientTest {
                 .withPassword(contractConfiguration.getProperty(PASSWORD).getValue()).build();
         System.out.println(login);
         Assertions.assertDoesNotThrow(() -> client.checkConnection(configuration, login));
+    }
+
+    @Test
+    void initiate() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseInitiate()
+                , null);
+        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
+
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+//        ContractConfiguration contractConfiguration = MockUtils.aContractConfiguration();
+
+        Initiate initiate = new Initiate.InitiateBuilder().build();
+        Assertions.assertDoesNotThrow(() -> client.initiate(configuration, initiate));
     }
 }

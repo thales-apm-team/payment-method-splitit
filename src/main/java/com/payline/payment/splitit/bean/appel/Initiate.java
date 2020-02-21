@@ -1,5 +1,6 @@
 package com.payline.payment.splitit.bean.appel;
 
+import com.google.gson.Gson;
 import com.payline.payment.splitit.bean.*;
 
 public class Initiate {
@@ -9,7 +10,7 @@ public class Initiate {
     ConsumerData consumerData;
     PaymentWizardData paymentWizardData;
     RedirectUrl redirectUrl;
-    String createSucceeded;
+    EventsEndpoints eventsEndpoints;
 
     public static class InitiateBuilder {
         RequestHeader requestHeader;
@@ -18,7 +19,7 @@ public class Initiate {
         ConsumerData consumerData;
         PaymentWizardData paymentWizardData;
         RedirectUrl redirectUrl;
-        String createSucceeded;
+        EventsEndpoints eventsEndpoints;
 
         public InitiateBuilder withRequestHeader(RequestHeader requestHeader) {
             this.requestHeader = requestHeader;
@@ -50,8 +51,8 @@ public class Initiate {
             return this;
         }
 
-        public InitiateBuilder withCreateSucceeded(String createSucceeded) {
-            this.createSucceeded = createSucceeded;
+        public InitiateBuilder withEventsEndpoints(EventsEndpoints eventsEndpoints) {
+            this.eventsEndpoints = eventsEndpoints;
             return this;
         }
 
@@ -63,20 +64,13 @@ public class Initiate {
             initiate.consumerData = consumerData;
             initiate.paymentWizardData = paymentWizardData;
             initiate.redirectUrl = redirectUrl;
-            initiate.createSucceeded = createSucceeded;
+            initiate.eventsEndpoints = eventsEndpoints;
             return initiate;
         }
     }
 
-    @Override
     public String toString() {
-        return "Initiate{" +
-                "requestHeader=" + requestHeader +
-                ", billingAddress=" + billingAddress +
-                ", consumerData=" + consumerData +
-                ", paymentWizardData=" + paymentWizardData +
-                ", redirectUrl=" + redirectUrl +
-                ", createSucceeded='" + createSucceeded + '\'' +
-                '}';
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

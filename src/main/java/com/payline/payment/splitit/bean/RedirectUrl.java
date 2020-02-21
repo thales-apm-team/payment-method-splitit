@@ -1,5 +1,6 @@
 package com.payline.payment.splitit.bean;
 
+
 public class RedirectUrl {
     String succeeded;
     String canceled;
@@ -34,12 +35,15 @@ public class RedirectUrl {
         }
     }
 
-    @Override
-    public String toString() {
-        return "RedirectUrl{" +
-                "succeeded='" + succeeded + '\'' +
-                ", canceled='" + canceled + '\'' +
-                ", failed='" + failed + '\'' +
-                '}';
+    public String getSucceeded() {
+        return succeeded;
+    }
+
+    public String getCanceled() {
+        return canceled;
+    }
+
+    public String getFailed() {
+        return failed;
     }
 }

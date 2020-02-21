@@ -3,9 +3,14 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.payline.payment.splitit.bean.InstallmentPlanStatus;
+import com.payline.payment.splitit.bean.appel.VerifyPayment;
+import com.payline.payment.splitit.bean.appel.Initiate;
 import com.payline.payment.splitit.bean.appel.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
+import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.bean.response.LoginResponse;
+import com.payline.payment.splitit.bean.response.VerifyPaymentResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
@@ -187,18 +192,28 @@ public class HttpClient {
 
         LoginResponse loginResponse = parser.fromJson(response.getContent(), LoginResponse.class);
 
-/*
-
-        System.out.println(response.getContent());
-        ResponseParse responseParse = new ResponseParse.ResponseParseBuilder()
-                .withResponse(response)
-                .build();
-*/
-
         if (!response.isSuccess()) {
             throw new InvalidDataException("page introuvable, mauvaise URL");
         } else if (!loginResponse.getResponseHeader().isSucceeded()) {
             throw new InvalidDataException("Le Login s'est mal passé");
         }
     }
+
+    public InitiateResponse initiate(RequestConfiguration configuration, Initiate initiate) {
+        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL);
+        Header[] headers = createHeaders();
+        String body = initiate.toString();
+
+        StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
+        InitiateResponse initiateResponse = parser.fromJson(response.getContent(), InitiateResponse.class);
+
+        if (initiateResponse.getResponseHeader().isSucceeded()
+                && initiateResponse.getInstallmentPlan().getInstallmentPlanStatus().getCode() == InstallmentPlanStatus.Code.INITIALIZING) {
+            return initiateResponse;
+        } else {
+            throw new InvalidDataException("something went wrong");
+        }
+    }
+
+
 }

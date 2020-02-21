@@ -425,4 +425,213 @@ public class MockUtils {
                 "}";
     }
 
+    public static final String responseInitiate() {
+        return
+        "{" +
+                "\"CheckoutUrl\": \"https://checkout.sandbox.splitit.com/v2/?token=2b7cd23f-2c55-4353-a206-34925a42aedd&culture=en-US\"," +
+                "\"ApprovalUrl\": \"https://landing.sandbox.splitit.com/en-US/InstallmentPlan/ShowAgreement/?PublicToken=2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
+                "\"TermsAndConditionsUrl\": \"https://www.splitit.com/legals/splitit-shopper-terms-conditions/\"," +
+                "\"InstallmentPlanInfoUrl\": \"https://landing.sandbox.splitit.com/en-US/InstallmentPlan/ShowAgreement/?PublicToken=2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
+                "\"PublicToken\": \"2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
+                "\"ResponseHeader\": {" +
+                    "\"Succeeded\": true," +
+                    "\"Errors\": []" +
+                "}," +
+                "\"InstallmentPlan\": {" +
+                    "\"InstallmentPlanNumber\": \"36718353567647855177\"," +
+                    "\"InstallmentPlanStatus\": {" +
+                        "\"Code\": \"Initializing\"," +
+                        "\"Id\": 11," +
+                        "\"Description\": \"Initializing\"" +
+                    "}," +
+                    "\"Amount\": {" +
+                        "\"Value\": 5.0," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"OutstandingAmount\": {" +
+                        "\"Value\": 5.0," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"NumberOfInstallments\": 2," +
+                    "\"NumberOfProcessedInstallments\": 0," +
+                    "\"OriginalAmount\": {" +
+                        "\"Value\": 5.0," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"RefundAmount\": {" +
+                        "\"Value\": 0.0," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"Consumer\": {" +
+                        "\"Id\": \"0\"," +
+                        "\"UserName\": \"XXZ5P\"," +
+                        "\"FullName\": \"John Smith\"," +
+                        "\"Email\": \"JohnS@splitit.com\"," +
+                        "\"PhoneNumber\": \"1-844-775-4848\"," +
+                        "\"CultureName\": \"en-US\"," +
+                        "\"RoleName\": null," +
+                        "\"IsLocked\": false," +
+                        "\"IsDataRestricted\": false" +
+                    "}," +
+                    "\"ActiveCard\": null," +
+                    "\"FraudCheck\": null," +
+                    "\"Terminal\": {" +
+                        "\"Id\": 30675," +
+                        "\"Code\": \"30553\"," +
+                        "\"Description\": \"monext\"" +
+                    "}," +
+                    "\"Merchant\": {" +
+                        "\"Id\": 30533," +
+                        "\"Code\": \"monext\"," +
+                        "\"Description\": \"monext\"" +
+                    "}," +
+                    "\"RefOrderNumber\": \"012AB\"," +
+                    "\"PurchaseMethod\": {" +
+                        "\"Code\": \"ECommerce\"," +
+                        "\"Id\": 3," +
+                        "\"Description\": \"E-Commerce\"" +
+                    "}," +
+                    "\"Strategy\": {" +
+                        "\"Code\": \"SecuredPlan\"," +
+                        "\"Id\": 1," +
+                        "\"Description\": \"Secured\"" +
+                    "}," +
+                    "\"DelayResolution\": null," +
+                    "\"ExtendedParams\": {" +
+                        "\"AnyParameterKey1\": \"AnyParameterVal1\"," +
+                        "\"AnyParameterKey2\": \"AnyParameterVal2\"" +
+                    "}," +
+                    "\"IsFullCaptured\": false," +
+                    "\"IsChargedBack\": false," +
+                    "\"ArePaymentsOnHold\": false," +
+                    "\"ScpFundingPercent\": 0.0," +
+                    "\"TestMode\": \"None\"," +
+                    "\"CreationDateTime\": \"2020-02-21T07:58:20.7411517+00:00\"," +
+                    "\"Installments\": [" +
+                    "{" +
+                        "\"InstallmentNumber\": 1," +
+                        "\"Amount\": {" +
+                        "\"Value\": 2.5," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    " }," +
+                    "\"OriginalAmount\": {" +
+                        "\"Value\": 2.5," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"RefundAmount\": {" +
+                        "\"Value\": 0.0," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"ProcessDateTime\": \"2020-02-21T07:58:20.867411Z\"," +
+                    "\"IsRefund\": false," +
+                    "\"RequiredCredit\": {" +
+                        "\"Value\": 5.0," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"CreatedDateTime\": \"2020-02-21T07:58:20.8702427Z\"," +
+                    "\"Status\": {" +
+                        "\"Code\": \"WaitingForProcessDate\"," +
+                        "\"Id\": 2," +
+                        "\"Description\": \"Waiting for process date\"" +
+                    "}," +
+                    "\"TransactionResults\": []," +
+                    "\"CardDetails\": null," +
+                    "\"Result\": null" +
+                    "}," +
+                    "{" +
+                    "\"InstallmentNumber\": 2," +
+                    "\"Amount\": {" +
+                        "\"Value\": 2.5," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"OriginalAmount\": {" +
+                        "\"Value\": 2.5," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"RefundAmount\": {" +
+                        "\"Value\": 0.0," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"ProcessDateTime\": \"2020-03-21T07:58:20.8702487Z\"," +
+                    "\"IsRefund\": false," +
+                    "\"RequiredCredit\": {" +
+                        "\"Value\": 2.5," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"US$\"," +
+                            "\"Id\": 1," +
+                            "\"Code\": \"USD\"," +
+                            "\"Description\": \"US Dollar\"" +
+                        "}" +
+                    "}," +
+                    "\"CreatedDateTime\": \"2020-02-21T07:58:20.8702526Z\"," +
+                    "\"Status\": {" +
+                        "\"Code\": \"WaitingForProcessDate\"," +
+                        "\"Id\": 2," +
+                        "\"Description\": \"Waiting for process date\"" +
+                    "}," +
+                    "\"TransactionResults\": []," +
+                    "\"CardDetails\": null," +
+                    "\"Result\": null" +
+                "}" +
+                "]," +
+                "\"SecureAuthorizations\": null" +
+            "}" +
+        "}";
+    }
+
 }

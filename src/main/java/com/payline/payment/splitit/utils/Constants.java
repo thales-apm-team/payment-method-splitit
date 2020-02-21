@@ -1,5 +1,7 @@
 package com.payline.payment.splitit.utils;
 
+import com.payline.pmapi.bean.common.Amount;
+
 /**
  * Support for constants used everywhere in the plugin sources.
  */
@@ -31,7 +33,6 @@ public class Constants {
 
         public static final String URL = "URL";
         public static final String API_KEY = "Api key";
-        public static final String SESSION_ID = "Session id";
 
         /* Static utility class : no need to instantiate it (Sonar bug fix) */
         private PartnerConfigurationKeys() {
@@ -42,7 +43,8 @@ public class Constants {
      * Keys for the entries in RequestContext data.
      */
     public static class RequestContextKeys {
-        public static final String PARTNER_TRANSACTION_ID = "partnerTransactionId";
+        public static final String INSTALLMENT_PLAN_NUMBER = "installment plan number";
+        public static final String SESSION_ID = "Session id";
 
         /* Static utility class : no need to instantiate it (Sonar bug fix) */
         private RequestContextKeys() {
