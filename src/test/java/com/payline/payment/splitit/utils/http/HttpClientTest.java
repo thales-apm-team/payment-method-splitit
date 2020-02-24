@@ -1,9 +1,11 @@
 package com.payline.payment.splitit.utils.http;
 
 import com.payline.payment.splitit.MockUtils;
+import com.payline.payment.splitit.bean.PlanData;
 import com.payline.payment.splitit.bean.appel.Initiate;
 import com.payline.payment.splitit.bean.appel.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
+import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.PASSWORD;
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.USERNAME;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.*;
 import static org.mockito.ArgumentMatchers.any;
 
 class HttpClientTest {
@@ -66,9 +67,8 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-//        ContractConfiguration contractConfiguration = MockUtils.aContractConfiguration();
-
         Initiate initiate = new Initiate.InitiateBuilder().build();
-        Assertions.assertDoesNotThrow(() -> client.initiate(configuration, initiate));
+        InitiateResponse response = client.initiate(configuration, initiate);
+        Assertions.assertEquals("36718353567647855177",response.getInstallmentPlan().getInstallmentPlanNumber());
     }
 }

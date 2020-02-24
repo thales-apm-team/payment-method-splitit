@@ -6,11 +6,11 @@ import java.util.List;
 
 public class ResponseHeader {
     @SerializedName("Succeeded")
-    Boolean succeeded;
+    boolean succeeded;
     @SerializedName("Errors")
     List<ResponseErrors> errors;
 
-    public Boolean isSucceeded() {
+    public boolean isSucceeded() {
         return succeeded;
     }
 

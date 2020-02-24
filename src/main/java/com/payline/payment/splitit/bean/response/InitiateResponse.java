@@ -8,8 +8,6 @@ import java.net.URL;
 public class InitiateResponse {
     @SerializedName("ResponseHeader")
     ResponseHeader responseHeader;
-    @SerializedName("InstallmentPlanNumber")
-    String installmentPlanNumber;
     @SerializedName("CheckoutUrl")
     URL checkoutUrl;
     @SerializedName("SessionId")
@@ -20,10 +18,6 @@ public class InitiateResponse {
 
     public ResponseHeader getResponseHeader() {
         return responseHeader;
-    }
-
-    public String getInstallmentPlanNumber() {
-        return installmentPlanNumber;
     }
 
     public URL getCheckoutUrl() {
