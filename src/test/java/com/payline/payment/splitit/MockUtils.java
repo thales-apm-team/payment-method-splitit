@@ -425,6 +425,23 @@ public class MockUtils {
                 "}";
     }
 
+    public static final String responseLoginKO() {
+        return
+            "{" +
+                "\"ResponseHeader\": {" +
+                "\"Succeeded\": false," +
+                "\"Errors\": [" +
+                     "{" +
+                        "\"ErrorCode\": \"700\"," +
+                        "\"Message\": \"Invalid credentials\"," +
+                        "\"AdditionalInfo\": \"\"" +
+                     "}" +
+                   "]" +
+                "}," +
+                "\"SessionId\": null" +
+            "}";
+    }
+
     public static final String responseInitiate() {
         return
         "{" +
@@ -632,6 +649,38 @@ public class MockUtils {
                 "\"SecureAuthorizations\": null" +
             "}" +
         "}";
+    }
+
+    public static final String responseGet() {
+        return
+        "{" +
+                "\"ResponseHeader\": {" +
+                    "\"Succeeded\": true," +
+                    "\"Errors\": []" +
+                "}," +
+                "\"PlansList\": [" +
+                "{" +
+                    "\"InstallmentPlanNumber\": \"81061838427155704844\"," +
+                    "\"InstallmentPlanStatus\": {" +
+                        "\"Code\": \"InProgress\"," +
+                        "\"Id\": 3," +
+                        "\"Description\": \"In Progress\"" +
+                    "}" +
+                "}" +
+                "]" +
+        "}";
+    }
+
+    public static final String responseVerifyPayment() {
+        return
+                "{" +
+                        "\"ResponseHeader\": {" +
+                            "\"Succeeded\": true," +
+                            "\"Errors\": null" +
+                        "}," +
+                        "\"IsPaid\": true," +
+                        "\"OriginalAmountPaid\": 2000" +
+                "}";
     }
 
 }
