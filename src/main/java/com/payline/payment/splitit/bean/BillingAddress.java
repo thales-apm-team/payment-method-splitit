@@ -1,11 +1,19 @@
 package com.payline.payment.splitit.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 public class BillingAddress {
+    @SerializedName("AddressLine")
     String addressLine;
+    @SerializedName("AddressLine2")
     String addressLine2;
+    @SerializedName("City")
     String city;
+    @SerializedName("State")
     String state;
+    @SerializedName("Country")
     String country;
+    @SerializedName("Zip")
     String zip;
 
     public static class BillingAddressBuilder {
@@ -58,15 +66,28 @@ public class BillingAddress {
         }
     }
 
-    @Override
-    public String toString() {
-        return "BillingAddress{" +
-                "addressLine='" + addressLine + '\'' +
-                ", addressLine2='" + addressLine2 + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", country='" + country + '\'' +
-                ", zip='" + zip + '\'' +
-                '}';
+    public String getAddressLine() {
+        return addressLine;
     }
+
+    public String getAddressLine2() {
+        return addressLine2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
 }

@@ -1,15 +1,24 @@
 package com.payline.payment.splitit.bean.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.payline.payment.splitit.bean.InstallmentPlan;
 
-public class LoginResponse {
+import java.util.List;
+
+public class GetResponse {
     @SerializedName("ResponseHeader")
     ResponseHeader responseHeader;
+    @SerializedName("PlansList")
+    List<InstallmentPlan> plansList;
     @SerializedName("SessionId")
     String sessionId;
 
     public ResponseHeader getResponseHeader() {
         return responseHeader;
+    }
+
+    public List<InstallmentPlan> getPlansList() {
+        return plansList;
     }
 
     public String getSessionId() {

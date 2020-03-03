@@ -1,12 +1,15 @@
 package com.payline.payment.splitit.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 public class EventsEndpoints {
+    @SerializedName("CreateSucceeded")
     String createSucceeded;
 
-    public static class EnventEndpointsBuilder {
+    public static class EventEndpointsBuilder {
         String createSucceeded;
 
-        public EnventEndpointsBuilder withCreateSucceeded(String createSucceeded) {
+        public EventEndpointsBuilder withCreateSucceeded(String createSucceeded) {
             this.createSucceeded = createSucceeded;
             return this;
         }
@@ -16,4 +19,9 @@ public class EventsEndpoints {
             return eventsEndpoints;
         }
     }
+
+    public String getCreateSucceeded() {
+        return createSucceeded;
+    }
+
 }

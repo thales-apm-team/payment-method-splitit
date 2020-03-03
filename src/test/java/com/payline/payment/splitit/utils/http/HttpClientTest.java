@@ -1,19 +1,16 @@
 package com.payline.payment.splitit.utils.http;
 
+import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.PlanData;
+import com.payline.payment.splitit.bean.RequestHeader;
 import com.payline.payment.splitit.bean.appel.Get;
 import com.payline.payment.splitit.bean.appel.Initiate;
 import com.payline.payment.splitit.bean.appel.Login;
-import com.payline.payment.splitit.bean.appel.VerifyPayment;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.GetResponse;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.bean.response.LoginResponse;
-import com.payline.payment.splitit.bean.response.VerifyPaymentResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
-import com.payline.payment.splitit.utils.Constants;
-import com.payline.pmapi.bean.configuration.request.ContractParametersCheckRequest;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,9 +20,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import java.util.Map;
-
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.*;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.PASSWORD;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.USERNAME;
 import static org.mockito.ArgumentMatchers.any;
 
 class HttpClientTest {
@@ -121,10 +117,44 @@ class HttpClientTest {
     }
 
     @Test
+    void initiateError703() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(200
+                , "KO"
+                , MockUtils.responseError703()
+                , null);
+
+        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseInitiate()
+                , null);
+
+        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseLogin()
+                , null).getContent(), LoginResponse.class);
+
+        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+
+        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Initiate initiate = new Initiate.InitiateBuilder().withRequestHeader(new RequestHeader()).build();
+        client.initiate(configuration, initiate);
+
+        InitiateResponse response = client.initiate(configuration, initiate);
+        Assertions.assertEquals("36718353567647855177",response.getInstallmentPlan().getInstallmentPlanNumber());
+    }
+
+    @Test
     void getSuccess() {
         StringResponse stringResponse = MockUtils.mockStringResponse(200
                 , "OK"
-                , MockUtils.responseGet()
+                , MockUtils.responseGetOK("InProgress")
                 , null);
         Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
 
@@ -144,7 +174,7 @@ class HttpClientTest {
     void getNotSuccess() {
         StringResponse stringResponse = MockUtils.mockStringResponse(400
                 , "KO"
-                , MockUtils.responseGet()
+                , MockUtils.responseGetOK("InProgress")
                 , null);
         Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
 
@@ -160,33 +190,25 @@ class HttpClientTest {
     }
 
     @Test
-    void verifyPaymentSuccess() {
+    void getError703() {
         StringResponse stringResponse = MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseVerifyPayment()
-                , null);
-        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
-
-
-        RequestConfiguration configuration = new RequestConfiguration(
-                MockUtils.aContractConfiguration()
-                , MockUtils.anEnvironment()
-                , MockUtils.aPartnerConfiguration()
-        );
-
-        VerifyPayment verifyPayment = new VerifyPayment.VerifyPaymentBuilder().build();
-        VerifyPaymentResponse response = client.verifyPayment(configuration, verifyPayment);
-        Assertions.assertTrue(response.isPaid());
-    }
-
-    @Test
-    void verifyPaymentNotSuccess() {
-        StringResponse stringResponse = MockUtils.mockStringResponse(400
                 , "KO"
-                , MockUtils.responseVerifyPayment()
+                , MockUtils.responseError703()
                 , null);
-        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
 
+        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseGetOK("InProgress")
+                , null);
+
+        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseLogin()
+                , null).getContent(), LoginResponse.class);
+
+        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+
+        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
 
         RequestConfiguration configuration = new RequestConfiguration(
                 MockUtils.aContractConfiguration()
@@ -194,7 +216,47 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        VerifyPayment verifyPayment = new VerifyPayment.VerifyPaymentBuilder().build();
-        Assertions.assertThrows(InvalidDataException.class, ()-> client.verifyPayment(configuration, verifyPayment));
+        Get get = new Get.GetBuilder().withRequestHearder(new RequestHeader()).build();
+        GetResponse response = client.get(configuration, get);
+        Assertions.assertEquals("81061838427155704844",response.getPlansList().get(0).getInstallmentPlanNumber());
     }
+
+//    @Test
+//    void verifyPaymentSuccess() {
+//        StringResponse stringResponse = MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseVerifyPayment()
+//                , null);
+//        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
+//
+//
+//        RequestConfiguration configuration = new RequestConfiguration(
+//                MockUtils.aContractConfiguration()
+//                , MockUtils.anEnvironment()
+//                , MockUtils.aPartnerConfiguration()
+//        );
+//
+//        VerifyPayment verifyPayment = new VerifyPayment.VerifyPaymentBuilder().build();
+//        VerifyPaymentResponse response = client.verifyPayment(configuration, verifyPayment);
+//        Assertions.assertTrue(response.isPaid());
+//    }
+
+//    @Test
+//    void verifyPaymentNotSuccess() {
+//        StringResponse stringResponse = MockUtils.mockStringResponse(400
+//                , "KO"
+//                , MockUtils.responseVerifyPayment()
+//                , null);
+//        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
+//
+//
+//        RequestConfiguration configuration = new RequestConfiguration(
+//                MockUtils.aContractConfiguration()
+//                , MockUtils.anEnvironment()
+//                , MockUtils.aPartnerConfiguration()
+//        );
+//
+//        VerifyPayment verifyPayment = new VerifyPayment.VerifyPaymentBuilder().build();
+//        Assertions.assertThrows(InvalidDataException.class, ()-> client.verifyPayment(configuration, verifyPayment));
+//    }
 }

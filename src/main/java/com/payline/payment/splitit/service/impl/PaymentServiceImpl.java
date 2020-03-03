@@ -5,8 +5,8 @@ import com.payline.payment.splitit.bean.appel.Initiate;
 import com.payline.payment.splitit.bean.appel.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
-import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.utils.Constants;
+import com.payline.payment.splitit.utils.PluginUtils;
 import com.payline.payment.splitit.utils.http.HttpClient;
 import com.payline.pmapi.bean.common.Buyer;
 import com.payline.pmapi.bean.common.FailureCause;
@@ -27,30 +27,67 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse paymentRequest(PaymentRequest request) {
-        final RequestConfiguration configuration = new RequestConfiguration(
-                request.getContractConfiguration()
-                , request.getEnvironment()
-                , request.getPartnerConfiguration()
-        );
+        final RequestConfiguration configuration = configurationCreate(request);
+        Login login = loginCreate(request);
 
-        Login login = new Login.LoginBuilder()
-                .withUsername(request.getContractConfiguration().getProperty(USERNAME).getValue())
-                .withPassword(request.getContractConfiguration().getProperty(PASSWORD).getValue())
-                .build();
+        // appel du POST /Login
+        try {
+//            LoginResponse response = httpClient.checkConnection(configuration, login);
+//            // en fonction du result faire l'appel initiate
+//
+//
+//            // Appel du POST /Initiate
+//            if (response.getResponseHeader().isSucceeded()) {
+                Initiate initiate = initiateCreate(request);
+                return initiateCall(request, initiate);
+//
+//            } else {
+//                return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+//                        .withErrorCode(response.getResponseHeader().getErrors().get(0).getErrorCode())
+//                        .withFailureCause(FailureCause.INVALID_DATA)
+//                        .build();
+//            }
+            // On n'a pas pu faire le login
+        } catch (Exception e) {
+            return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+                    .withFailureCause(FailureCause.INVALID_DATA)
+                    .build();
+        }
+    }
 
-        // todo faire l'appel login
-        // en fondction du result faire l'appel initiate
 
-        // Appel du POST /Initiate
+    public PaymentResponse initiateCall(PaymentRequest request, Initiate initiate) {
+        final RequestConfiguration configuration = configurationCreate(request);
 
+        try {
+            InitiateResponse responseInitiate = httpClient.initiate(configuration, initiate);
+
+            // if everything is ok, then return a redirectionResponseSuccess
+            if (responseInitiate.getResponseHeader().isSucceeded()
+                    && responseInitiate.getInstallmentPlan().getInstallmentPlanStatus().getCode().equals(InstallmentPlanStatus.Code.INITIALIZING)) {
+
+                return initiateResponseSuccess(responseInitiate);
+                // else return the right responseError
+            } else {
+                return PluginUtils.paymentResponseFailure(responseInitiate.getResponseHeader().getErrors().get(0).getErrorCode());
+            }
+
+        } catch (Exception e) {
+            return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+                    .withFailureCause(FailureCause.INVALID_DATA)
+                    .build();
+        }
+    }
+
+    public Initiate initiateCreate(PaymentRequest request) {
         RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
-                .withSessionId(Constants.RequestContextKeys.SESSION_ID)
-                .withApiKey(Constants.PartnerConfigurationKeys.API_KEY)
+                .withSessionId(request.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID))
+                .withApiKey(request.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY))
                 .build();
 
         PlanData planData = new PlanData.PlanDataBuilder()
-                .withAmount(request.getAmount())
-                .withNumberOfInstallments(Integer.parseInt(request.getContractConfiguration().getProperty(NUMBER_OF_INSTALLMENTS).getValue()))
+                .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(String.valueOf(request.getAmount().getAmountInSmallestUnit())).build())
+                .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBER_OF_INSTALLMENTS).getValue())
                 .withRefOrderNumber(request.getTransactionId())
                 .withAutoCapture(request.isCaptureNow())
                 .build();
@@ -72,7 +109,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         PaymentWizardData paymentWizardData = new PaymentWizardData.PaymentWizardDataBuilder()
-                .withRequestednumberOfInstallments(String.valueOf(request.getContractConfiguration().getProperty(REQUESTED_NUMBER_OF_INSTALLMENTS)))
+                .withRequestednumberOfInstallments(String.valueOf(request.getContractConfiguration().getProperty(REQUESTED_NUMBER_OF_INSTALLMENTS).getValue()))
                 .withIsOpenedInIframe(false)
                 .build();
 
@@ -82,11 +119,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .withFailed(request.getEnvironment().getRedirectionReturnURL())
                 .build();
 
-        EventsEndpoints eventsEndpoints = new EventsEndpoints.EnventEndpointsBuilder()
+        EventsEndpoints eventsEndpoints = new EventsEndpoints.EventEndpointsBuilder()
                 .withCreateSucceeded(request.getEnvironment().getNotificationURL())
                 .build();
 
-        Initiate initiate = new Initiate.InitiateBuilder()
+        return new Initiate.InitiateBuilder()
+                .withRequestHeader(requestHeader)
                 .withPlanData(planData)
                 .withBillingAddress(billingAddress)
                 .withConsumerData(consumerData)
@@ -94,74 +132,44 @@ public class PaymentServiceImpl implements PaymentService {
                 .withRedirectUrl(redirectUrl)
                 .withEventsEndpoints(eventsEndpoints)
                 .build();
+    }
 
-        try {
-            InitiateResponse response = httpClient.initiate(configuration, initiate);
+    public Login loginCreate(PaymentRequest request) {
+        return new Login.LoginBuilder()
+                .withUsername(request.getContractConfiguration().getProperty(USERNAME).getValue())
+                .withPassword(request.getContractConfiguration().getProperty(PASSWORD).getValue())
+                .build();
+    }
 
-            if(response.getInstallmentPlan().getInstallmentPlanStatus().getCode() == InstallmentPlanStatus.Code.INITIALIZING) {
+    public RequestConfiguration configurationCreate(PaymentRequest request) {
+        return new RequestConfiguration(
+                request.getContractConfiguration()
+                , request.getEnvironment()
+                , request.getPartnerConfiguration()
+        );
+    }
 
-                PaymentResponseRedirect.RedirectionRequest redirectionRequest = PaymentResponseRedirect.RedirectionRequest
-                        .RedirectionRequestBuilder.aRedirectionRequest()
-                        .withRequestType(PaymentResponseRedirect.RedirectionRequest.RequestType.GET)
-                        .withUrl(response.getCheckoutUrl())
-                        .build();
+    public PaymentResponseRedirect initiateResponseSuccess(InitiateResponse initiateResponse) {
+        PaymentResponseRedirect.RedirectionRequest redirectionRequest = PaymentResponseRedirect.RedirectionRequest
+                .RedirectionRequestBuilder.aRedirectionRequest()
+                .withRequestType(PaymentResponseRedirect.RedirectionRequest.RequestType.GET)
+                .withUrl(initiateResponse.getCheckoutUrl())
+                .build();
 
-                Map<String, String> requestData = new HashMap<>();
-                requestData.put(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER, response.getInstallmentPlanNumber());
-                Map<String, String> requestSensitiveData = new HashMap<>();
-                requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID, response.getSessionId());
-                RequestContext context = RequestContext.RequestContextBuilder.aRequestContext()
-                        .withRequestData(requestData)
-                        .withSensitiveRequestData(requestSensitiveData)
-                        .build();
+        Map<String, String> requestData = new HashMap<>();
+        requestData.put(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER, initiateResponse.getInstallmentPlan().getInstallmentPlanNumber());
+        Map<String, String> requestSensitiveData = new HashMap<>();
+        requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID, initiateResponse.getSessionId());
+        RequestContext context = RequestContext.RequestContextBuilder.aRequestContext()
+                .withRequestData(requestData)
+                .withSensitiveRequestData(requestSensitiveData)
+                .build();
 
-                return PaymentResponseRedirect.PaymentResponseRedirectBuilder.aPaymentResponseRedirect()
-                        .withPartnerTransactionId(response.getInstallmentPlanNumber())
-                        .withRedirectionRequest(redirectionRequest)
-                        .withRequestContext(context)
-                        .withStatusCode(String.valueOf(response.getInstallmentPlan().getInstallmentPlanStatus().getCode()))
-                        .build();
-            } else
-                switch (response.getResponseHeader().getErrors().get(0).getErrorCode()) {
-                    case "599": return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-                            .withErrorCode(response.getResponseHeader().getErrors().get(0).getErrorCode())
-                            .withFailureCause(FailureCause.COMMUNICATION_ERROR)
-                            .build();
-
-                    case "505":
-                    case "511": return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-                            .withErrorCode(response.getResponseHeader().getErrors().get(0).getErrorCode())
-                            .withFailureCause(FailureCause.INVALID_DATA)
-                            .build();
-
-                    case "400": return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-                            .withErrorCode(response.getResponseHeader().getErrors().get(0).getErrorCode())
-                            .withFailureCause(FailureCause.INVALID_FIELD_FORMAT)
-                            .build();
-
-                    case "704": return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-                            .withErrorCode(response.getResponseHeader().getErrors().get(0).getErrorCode())
-                            .withFailureCause(FailureCause.SESSION_EXPIRED)
-                            .build();
-
-                    default:
-                        System.out.println("UNKNOW ERROR");
-                        return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-                            .withErrorCode(response.getResponseHeader().getErrors().get(0).getErrorCode())
-                            .withFailureCause(FailureCause.INVALID_DATA)
-                            .build();
-                }
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        // en fonction du resultat paymentResponseRedirect ou failure
-
-//        request.getContractConfiguration().getProperty(MYKEY).getValue()
-
-            return PaymentResponseFailure.PaymentResponseFailureBuilder
-                    .aPaymentResponseFailure()
-                    .build();
+        return PaymentResponseRedirect.PaymentResponseRedirectBuilder.aPaymentResponseRedirect()
+                .withPartnerTransactionId(initiateResponse.getInstallmentPlan().getInstallmentPlanNumber())
+                .withRedirectionRequest(redirectionRequest)
+                .withRequestContext(context)
+                .withStatusCode(String.valueOf(initiateResponse.getInstallmentPlan().getInstallmentPlanStatus().getCode()))
+                .build();
     }
 }

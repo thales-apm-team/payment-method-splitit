@@ -18,25 +18,4 @@ public class ResponseHeader {
         return errors;
     }
 
-    public static class ResponseHeaderBuilder {
-        Boolean succeeded;
-        List<ResponseErrors> errors;
-
-        public ResponseHeaderBuilder withSucceeded(boolean succeeded) {
-            this.succeeded = succeeded;
-            return this;
-        }
-
-        public ResponseHeaderBuilder withErrors(List<ResponseErrors> errors) {
-            this.errors = errors;
-            return this;
-        }
-
-        public ResponseHeader build() {
-            ResponseHeader responseHeader = new ResponseHeader();
-            responseHeader.succeeded = succeeded;
-            responseHeader.errors = errors;
-            return responseHeader;
-        }
-    }
 }

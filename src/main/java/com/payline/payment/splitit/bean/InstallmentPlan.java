@@ -1,6 +1,5 @@
 package com.payline.payment.splitit.bean;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class InstallmentPlan {
@@ -8,6 +7,16 @@ public class InstallmentPlan {
     String installmentPlanNumber;
     @SerializedName("InstallmentPlanStatus")
     InstallmentPlanStatus installmentPlanStatus;
+    @SerializedName("ActiveCard")
+    ActiveCard activeCard;
+    @SerializedName("Amount")
+    AmountResponse amount;
+    @SerializedName("RefOrderNumber")
+    String refOrderNumber;
+
+    public ActiveCard getActiveCard() {
+        return activeCard;
+    }
 
     public String getInstallmentPlanNumber() {
         return installmentPlanNumber;
@@ -17,8 +26,11 @@ public class InstallmentPlan {
         return installmentPlanStatus;
     }
 
-    public String toString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+    public AmountResponse getAmount() {
+        return amount;
+    }
+
+    public String getRefOrderNumber() {
+        return refOrderNumber;
     }
 }

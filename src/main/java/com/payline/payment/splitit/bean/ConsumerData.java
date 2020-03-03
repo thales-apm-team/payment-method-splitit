@@ -1,10 +1,17 @@
 package com.payline.payment.splitit.bean;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
 public class ConsumerData {
-    String fullName;
-    String email;
-    String phoneNumber;
-    String cultureName;
+    @SerializedName("FullName")
+    private String fullName;
+    @SerializedName("Email")
+    private String email;
+    @SerializedName("PhoneNumber")
+    private String phoneNumber;
+    @SerializedName("CultureName")
+    private String cultureName;
 
     public static class ConsumerDataBuilder {
         String fullName;
@@ -42,13 +49,24 @@ public class ConsumerData {
         }
     }
 
-    @Override
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getCultureName() {
+        return cultureName;
+    }
+
     public String toString() {
-        return "ConsumerData{" +
-                "fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", cultureName='" + cultureName + '\'' +
-                '}';
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

@@ -1,15 +1,22 @@
 package com.payline.payment.splitit.bean;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class RedirectUrl {
+    @SerializedName("Succeeded")
     String succeeded;
-    String canceled;
+    @SerializedName("Failed")
     String failed;
+    @SerializedName("Canceled")
+    String canceled;
+
 
     public static class RedirectUrlBuilder {
         String succeeded;
-        String canceled;
         String failed;
+        String canceled;
+
 
         public RedirectUrlBuilder withSucceeded(String succeeded) {
             this.succeeded = succeeded;
@@ -46,4 +53,6 @@ public class RedirectUrl {
     public String getFailed() {
         return failed;
     }
+
+
 }

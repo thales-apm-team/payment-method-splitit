@@ -1,16 +1,28 @@
 package com.payline.payment.splitit.bean.appel;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.payline.payment.splitit.bean.*;
 
 public class Initiate {
+    @SerializedName("RequestHeader")
     RequestHeader requestHeader;
+    @SerializedName("PlanData")
     PlanData planData;
+    @SerializedName("BillingAddress")
     BillingAddress billingAddress;
+    @SerializedName("ConsumerData")
     ConsumerData consumerData;
+    @SerializedName("PaymentWizardData")
     PaymentWizardData paymentWizardData;
+    @SerializedName("RedirectUrls")
     RedirectUrl redirectUrl;
+    @SerializedName("EventsEndpoints")
     EventsEndpoints eventsEndpoints;
+
+    public void setSessionId(String sessionId){
+        this.requestHeader.setSessionId(sessionId);
+    }
 
     public static class InitiateBuilder {
         RequestHeader requestHeader;
@@ -67,6 +79,34 @@ public class Initiate {
             initiate.eventsEndpoints = eventsEndpoints;
             return initiate;
         }
+    }
+
+    public RequestHeader getRequestHeader() {
+        return requestHeader;
+    }
+
+    public PlanData getPlanData() {
+        return planData;
+    }
+
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public ConsumerData getConsumerData() {
+        return consumerData;
+    }
+
+    public PaymentWizardData getPaymentWizardData() {
+        return paymentWizardData;
+    }
+
+    public RedirectUrl getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public EventsEndpoints getEventsEndpoints() {
+        return eventsEndpoints;
     }
 
     public String toString() {

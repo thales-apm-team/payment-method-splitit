@@ -1,8 +1,17 @@
 package com.payline.payment.splitit.bean;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
 public class RequestHeader {
+    @SerializedName("SessionId")
     String sessionId;
+    @SerializedName("ApiKey")
     String apiKey;
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
     public static class RequestHeaderBuilder {
         String sessionId;
@@ -26,11 +35,16 @@ public class RequestHeader {
         }
     }
 
-    @Override
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
     public String toString() {
-        return "RequestHeader{" +
-                "sessionId='" + sessionId + '\'' +
-                ", apiKey='" + apiKey + '\'' +
-                '}';
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

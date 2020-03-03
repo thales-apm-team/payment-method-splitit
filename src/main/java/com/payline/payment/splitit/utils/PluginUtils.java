@@ -1,9 +1,10 @@
 package com.payline.payment.splitit.utils;
 
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.payline.pmapi.bean.common.Amount;
+import com.payline.pmapi.bean.common.FailureCause;
+import com.payline.pmapi.bean.payment.response.impl.PaymentResponseFailure;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -73,21 +74,29 @@ public class PluginUtils {
         return value == null || value.isEmpty();
     }
 
+    public static PaymentResponseFailure paymentResponseFailure(String errorCode) {
+        FailureCause cause;
 
-// todo peut etre verifier les NPE et lever ine invalid avec "mauvais message recu" en message
+        switch (errorCode) {
+            case "599":
+                cause = FailureCause.COMMUNICATION_ERROR;
+                break;
 
-    /**
-     * Get first error of an errorMessage sent by splitit
-     *
-     * @param json the message containing all errors
-     * @return a simple message formatted as [firstErrorField]: [firstErrorMessage]
-     */
-    public static String getErrorMessage(String json) {
-        JsonObject obj = parser.parse(json).getAsJsonObject().get("errors").getAsJsonObject();
-        String k = obj.keySet().iterator().next();
-        String v = obj.get(k).getAsJsonArray().get(0).getAsString();
+            case "400":
+                cause = FailureCause.INVALID_FIELD_FORMAT;
+                break;
 
-        return k + ": " + v;
+            case "704":
+                cause = FailureCause.SESSION_EXPIRED;
+                break;
+
+            default:
+                cause = FailureCause.INVALID_DATA;
+        }
+        return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+                .withErrorCode(errorCode)
+                .withFailureCause(cause)
+                .build();
     }
 
 }

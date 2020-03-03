@@ -31,4 +31,5 @@ public class InitiateResponse {
     public InstallmentPlan getInstallmentPlan() {
         return installmentPlan;
     }
+
 }

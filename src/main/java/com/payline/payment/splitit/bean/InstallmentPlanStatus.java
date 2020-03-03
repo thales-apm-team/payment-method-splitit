@@ -44,4 +44,6 @@ public class InstallmentPlanStatus {
     public String getDescription() {
         return description;
     }
+
+
 }

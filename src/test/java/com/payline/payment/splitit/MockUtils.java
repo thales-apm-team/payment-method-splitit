@@ -1,5 +1,6 @@
 package com.payline.payment.splitit;
 
+import com.payline.payment.splitit.bean.*;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.http.StringResponse;
 import com.payline.pmapi.bean.common.Buyer;
@@ -24,14 +25,34 @@ import org.mockito.internal.util.reflection.FieldSetter;
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.Currency;
 import java.util.*;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 public class MockUtils {
+    private static String sessionId = "9b358c4a-1237-46a7-8167-b62f66dd4a8d";
+    private static String apiKey = "f661600c-5f1a-4d4c-829d-768fbc40be6c";
+    private static String installmentPlanNumber = "81061838427155704844";
+
     private static String TRANSACTIONID = "123456789012345678901";
     private static String PARTNER_TRANSACTIONID = "098765432109876543210";
+
+
+    /*------------------------------------------------------------------------------------------------------------------*/
+
+    private static String amountValue = "1234";
+    private static String currency = "EUR";
+    private static Date firstChargeDate = new Date(1582900000);
+    private static String numberOfInstallments = "10";
+    private static String requestedNumberOfInstallments = "10";
+    private static String refOrderNumber = "102AB";
+
+    private static String fullName = "John Smith";
+    private static String email = "JohnS@splitit.com";
+    private static String phoneNumber = "1-844-775-4848";
+    private static String cultureName = "en-us";
 
 
     /**------------------------------------------------------------------------------------------------------------------*/
@@ -41,7 +62,7 @@ public class MockUtils {
      */
     public static Environment anEnvironment() {
         return new Environment("https://example.org/store/notification",
-                "https://example.org/store/redirection",
+                "https://succesurl.com/",
                 "http://redirectionCancelURL.com",
                 true);
     }
@@ -169,9 +190,10 @@ public class MockUtils {
                 .anAddress()
                 .withStreet1("street1")
                 .withStreet2("street2")
-                .withCity("City")
-                .withZipCode("75000")
-                .withState("France")
+                .withCity("New York")
+                .withCountry("USA")
+                .withZipCode("10016")
+                .withState("NY")
                 .build();
     }
 
@@ -324,6 +346,8 @@ public class MockUtils {
         Map<String, ContractProperty> contractProperties = new HashMap<>();
         contractProperties.put(Constants.ContractConfigurationKeys.USERNAME, new ContractProperty("monextTest"));
         contractProperties.put(Constants.ContractConfigurationKeys.PASSWORD, new ContractProperty("eZ7HJddV"));
+        contractProperties.put(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
 
         return new ContractConfiguration("SplitIt", contractProperties);
     }
@@ -343,6 +367,23 @@ public class MockUtils {
                 .withTransactionId(TRANSACTIONID)
                 .build();
     }
+
+    public static RedirectionPaymentRequest aPaylineRedirectionPaymentRequest() {
+        return aRedirectionPaymentRequestBuilder().build();
+    }
+
+    public static PaymentRequest.Builder<RedirectionPaymentRequest> aRedirectionPaymentRequestBuilder() {
+        return (PaymentRequest.Builder<RedirectionPaymentRequest>) RedirectionPaymentRequest.builder()
+                .withAmount(aPaylineAmount())
+                .withBrowser(aBrowser())
+                .withBuyer(aBuyer())
+                .withContractConfiguration(aContractConfiguration())
+                .withEnvironment(anEnvironment())
+                .withOrder(aPaylineOrder())
+                .withPartnerConfiguration(aPartnerConfiguration())
+                .withTransactionId(TRANSACTIONID);
+    }
+
 
     /**
      * Generate a valid {@link TransactionStatusRequest}.
@@ -412,6 +453,83 @@ public class MockUtils {
             doReturn(new Header[]{}).when(response).getAllHeaders();
         }
         return response;
+    }
+
+    public static RequestContext aRequestContext(String sessionId, String apiKey, String installmentPlanNumber) {
+        return aRequestContextBuilder(sessionId, apiKey, installmentPlanNumber).build();
+    }
+
+
+    public static RequestContext.RequestContextBuilder aRequestContextBuilder(String sessionId, String apiKey, String installmentPlanNumber) {
+        Map<String, String> requestSensitiveData = new HashMap<>();
+        requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID, sessionId);
+        requestSensitiveData.put(Constants.PartnerConfigurationKeys.API_KEY, apiKey);
+        Map<String, String> requestData = new HashMap<>();
+        requestData.put(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER, installmentPlanNumber);
+        return RequestContext.RequestContextBuilder.aRequestContext()
+                .withRequestData(requestData)
+                .withSensitiveRequestData(requestSensitiveData);
+    }
+
+    public static RequestHeader requestHeaderTest() {
+        return new RequestHeader.RequestHeaderBuilder()
+                .withSessionId(sessionId)
+                .withApiKey(apiKey)
+                .build();
+    }
+
+    public static Amount amountTest() {
+        return new Amount.AmountBuilder()
+                .withValue(amountValue)
+                .withCurrency(currency)
+                .build();
+    }
+
+    public static PlanData planDatatest() {
+        return new PlanData.PlanDataBuilder()
+                .withAmount(amountTest())
+                .withFirstInstallmentAmount(amountTest())
+                .withAttempt3DSecure(true)
+                .withAutoCapture(true)
+                .withFirstChargeDate(firstChargeDate)
+                .withNumberOfInstallments(numberOfInstallments)
+                .withRefOrderNumber(refOrderNumber)
+                .build();
+    }
+
+    public static BillingAddress addressTest() {
+        return new BillingAddress.BillingAddressBuilder()
+                .withAddressLine("street1")
+                .withAddressLine2("street2")
+                .withCity("New York")
+                .withCountry("USA")
+                .withZip("10016")
+                .withState("NY")
+                .build();
+    }
+
+    public static ConsumerData consumerDataTest() {
+        return new ConsumerData.ConsumerDataBuilder()
+                .withFullName(fullName)
+                .withEmail(email)
+                .withPhoneNumber(phoneNumber)
+                .withCultureName(cultureName)
+                .build();
+    }
+
+    public static PaymentWizardData paymentWizardDataTest() {
+        return new PaymentWizardData.PaymentWizardDataBuilder()
+                .withIsOpenedInIframe(false)
+                .withRequestednumberOfInstallments(requestedNumberOfInstallments)
+                .build();
+    }
+
+    public static RedirectUrl redirectUrlTest(){
+        return new RedirectUrl.RedirectUrlBuilder()
+                .withSucceeded("https://www.success.com/")
+                .withCanceled("https://www.canceled.com/")
+                .withFailed("https://www.failed.com/")
+                .build();
     }
 
 
@@ -651,7 +769,23 @@ public class MockUtils {
         "}";
     }
 
-    public static final String responseGet() {
+    public static final String responseError703() {
+        return
+                "{" +
+                        "\"ResponseHeader\": {" +
+                            "\"Succeeded\": false," +
+                            "\"Errors\": [" +
+                                "{" +
+                                    "\"ErrorCode\": \"703\"," +
+                                    "\"Message\": \"Session is not valid\"," +
+                                    "\"AdditionalInfo\": \"\"" +
+                                "}" +
+                            "]" +
+                        "}" +
+                        "}";
+    }
+
+    public static final String responseGetOK(String code) {
         return
         "{" +
                 "\"ResponseHeader\": {" +
@@ -662,13 +796,80 @@ public class MockUtils {
                 "{" +
                     "\"InstallmentPlanNumber\": \"81061838427155704844\"," +
                     "\"InstallmentPlanStatus\": {" +
-                        "\"Code\": \"InProgress\"," +
+                        "\"Code\": " + code + "," +
                         "\"Id\": 3," +
                         "\"Description\": \"In Progress\"" +
-                    "}" +
+                    "}," +
+                    "\"Amount\": {" +
+                        "\"Value\": 800," +
+                        "\"Currency\": {" +
+                            "\"Symbol\": \"€\"," +
+                            "\"Id\": 4," +
+                            "\"Code\": \"EUR\"," +
+                            "\"Description\": \"Euro\"" +
+                        "}" +
+                    "}," +
+                    "\"ActiveCard\": {" +
+                    "\"CardId\": null," +
+                    "\"CardNumber\": \"**** **** **** 1111\"," +
+                    "\"CardExpMonth\": \"3\"," +
+                    "\"CardExpYear\": \"2022\"," +
+                    "\"CardBrand\": {" +
+                        "\"Code\": \"Visa\"," +
+                        "\"Id\": 2," +
+                        "\"Description\": \"VISA\"" +
+                    "}," +
+                    "\"CardType\": {" +
+                        "\"Code\": \"Credit\"," +
+                        "\"Id\": 1," +
+                        "\"Description\": \"CREDIT\"" +
+                    "}," +
+                    "\"Bin\": \"411111\"," +
+                    "\"CardHolderFullName\": \"John Smith\"," +
+                    "\"CardCvv\": \"[Filtered]\"," +
+                    "\"Address\": {" +
+                        "\"AddressLine\": \"260 Madison Avenue.\"," +
+                        "\"AddressLine2\": \"Appartment 1\"," +
+                        "\"City\": \"New York\"," +
+                        "\"Country\": \"US\"," +
+                        "\"State\": \"NY\"," +
+                        "\"Zip\": \"10016\"," +
+                        "\"FullAddressLine\": \"260 Madison Avenue.,Appartment 1,New York,NY,US\"" +
+                    "}," +
+                    "\"Token\": \"b8f60b30-ebd9-40aa-820d-584c93d34075\"" +
+                    "}"+
                 "}" +
                 "]" +
         "}";
+    }
+
+    public static final String responseGetNoInstallmentPlanNumber(){
+        return "{" +
+                "\"PlansList\": []," +
+                "\"ResponseHeader\": {" +
+                    "\"Succeeded\": true," +
+                    "\"Errors\": []" +
+                "}," +
+                "\"PagingResponseHeader\": {" +
+                "\"TotalNumber\": 0" +
+                "}" +
+        "}";
+    }
+
+    public static final String responseGetNotSuccess() {
+        return
+                "{" +
+                        "\"ResponseHeader\": {" +
+                            "\"Succeeded\": false," +
+                            "\"Errors\": [" +
+                                "{" +
+                                    "\"ErrorCode\": \"705\"," +
+                                    "\"Message\": \"error??\"," +
+                                    "\"AdditionalInfo\": \"\"" +
+                                "}" +
+                            "]" +
+                        "}" +
+                "}";
     }
 
     public static final String responseVerifyPayment() {
@@ -683,4 +884,103 @@ public class MockUtils {
                 "}";
     }
 
+    public static final String appelInitiate() {
+        return "{" +
+                    "\"RequestHeader\":{" +
+                        "\"SessionId\":\"" + sessionId + "\"," +
+                        "\"ApiKey\":\"" + apiKey + "\"" +
+                    "}," +
+                    "\"PlanData\":{" +
+                        "\"Amount\":{" +
+                            "\"Value\":\"" + amountValue + "\"," +
+                            "\"CurrencyCode\":\"" + currency  + "\"" +
+                        "}," +
+                        "\"NumberOfInstallments\":\"" + numberOfInstallments + "\"," +
+                        "\"RefOrderNumber\":\"" + refOrderNumber + "\"," +
+                        "\"AutoCapture\":true," +
+                        "\"FirstInstallmentAmount\":{" +
+                            "\"Value\":\"" + amountValue + "\"," +
+                            "\"CurrencyCode\":\"" + currency  + "\"" +
+                        "}," +
+                        "\"PurchaseMethod\":\"ECommerce\"," +
+                        "\"Attempt3DSecure\":true," +
+                        "\"FirstChargeDate\":\"Jan 19, 1970, 8:41:40 AM\"" +
+                    "}," +
+                    "\"BillingAddress\":{" +
+                        "\"AddressLine\":\"street1\"," +
+                        "\"AddressLine2\":\"street2\"," +
+                        "\"City\":\"New York\"," +
+                        "\"State\":\"NY\"," +
+                        "\"Country\":\"USA\"," +
+                        "\"Zip\":\"10016\"" +
+                    "}," +
+                    "\"ConsumerData\":{" +
+                        "\"FullName\":\"" + fullName + "\"," +
+                        "\"Email\":\"" + email + "\"," +
+                        "\"PhoneNumber\":\"" + phoneNumber + "\"," +
+                        "\"CultureName\":\"" + cultureName + "\"" +
+                    "}," +
+                    "\"PaymentWizardData\":{" +
+                        "\"RequestedNumberOfInstallments\":\"" + requestedNumberOfInstallments + "\"," +
+                        "\"IsOpenedInIframe\":false" +
+                    "}," +
+                    "\"RedirectUrls\":{" +
+                        "\"Succeeded\":\"https://www.success.com/\"," +
+                        "\"Failed\":\"https://www.failed.com/\"," +
+                        "\"Canceled\":\"https://www.canceled.com/\"" +
+                    "}," +
+                    "\"EventsEndpoints\":{" +
+                        "\"CreateSucceeded\":\"https://www.async-success.com/\"" +
+                    "}" +
+                "}";
+    }
+
+
+    public static String getSessionId() {
+        return sessionId;
+    }
+
+    public static String getApiKey() {
+        return apiKey;
+    }
+
+    public static String getInstallmentPlanNumber() {
+        return installmentPlanNumber;
+    }
+
+    public static String getAmountValue() {
+        return amountValue;
+    }
+
+    public static String getCurrency() {
+        return currency;
+    }
+
+    public static Date getFirstChargeDate() {
+        return firstChargeDate;
+    }
+
+    public static String getNumberOfInstallments() {
+        return numberOfInstallments;
+    }
+
+    public static String getRefOrderNumber() {
+        return refOrderNumber;
+    }
+
+    public static String getFullName() {
+        return fullName;
+    }
+
+    public static String getEmail() {
+        return email;
+    }
+
+    public static String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public static String getCultureName() {
+        return cultureName;
+    }
 }

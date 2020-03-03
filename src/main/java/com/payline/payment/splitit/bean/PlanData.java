@@ -1,26 +1,34 @@
 package com.payline.payment.splitit.bean;
 
-import com.payline.pmapi.bean.common.Amount;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
 public class PlanData {
+    @SerializedName("Amount")
     Amount amount;
-    int numberOfInstallments;
+    @SerializedName("NumberOfInstallments")
+    String numberOfInstallments;
+    @SerializedName("RefOrderNumber")
     String refOrderNumber;
-    Boolean autoCapture;
+    @SerializedName("AutoCapture")
+    boolean autoCapture;
+    @SerializedName("FirstInstallmentAmount")
     Amount firstInstallmentAmount;
+    @SerializedName("PurchaseMethod")
     String purchaseMethode = "ECommerce";
-    Boolean attempt3DSecure = false;
+    @SerializedName("Attempt3DSecure")
+    boolean attempt3DSecure = false;
+    @SerializedName("FirstChargeDate")
     Date firstChargeDate;
 
     public static class PlanDataBuilder {
         Amount amount;
-        int numberOfInstallments;
+        String numberOfInstallments;
         String refOrderNumber;
-        Boolean autoCapture;
+        boolean autoCapture;
         Amount firstInstallmentAmount;
-        Boolean attempt3DSecure = false;
+        boolean attempt3DSecure = false;
         Date firstChargeDate;
 
         public PlanDataBuilder withAmount(Amount amount) {
@@ -28,7 +36,7 @@ public class PlanData {
             return this;
         }
 
-        public PlanDataBuilder withNumberOfInstallments(int numberOfInstallments) {
+        public PlanDataBuilder withNumberOfInstallments(String numberOfInstallments) {
             this.numberOfInstallments = numberOfInstallments;
             return this;
         }
@@ -38,7 +46,7 @@ public class PlanData {
             return this;
         }
 
-        public PlanDataBuilder withAutoCapture(Boolean autoCapture) {
+        public PlanDataBuilder withAutoCapture(boolean autoCapture) {
             this.autoCapture = autoCapture;
             return this;
         }
@@ -48,7 +56,7 @@ public class PlanData {
             return this;
         }
 
-        public PlanDataBuilder withAttempt3DSecure(Boolean attempt3DSecure) {
+        public PlanDataBuilder withAttempt3DSecure(boolean attempt3DSecure) {
             this.attempt3DSecure = attempt3DSecure;
             return this;
         }
@@ -71,17 +79,36 @@ public class PlanData {
         }
     }
 
-    @Override
-    public String toString() {
-        return "PlanData{" +
-                "amount=" + amount +
-                ", numberOfInstallments=" + numberOfInstallments +
-                ", refOrderNumber='" + refOrderNumber + '\'' +
-                ", autoCapture=" + autoCapture +
-                ", firstInstallmentAmount=" + firstInstallmentAmount +
-                ", purchaseMethode='" + purchaseMethode + '\'' +
-                ", attempt3DSecure=" + attempt3DSecure +
-                ", firstChargeDate=" + firstChargeDate +
-                '}';
+    public Amount getAmount() {
+        return amount;
     }
+
+    public String getNumberOfInstallments() {
+        return numberOfInstallments;
+    }
+
+    public String getRefOrderNumber() {
+        return refOrderNumber;
+    }
+
+    public boolean isAutoCapture() {
+        return autoCapture;
+    }
+
+    public Amount getFirstInstallmentAmount() {
+        return firstInstallmentAmount;
+    }
+
+    public String getPurchaseMethode() {
+        return purchaseMethode;
+    }
+
+    public boolean isAttempt3DSecure() {
+        return attempt3DSecure;
+    }
+
+    public Date getFirstChargeDate() {
+        return firstChargeDate;
+    }
+
 }

@@ -2,6 +2,7 @@ package com.payline.payment.splitit.service.impl;
 
 import com.payline.payment.splitit.bean.appel.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
+import com.payline.payment.splitit.bean.response.LoginResponse;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.PluginUtils;
@@ -53,7 +54,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         parameters.add(numberOfInstallments);
 
 
-
         AbstractParameter requestedNumberOfInstallments = new InputParameter();
         requestedNumberOfInstallments.setKey(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS);
         requestedNumberOfInstallments.setLabel("requested number of installments");
@@ -83,11 +83,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 errors.put(Constants.ContractConfigurationKeys.PASSWORD, i18n.getMessage("password.empty", locale));
             } else {
                 Login login = new Login.LoginBuilder().withUsername(username).withPassword(password).build();
-                client.checkConnection(configuration, login);
+                LoginResponse loginResponse = client.checkConnection(configuration, login);
+                if (!loginResponse.getResponseHeader().isSucceeded()) {
+                    errors.put(Constants.ContractConfigurationKeys.USERNAME, i18n.getMessage("login.invalid", locale));
+                    errors.put(Constants.ContractConfigurationKeys.PASSWORD, "");
+                }
             }
         } catch (PluginException e) {
-            errors.put(Constants.ContractConfigurationKeys.USERNAME, i18n.getMessage("login.invalid", locale));
-            errors.put(Constants.ContractConfigurationKeys.PASSWORD, "");
+            errors.put(ContractParametersCheckRequest.GENERIC_ERROR, e.getErrorCode());
         }
         return errors;
     }

@@ -1,21 +1,25 @@
 package com.payline.payment.splitit.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PaymentWizardData {
 
     // ATTENTION du type "2,3,4", 1<requestedNumberOfInstallments<13
+    @SerializedName("RequestedNumberOfInstallments")
     String requestednumberOfInstallments;
-    Boolean isOpenedInIframe;
+    @SerializedName("IsOpenedInIframe")
+    boolean isOpenedInIframe;
 
     public static class PaymentWizardDataBuilder {
         String requestednumberOfInstallments;
-        Boolean isOpenedInIframe = false;
+        boolean isOpenedInIframe = false;
 
         public PaymentWizardDataBuilder withRequestednumberOfInstallments(String requestednumberOfInstallments) {
             this.requestednumberOfInstallments = requestednumberOfInstallments;
             return this;
         }
 
-        public PaymentWizardDataBuilder withIsOpenedInIframe(Boolean isOpenedInIframe) {
+        public PaymentWizardDataBuilder withIsOpenedInIframe(boolean isOpenedInIframe) {
             this.isOpenedInIframe = isOpenedInIframe;
             return this;
         }
@@ -28,11 +32,12 @@ public class PaymentWizardData {
         }
     }
 
-    @Override
-    public String toString() {
-        return "PaymentWizardData{" +
-                "requestednumberOfInstallments='" + requestednumberOfInstallments + '\'' +
-                ", isOpenedInIframe=" + isOpenedInIframe +
-                '}';
+    public String getRequestednumberOfInstallments() {
+        return requestednumberOfInstallments;
     }
+
+    public boolean isOpenedInIframe() {
+        return isOpenedInIframe;
+    }
+
 }

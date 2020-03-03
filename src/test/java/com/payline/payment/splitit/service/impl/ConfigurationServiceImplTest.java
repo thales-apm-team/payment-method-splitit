@@ -6,7 +6,6 @@ import com.payline.payment.splitit.bean.response.LoginResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.http.HttpClient;
-import com.payline.payment.splitit.utils.http.StringResponse;
 import com.payline.pmapi.bean.configuration.request.ContractParametersCheckRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

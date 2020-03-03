@@ -3,14 +3,13 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.payline.payment.splitit.bean.InstallmentPlanStatus;
-import com.payline.payment.splitit.bean.appel.VerifyPayment;
+import com.payline.payment.splitit.bean.appel.Get;
 import com.payline.payment.splitit.bean.appel.Initiate;
 import com.payline.payment.splitit.bean.appel.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
+import com.payline.payment.splitit.bean.response.GetResponse;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.bean.response.LoginResponse;
-import com.payline.payment.splitit.bean.response.VerifyPaymentResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
@@ -39,6 +38,9 @@ import java.nio.charset.StandardCharsets;
 public class HttpClient {
     private static final Logger LOGGER = LogManager.getLogger(HttpClient.class);
     private Gson parser;
+    private String urlLogin = "/api/Login";
+    private String urlInitiate = "/api/InstallmentPlan/Initiate";
+    private String urlGet = "/api/InstallmentPlan/Get";
 
 
     // Exceptions messages
@@ -100,6 +102,7 @@ public class HttpClient {
     private Header[] createHeaders() {
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader("Content-Type", "application/json");
+        headers[1] = new BasicHeader("Accept", "application/json");
         return headers;
     }
 
@@ -183,8 +186,9 @@ public class HttpClient {
         return this.execute(httpPost);
     }
 
-    public void checkConnection(RequestConfiguration configuration, Login login) {
-        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL);
+
+    public LoginResponse checkConnection(RequestConfiguration configuration, Login login) {
+        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlLogin;
         Header[] headers = createHeaders();
         String body = login.toString();
 
@@ -194,26 +198,94 @@ public class HttpClient {
 
         if (!response.isSuccess()) {
             throw new InvalidDataException("page introuvable, mauvaise URL");
-        } else if (!loginResponse.getResponseHeader().isSucceeded()) {
-            throw new InvalidDataException("Le Login s'est mal passé");
+        } else {
+            return loginResponse;
         }
     }
 
+
     public InitiateResponse initiate(RequestConfiguration configuration, Initiate initiate) {
-        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL);
+        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlInitiate;
         Header[] headers = createHeaders();
         String body = initiate.toString();
 
         StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
         InitiateResponse initiateResponse = parser.fromJson(response.getContent(), InitiateResponse.class);
 
-        if (initiateResponse.getResponseHeader().isSucceeded()
-                && initiateResponse.getInstallmentPlan().getInstallmentPlanStatus().getCode() == InstallmentPlanStatus.Code.INITIALIZING) {
+        if (response.isSuccess() && initiateResponse.getResponseHeader().isSucceeded()) {
             return initiateResponse;
+        } else if (response.isSuccess() && initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erruer session ID (703)
+            // create login request object
+            Login login = new Login.LoginBuilder()
+                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
+                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
+                    .build();
+            // call checkout connection
+            LoginResponse loginResponse = this.checkConnection(configuration, login);
+
+            if (loginResponse.getResponseHeader().isSucceeded()){
+                // set new sessionId to the initiate request object
+                initiate.setSessionId(loginResponse.getSessionId());
+
+                // recall initiate with new initiate request object
+                return this.initiate(configuration, initiate);
+            }else{
+                throw new InvalidDataException("bad ContractParams");
+            }
+
         } else {
             throw new InvalidDataException("something went wrong");
         }
     }
 
+
+//    public VerifyPaymentResponse verifyPayment(RequestConfiguration configuration, VerifyPayment verifyPayment) {
+//        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL);
+//        Header[] headers = createHeaders();
+//        String body = verifyPayment.toString();
+//
+//        StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
+//        VerifyPaymentResponse verifyPaymentResponse = parser.fromJson(response.getContent(), VerifyPaymentResponse.class);
+//
+//        // dans tous les cas si on reach le site on va dans le redirection payment, et c'est lui qui dit s'il y a eu une erreur ou non
+//        if (response.isSuccess()) {
+//            return verifyPaymentResponse;
+//        } else {
+//            throw new InvalidDataException("ERROR");
+//        }
+//    }
+
+    public GetResponse get(RequestConfiguration configuration, Get get) {
+        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlGet;
+        Header[] headers = createHeaders();
+        String body = get.toString();
+
+        StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
+        GetResponse getResponse = parser.fromJson(response.getContent(), GetResponse.class);
+
+        if (response.isSuccess() && getResponse.getResponseHeader().isSucceeded()) {
+            return getResponse;
+        } else if (response.isSuccess() && getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erruer session ID (703)
+            // create login request object
+            Login login = new Login.LoginBuilder()
+                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
+                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
+                    .build();
+            // call checkout connection
+            LoginResponse loginResponse = this.checkConnection(configuration, login);
+
+            if (loginResponse.getResponseHeader().isSucceeded()){
+                // set new sessionId to the get request object
+                get.setSessionId(loginResponse.getSessionId());
+
+                // recall get with new get request object
+                return this.get(configuration, get);
+            }else{
+                throw new InvalidDataException("bad ContractParams");
+            }
+        }else {
+            throw new InvalidDataException("ERROR");
+        }
+    }
 
 }
