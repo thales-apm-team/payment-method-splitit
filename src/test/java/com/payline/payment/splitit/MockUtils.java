@@ -1,6 +1,7 @@
 package com.payline.payment.splitit;
 
 import com.payline.payment.splitit.bean.*;
+import com.payline.payment.splitit.bean.request.Cancel;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.http.StringResponse;
 import com.payline.pmapi.bean.common.Buyer;
@@ -982,6 +983,58 @@ public class MockUtils {
                 "}";
     }
 
+    public static  final String appelCancel() {
+        return "{" +
+                    "\"RequestHeader\":{" +
+                        "\"SessionId\":\"" + sessionId + "\"," +
+                        "\"ApiKey\":\"" + apiKey + "\"" +
+                    "}," +
+                    "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"," +
+                    "\"RefundUnderCancelation\":\"OnlyIfAFullRefundIsPossible\"" +
+                "}";
+    }
+
+    public static final String responseCancelSuccess() {
+        return
+                "{" +
+                        "\"ResponseHeader\": {" +
+                            "\"Succeeded\": true," +
+                            "\"Errors\": []" +
+                        "}," +
+                        "\"InstallmentPlan\": {" +
+                            "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
+                            "\"InstallmentPlanStatus\": {" +
+                                "\"Code\": \"Canceled\"," +
+                                "\"Id\": 9," +
+                                "\"Description\": \"Canceled\"" +
+                            "}" +
+                        "}" +
+                "}";
+    }
+
+    public static final String responseCancelFailure() {
+        return
+                "{" +
+                        "\"ResponseHeader\": {" +
+                            "\"Succeeded\": false," +
+                            "\"Errors\":  [" +
+                        "      {" +
+                        "        \"ErrorCode\": \"503\"," +
+                        "        \"Message\": \"Invalid Installment Plan Status\"," +
+                        "        \"AdditionalInfo\": \"\"" +
+                        "      }" +
+                        "    ]" +
+                        "}," +
+                        "\"InstallmentPlan\": {" +
+                            "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
+                            "\"InstallmentPlanStatus\": {" +
+                                "\"Code\": \"Canceled\"," +
+                                "\"Id\": 9," +
+                                "\"Description\": \"Canceled\"" +
+                            "}" +
+                        "}" +
+                "}";
+    }
 
 
 

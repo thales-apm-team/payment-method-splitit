@@ -3,15 +3,9 @@ package com.payline.payment.splitit.utils.http;
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
 import com.payline.payment.splitit.bean.RequestHeader;
-import com.payline.payment.splitit.bean.request.Get;
-import com.payline.payment.splitit.bean.request.Initiate;
-import com.payline.payment.splitit.bean.request.Login;
-import com.payline.payment.splitit.bean.request.Refund;
+import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
-import com.payline.payment.splitit.bean.response.GetResponse;
-import com.payline.payment.splitit.bean.response.InitiateResponse;
-import com.payline.payment.splitit.bean.response.LoginResponse;
-import com.payline.payment.splitit.bean.response.MyRefundResponse;
+import com.payline.payment.splitit.bean.response.*;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
 import org.junit.jupiter.api.Assertions;
@@ -291,6 +285,76 @@ class HttpClientTest {
 
         Refund refund= new Refund.RefundBuilder().build();
         Assertions.assertThrows(InvalidDataException.class, ()-> client.refund(configuration, refund));
+    }
+
+    @Test
+    void cancelSuccess() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(200
+                , "KO"
+                , MockUtils.responseCancelSuccess()
+                , null);
+        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Cancel cancel = new Cancel.CancelBuilder().build();
+        CancelResponse response = client.cancel(configuration, cancel);
+        Assertions.assertEquals(response.getClass(), CancelResponse.class);
+    }
+
+    @Test
+    void cancelError703() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(200
+                , "KO"
+                , MockUtils.responseError703()
+                , null);
+
+        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseCancelSuccess()
+                , null);
+
+        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseLogin()
+                , null).getContent(), LoginResponse.class);
+
+        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+
+        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Cancel cancel= new Cancel.CancelBuilder().withRequestHeader(new RequestHeader()).build();
+        CancelResponse response = client.cancel(configuration, cancel);
+        Assertions.assertEquals(response.getClass(), CancelResponse.class);
+    }
+
+    @Test
+    void cancelNotSuccess() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(400
+                , "KO"
+                , MockUtils.responseCancelSuccess()
+                , null);
+        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
+
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Cancel cancel= new Cancel.CancelBuilder().build();
+        Assertions.assertThrows(InvalidDataException.class, ()-> client.cancel(configuration, cancel));
     }
 
 }

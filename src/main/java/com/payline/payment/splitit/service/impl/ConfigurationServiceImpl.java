@@ -1,5 +1,6 @@
 package com.payline.payment.splitit.service.impl;
 
+import com.payline.payment.splitit.bean.request.Cancel;
 import com.payline.payment.splitit.bean.request.Login;
 import com.payline.payment.splitit.bean.request.Refund;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
@@ -76,6 +77,18 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundStrategy.setDescription("how would you refund your amount for your installment ?");
         refundStrategy.setRequired(false);
         parameters.add(refundStrategy);
+
+        Map<String, String> refundUnderCancelationMap = new HashMap<>();
+        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.NO_REFUNDS.toString(), "NoRefunds");
+        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.ONLY_IF_A_FULL_REFUND_IS_POSSIBLE.toString(), "OnlyIfAFullRefundIsPossible");
+
+        ListBoxParameter refundUnderCancelation = new ListBoxParameter();
+        refundUnderCancelation.setKey(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELATION);
+        refundUnderCancelation.setList(refundUnderCancelationMap);
+        refundUnderCancelation.setLabel("refund under cancelation");
+        refundUnderCancelation.setDescription("how do you want to cancel your installmentPlan ?");
+        refundUnderCancelation.setRequired(false);
+        parameters.add(refundUnderCancelation);
 
         return parameters;
     }

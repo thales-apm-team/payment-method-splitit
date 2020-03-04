@@ -3,15 +3,9 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.payline.payment.splitit.bean.request.Get;
-import com.payline.payment.splitit.bean.request.Initiate;
-import com.payline.payment.splitit.bean.request.Login;
-import com.payline.payment.splitit.bean.request.Refund;
+import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
-import com.payline.payment.splitit.bean.response.GetResponse;
-import com.payline.payment.splitit.bean.response.InitiateResponse;
-import com.payline.payment.splitit.bean.response.LoginResponse;
-import com.payline.payment.splitit.bean.response.MyRefundResponse;
+import com.payline.payment.splitit.bean.response.*;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
@@ -44,6 +38,7 @@ public class HttpClient {
     private String urlInitiate = "/api/InstallmentPlan/Initiate";
     private String urlGet = "/api/InstallmentPlan/Get";
     private String urlRefund = "/api/InstallmentPlan/Refund";
+    private String urlCancel = "/api/InstallmentPlan/Cancel";
 
 
     // Exceptions messages
@@ -308,4 +303,36 @@ public class HttpClient {
         }
     }
 
+    public CancelResponse cancel(RequestConfiguration configuration, Cancel cancel) {
+        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlCancel;
+        Header[] headers = createHeaders();
+        String body = cancel.toString();
+
+        StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
+        CancelResponse cancelResponse = parser.fromJson(response.getContent(), CancelResponse.class);
+
+        if (response.isSuccess() && cancelResponse.getResponseHeader().isSucceeded()) {
+            return cancelResponse;
+        } else if (response.isSuccess() && cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
+            // create login request object
+            Login login = new Login.LoginBuilder()
+                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
+                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
+                    .build();
+            // call checkout connection
+            LoginResponse loginResponse = this.checkConnection(configuration, login);
+
+            if (loginResponse.getResponseHeader().isSucceeded()){
+                // set new sessionId to the get request object
+                cancel.setSessionId(loginResponse.getSessionId());
+
+                // recall get with new get request object
+                return this.cancel(configuration, cancel);
+            }else{
+                throw new InvalidDataException("bad ContractParams");
+            }
+        }else {
+            throw new InvalidDataException("ERROR");
+        }
+    }
 }

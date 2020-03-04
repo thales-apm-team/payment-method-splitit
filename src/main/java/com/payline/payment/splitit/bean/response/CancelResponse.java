@@ -3,19 +3,17 @@ package com.payline.payment.splitit.bean.response;
 import com.google.gson.annotations.SerializedName;
 import com.payline.payment.splitit.bean.InstallmentPlan;
 
-import java.util.List;
-
-public class GetResponse {
+public class CancelResponse {
     @SerializedName("ResponseHeader")
     ResponseHeader responseHeader;
-    @SerializedName("PlansList")
-    List<InstallmentPlan> plansList;
+    @SerializedName("InstallmentPlan")
+    InstallmentPlan installmentPlan;
 
     public ResponseHeader getResponseHeader() {
         return responseHeader;
     }
 
-    public List<InstallmentPlan> getPlansList() {
-        return plansList;
+    public InstallmentPlan getInstallmentPlan() {
+        return installmentPlan;
     }
 }

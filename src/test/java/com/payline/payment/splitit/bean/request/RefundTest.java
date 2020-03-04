@@ -46,11 +46,4 @@ class RefundTest {
 
         Assertions.assertEquals(expected, creation().toString());
     }
-
-    @Test
-    void getValue() {
-        Refund refund = creation();
-
-        Assertions.assertEquals(Refund.refundStrategyEnum.FutureInstallmentsFirst, refund.getRefundStrategy());
-    }
 }
