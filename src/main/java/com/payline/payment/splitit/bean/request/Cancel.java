@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
 public class Cancel {
+    // todo les privates
     public enum RefundUnderCancelation {
         @SerializedName("OnlyIfAFullRefundIsPossible")
         ONLY_IF_A_FULL_REFUND_IS_POSSIBLE,
@@ -18,6 +19,8 @@ public class Cancel {
     String installmentPlanNumber;
     @SerializedName("RefundUnderCancelation")
     RefundUnderCancelation refundUnderCancelation;
+
+    // todo le builder private
 
     public static class CancelBuilder {
         RequestHeader requestHeader;

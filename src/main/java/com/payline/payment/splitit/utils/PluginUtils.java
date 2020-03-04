@@ -74,6 +74,8 @@ public class PluginUtils {
         return value == null || value.isEmpty();
     }
 
+
+    // todo javadoc
     public static PaymentResponseFailure paymentResponseFailure(String errorCode) {
         FailureCause cause;
 

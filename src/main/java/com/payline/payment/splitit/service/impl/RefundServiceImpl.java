@@ -15,11 +15,13 @@ import com.payline.pmapi.bean.refund.response.impl.RefundResponseSuccess;
 import com.payline.pmapi.service.RefundService;
 
 public class RefundServiceImpl implements RefundService {
+    // todo le private (relis bien partout, jss sur que j'en ai raté)
     HttpClient client = HttpClient.getInstance();
 
     @Override
     public RefundResponse refundRequest(RefundRequest refundRequest) {
         try {
+            // todo si tu mets un constructeur pour les paymentRequest et RedirectionPaymentRequest tu peux faire pareil ici (sinon comme ca c'est bien)
             RequestConfiguration configuration = new RequestConfiguration(
                     refundRequest.getContractConfiguration()
                     , refundRequest.getEnvironment()
@@ -61,13 +63,13 @@ public class RefundServiceImpl implements RefundService {
                         .withFailureCause(FailureCause.INVALID_DATA)
                         .withPartnerTransactionId(refundResponse.getInstallmentPlan().getInstallmentPlanNumber())
                         .build();
-            } catch (Exception e) {
+            } catch (Exception e) {// todo catch(Exception) se fait pas trop (tes 2catch font la meme chose, tu peux virer ce try/catch et garder que celui qui englobe la methode
                 return RefundResponseFailure.RefundResponseFailureBuilder.aRefundResponseFailure()
                         .withFailureCause(FailureCause.INVALID_DATA)
                         .build();
             }
             // refund impossible
-        } catch (Exception e) {
+        } catch (Exception e) { // todo catch(Exception) se fait pas trop
             return RefundResponseFailure.RefundResponseFailureBuilder.aRefundResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)
                     .build();
@@ -77,10 +79,10 @@ public class RefundServiceImpl implements RefundService {
     @Override
     public boolean canMultiple() {
         return false;
-    }
+    }   // todo c'est vrai jte l'ai pas fait faire mais il faut documenter si on peut faire plusieurs remboursement sur une transaction et mettre true/false en fonction
 
     @Override
     public boolean canPartial() {
         return false;
-    }
+    }// todo c'est vrai jte l'ai pas fait faire mais il faut documenter si on peut faire un remboursement partiel sur une transaction et mettre true/false en fonction
 }

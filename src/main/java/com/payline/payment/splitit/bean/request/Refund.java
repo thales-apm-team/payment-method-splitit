@@ -6,6 +6,7 @@ import com.payline.payment.splitit.bean.nesteed.Amount;
 import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
 public class Refund {
+    // todo les private et le builder private
     public enum refundStrategyEnum {
         NoRefunds, FutureInstallmentsFirst, FutureInstallmentsLast, FutureInstallmentsNotAllowed
     }

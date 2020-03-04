@@ -2,6 +2,7 @@ package com.payline.payment.splitit.bean.nesteed;
 
 import com.google.gson.annotations.SerializedName;
 
+// todo: passe en private tout ce que tu peux, plus c'est encapsulé mieux c'est (partout)
 public class InstallmentPlan {
     @SerializedName("InstallmentPlanNumber")
     String installmentPlanNumber;
@@ -11,6 +12,8 @@ public class InstallmentPlan {
     ActiveCard activeCard;
     @SerializedName("Amount")
     AmountResponse amount;
+
+    // todo oubli pas le constructeur private pour ecraser le public, sinon on pourrais creer une instance vide sans passer par le Builder
 
     public ActiveCard getActiveCard() {
         return activeCard;
@@ -78,6 +81,7 @@ public class InstallmentPlan {
         }
     }
 
+    // todo j'ai l'impression qu'il y a pas mal d'objet qui contiennent code,id, description. ca vaut ptet le coup d'en creer un seul pour pas dupliquer le code
     public static class CardBrand {
         @SerializedName("Code")
         String code;
@@ -100,6 +104,7 @@ public class InstallmentPlan {
 
     }
 
+    // todo ah ben tiens! je disais quoi (bon lui a le symbole e plus)
     public static class Currency {
         @SerializedName("Symbol")
         String symbol;

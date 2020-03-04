@@ -2,6 +2,7 @@ package com.payline.payment.splitit.bean.nesteed;
 
 import com.google.gson.annotations.SerializedName;
 
+// todo: passe en private tout ce que tu peux, plus c'est encapsulé mieux c'est
 public class InstallmentPlanStatus {
     public enum Code {
         @SerializedName("Initializing")

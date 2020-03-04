@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import com.payline.payment.splitit.bean.nesteed.*;
 
 public class Initiate {
+    // todo les private et le builder private
+    // todo faudrait faire une Class mère du genre "Request" qui contiendrait le RequestHeader et dont Initiate, Get, Cancel & refund hériteraient. ca évite de dupliquer la methode setSessionId()
+    // todo et si t'arrive a faire un truc propre avec les generiques pour le toString() t'es un beauGosse
+
     @SerializedName("RequestHeader")
     RequestHeader requestHeader;
     @SerializedName("PlanData")

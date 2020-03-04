@@ -14,7 +14,7 @@ import com.payline.pmapi.bean.reset.response.impl.ResetResponseSuccess;
 import com.payline.pmapi.service.ResetService;
 
 public class ResetServiceImpl implements ResetService {
-
+    // todo le private
     HttpClient client = HttpClient.getInstance();
 
     @Override
@@ -22,6 +22,7 @@ public class ResetServiceImpl implements ResetService {
         // create reset request object
         try {
 
+            // todo meme remarque que le refundService, j'm bien mais si tu decides de faire des constructeurs dans RequestConfiguration, oubli pas ici
             RequestConfiguration configuration = new RequestConfiguration(
                     resetRequest.getContractConfiguration()
                     , resetRequest.getEnvironment()
@@ -56,13 +57,13 @@ public class ResetServiceImpl implements ResetService {
                             .withPartnerTransactionId(cancelResponse.getInstallmentPlan().getInstallmentPlanNumber())
                             .build();
                 }
-            } catch (Exception e) {
+            } catch (Exception e) { // todo catch(Exception) se fait pas trop + meme remarque que le RefundService
                 // ResetResponseFailure
                 return ResetResponseFailure.ResetResponseFailureBuilder.aResetResponseFailure()
                         .withFailureCause(FailureCause.INVALID_DATA)
                         .build();
             }
-        } catch (Exception e) {
+        } catch (Exception e) { // todo catch(Exception)
             // ResetResponseFailure
             return ResetResponseFailure.ResetResponseFailureBuilder.aResetResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)
@@ -73,10 +74,10 @@ public class ResetServiceImpl implements ResetService {
     @Override
     public boolean canMultiple() {
         return false;
-    }
+    } // todo meme consigne que pour le RefundService
 
     @Override
     public boolean canPartial() {
         return false;
-    }
+    }// todo meme consigne que pour le RefundService (meme si une annulation partielle parait chelou
 }

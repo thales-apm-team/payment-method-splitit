@@ -32,8 +32,10 @@ import java.nio.charset.StandardCharsets;
 
 
 public class HttpClient {
+    // todo de manière générale, hésite pas a logguer dans chaque cas non passant (comme ca si ca marche pas, on demande les log a monext et on leur dit que c'est pas nous, le log indique qu'ils envoient de mauvaises données)
     private static final Logger LOGGER = LogManager.getLogger(HttpClient.class);
     private Gson parser;
+    // todo YES t'as mis private! mais hésite pas a mettre final quand tu peux (la JVM aime bien)
     private String urlLogin = "/api/Login";
     private String urlInitiate = "/api/InstallmentPlan/Initiate";
     private String urlGet = "/api/InstallmentPlan/Get";
@@ -68,7 +70,7 @@ public class HttpClient {
 
             // retries
             this.retries = Integer.parseInt(config.get("http.retries"));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) { // todo rien a faire mais c'est pour illustrer ma remarque dans le PaymentService sur la gestion des try/catch :)
             throw new PluginException("plugin error: http.* properties must be integers", e);
         }
 
@@ -142,6 +144,7 @@ public class HttpClient {
      * @param headers header(s) of the request
      * @return
      */
+    // todo si t'as aucun GET, tu peux virer cette méthode (ca fait ca de moins a tester ;)
     StringResponse get(String url, Header[] headers) {
         URI uri;
         try {
@@ -184,7 +187,7 @@ public class HttpClient {
         return this.execute(httpPost);
     }
 
-
+// todo javadoc
     public LoginResponse checkConnection(RequestConfiguration configuration, Login login) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlLogin;
         Header[] headers = createHeaders();
@@ -201,7 +204,7 @@ public class HttpClient {
         }
     }
 
-
+    // todo javadoc
     public InitiateResponse initiate(RequestConfiguration configuration, Initiate initiate) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlInitiate;
         Header[] headers = createHeaders();
@@ -236,7 +239,7 @@ public class HttpClient {
         }
     }
 
-
+    // todo javadoc
     public GetResponse get(RequestConfiguration configuration, Get get) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlGet;
         Header[] headers = createHeaders();
@@ -270,6 +273,7 @@ public class HttpClient {
         }
     }
 
+    // todo javadoc, mais sinon nickel les commentaires
     public MyRefundResponse refund(RequestConfiguration configuration, Refund refund) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlRefund;
         Header[] headers = createHeaders();
@@ -303,6 +307,7 @@ public class HttpClient {
         }
     }
 
+    // todo javadoc
     public CancelResponse cancel(RequestConfiguration configuration, Cancel cancel) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlCancel;
         Header[] headers = createHeaders();

@@ -6,6 +6,7 @@ import com.payline.payment.splitit.bean.nesteed.QueryCriteria;
 import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
 public class Get {
+    // todo les private et le builder private
     @SerializedName("RequestHeader")
     RequestHeader requestHeader;
     @SerializedName("QueryCriteria")

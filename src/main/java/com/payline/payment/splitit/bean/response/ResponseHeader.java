@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class ResponseHeader {
+    // todo les private
     @SerializedName("Succeeded")
     boolean succeeded;
     @SerializedName("Errors")

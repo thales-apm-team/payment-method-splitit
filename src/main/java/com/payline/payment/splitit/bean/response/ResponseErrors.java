@@ -3,6 +3,7 @@ package com.payline.payment.splitit.bean.response;
 import com.google.gson.annotations.SerializedName;
 
 public class ResponseErrors {
+    // todo les private
     @SerializedName("ErrorCode")
     String errorCode;
     @SerializedName("Message")

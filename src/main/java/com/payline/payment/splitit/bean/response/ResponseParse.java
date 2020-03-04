@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.utils.http.StringResponse;
 
 public class ResponseParse {
+    // todo La classe a pas l'air utilisée, tu peux la virer
     StringResponse response;
 
     public static class ResponseParseBuilder {

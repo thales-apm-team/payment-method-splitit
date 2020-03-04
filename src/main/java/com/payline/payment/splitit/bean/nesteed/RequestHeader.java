@@ -1,8 +1,9 @@
 package com.payline.payment.splitit.bean.nesteed;
-
+// todo attention au import inutiles
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+// todo: passe en private tout ce que tu peux, plus c'est encapsulé mieux c'est
 public class RequestHeader {
     @SerializedName("SessionId")
     String sessionId;
@@ -12,6 +13,8 @@ public class RequestHeader {
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
+
+    // todo oubli pas le constructeur private pour ecraser le public, sinon on pourrais creer une instance vide sans passer par le Builder
 
     public static class RequestHeaderBuilder {
         String sessionId;

@@ -1,5 +1,5 @@
 package com.payline.payment.splitit.bean.nesteed;
-
+// todo attention les imports inutiles
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,6 +13,10 @@ public class ConsumerData {
     @SerializedName("CultureName")
     private String cultureName;
 
+    // todo oubli pas le constructeur private pour ecraser le public, sinon on pourrais creer une instance vide sans passer par le Builder
+
+
+    // todo: passe en private tout ce que tu peux, plus c'est encapsulé mieux c'est (meme dans le builder)
     public static class ConsumerDataBuilder {
         String fullName;
         String email;

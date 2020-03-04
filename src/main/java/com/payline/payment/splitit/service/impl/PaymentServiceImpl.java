@@ -23,25 +23,32 @@ import java.util.Map;
 import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.*;
 
 public class PaymentServiceImpl implements PaymentService {
+    /*
+     todo rmq générale sur les try/catch: on essaye, dans ce projet, que ce soit uniquement nos methodes pricipales (celles appelées par le core, ici paymentRequest())
+     qui try/catch(pluginExeption et RuntimeExeption)
+     Les autres méthodes (ici initCall etc...) catch les autres exceptions (genre IOException etc...) et throws des PluginException que les méthodes "mères" catcheront
+     */
     private HttpClient httpClient = HttpClient.getInstance();
 
     @Override
     public PaymentResponse paymentRequest(PaymentRequest request) {
 
-        // POST /Login
+        // POST /Login // todo commentaire périmé :)
         try {
             // POST /Initiate
             Initiate initiate = initiateCreate(request);
             return initiateCall(request, initiate);
             // POST /Login doesn't worked
         } catch (Exception e) {
+            // todo catch(Exception) se fait pas trop, faut etre plus specifique: PluginException, RuntimeExeption
+            // todo en plus dans nos PluginException, on a une methode toPaymentResponseFailureBuilder() pour pas se faire chier
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)
                     .build();
         }
     }
 
-
+    // todo un max de javadoc pour expliquer ce que fait chaque methode, en tout cas celle que tu ajoutes
     public PaymentResponse initiateCall(PaymentRequest request, Initiate initiate) {
         final RequestConfiguration configuration = configurationCreate(request);
 
@@ -59,6 +66,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
         } catch (Exception e) {
+            // todo catch(Exception) se fait pas trop
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)
                     .build();
@@ -120,6 +128,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
     }
 
+    // todo c'est pas utile pour une ligne (si c'est pour la lisibilité, mets cette methode dans RequestConfiguration)
     public RequestConfiguration configurationCreate(PaymentRequest request) {
         return new RequestConfiguration(
                 request.getContractConfiguration()

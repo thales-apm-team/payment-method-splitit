@@ -2,6 +2,7 @@ package com.payline.payment.splitit.bean.nesteed;
 
 import com.google.gson.annotations.SerializedName;
 
+// todo: passe en private tout ce que tu peux, plus c'est encapsulé mieux c'est
 public class BillingAddress {
     @SerializedName("AddressLine")
     String addressLine;
@@ -16,6 +17,9 @@ public class BillingAddress {
     @SerializedName("Zip")
     String zip;
 
+    // todo oubli pas le constructeur private pour ecraser le public, sinon on pourrais creer une instance vide sans passer par le Builder
+
+    // todo: passe en private tout ce que tu peux, plus c'est encapsulé mieux c'est (meme dans le builder)
     public static class BillingAddressBuilder {
         String addressLine;
         String addressLine2;

@@ -6,6 +6,7 @@ import com.payline.payment.splitit.bean.nesteed.InstallmentPlan;
 import java.net.URL;
 
 public class InitiateResponse {
+    // todo les private
     @SerializedName("ResponseHeader")
     ResponseHeader responseHeader;
     @SerializedName("CheckoutUrl")

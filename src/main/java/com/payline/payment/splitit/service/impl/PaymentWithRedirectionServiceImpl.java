@@ -33,7 +33,7 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
 
         RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
                 .withSessionId(redirectionPaymentRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID))
-                .withApiKey(redirectionPaymentRequest.getRequestContext().getRequestData().get(Constants.PartnerConfigurationKeys.API_KEY))
+                .withApiKey(redirectionPaymentRequest.getRequestContext().getRequestData().get(Constants.PartnerConfigurationKeys.API_KEY)) // todo attention tu vas pas chercher l'info au bon endroit (regarde la Doc que t'as fait)
                 .build();
 
         String partnerTransactionId = redirectionPaymentRequest.getRequestContext().getRequestData().get(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER);
@@ -45,19 +45,28 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                         .build())
                 .build();
 
-        // POST /Get and look at the champ Code
+        // POST /Get and look at the champ Code // todo the "champ"?
         try {
             GetResponse getResponse = httpClient.get(configuration, get);
 
-            // wrong installmentPlanNumber => PlanData list empty
+            // wrong installmentPlanNumber => PlanData list empty // todo hésite pas a detailler plus (fait des phrases), c'est bien d'avoir ce comm ici mais il est pas super explicite
             if (getResponse.getResponseHeader().isSucceeded()
                     && getResponse.getPlansList().isEmpty()) {
                 return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
                         .withFailureCause(FailureCause.INVALID_DATA)
                         .build();
 
+                // todo on doit pouvoir faire plus lisible avec tous ces if
             } else if (getResponse.getResponseHeader().isSucceeded()
                     && getResponse.getPlansList().get(0).getInstallmentPlanStatus().getCode().equals(InstallmentPlanStatus.Code.IN_PROGRESS)) {
+
+                /* todo essaye de verifier la non nullité des objets, ici: getResponse.getPlansList().get(0)
+                    j'aurais tendance a dire c'est pas grave c'est catché mais au moins on peut afficher le message qu'on veux pour debuguer plus facilement
+                    Par exemple, dans equesn on a: if (paymentRequest.getAmount() == null
+                    || paymentRequest.getAmount().getCurrency() == null
+                    || paymentRequest.getAmount().getAmountInSmallestUnit() == null) {     throw new InvalidDataException("Missing or invalid paymentRequest.amount");          }
+                    et au moins dans le catche en bas de méthode le message est hyper clair
+                 */
 
                 YearMonth date = YearMonth.of(Integer.parseInt(getResponse.getPlansList().get(0).getActiveCard().getCardExpYear()),
                         Integer.parseInt(getResponse.getPlansList().get(0).getActiveCard().getCardExpMonth()));
@@ -76,6 +85,7 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                         .withCard(card)
                         .build();
 
+                // todo pas mal, si l'annulation arrive desuite apres on est pas obligé de redemander un token... fait un commentaire!
                 Map<String, String> requestSensitiveData = new HashMap<>();
                 requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID,
                         redirectionPaymentRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID));
@@ -101,19 +111,21 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                 return PluginUtils.paymentResponseFailure(getResponse.getResponseHeader().getErrors().get(0).getErrorCode());
             }
             // get Failure
-        } catch (Exception e) {
+        } catch (Exception e) {// todo catch(Exception) se fait pas trop
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)
                     .build();
         }
-        return null;
+        return null; // todo wow!
     }
 
+    // todo: faut implementer cette méthode, elle fait la meme chose que finalyze mais est appelé en cas de timeout
     @Override
     public PaymentResponse handleSessionExpired(TransactionStatusRequest transactionStatusRequest) {
         return null;
     }
 
+    // todo pareil que pour le PaymentService
     public RequestConfiguration configurationCreate(RedirectionPaymentRequest request) {
         return new RequestConfiguration(
                 request.getContractConfiguration()
