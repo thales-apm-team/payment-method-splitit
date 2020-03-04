@@ -3,13 +3,15 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.payline.payment.splitit.bean.appel.Get;
-import com.payline.payment.splitit.bean.appel.Initiate;
-import com.payline.payment.splitit.bean.appel.Login;
+import com.payline.payment.splitit.bean.request.Get;
+import com.payline.payment.splitit.bean.request.Initiate;
+import com.payline.payment.splitit.bean.request.Login;
+import com.payline.payment.splitit.bean.request.Refund;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.GetResponse;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.bean.response.LoginResponse;
+import com.payline.payment.splitit.bean.response.MyRefundResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
@@ -41,6 +43,7 @@ public class HttpClient {
     private String urlLogin = "/api/Login";
     private String urlInitiate = "/api/InstallmentPlan/Initiate";
     private String urlGet = "/api/InstallmentPlan/Get";
+    private String urlRefund = "/api/InstallmentPlan/Refund";
 
 
     // Exceptions messages
@@ -214,7 +217,7 @@ public class HttpClient {
 
         if (response.isSuccess() && initiateResponse.getResponseHeader().isSucceeded()) {
             return initiateResponse;
-        } else if (response.isSuccess() && initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erruer session ID (703)
+        } else if (response.isSuccess() && initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
             // create login request object
             Login login = new Login.LoginBuilder()
                     .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
@@ -239,22 +242,6 @@ public class HttpClient {
     }
 
 
-//    public VerifyPaymentResponse verifyPayment(RequestConfiguration configuration, VerifyPayment verifyPayment) {
-//        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL);
-//        Header[] headers = createHeaders();
-//        String body = verifyPayment.toString();
-//
-//        StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
-//        VerifyPaymentResponse verifyPaymentResponse = parser.fromJson(response.getContent(), VerifyPaymentResponse.class);
-//
-//        // dans tous les cas si on reach le site on va dans le redirection payment, et c'est lui qui dit s'il y a eu une erreur ou non
-//        if (response.isSuccess()) {
-//            return verifyPaymentResponse;
-//        } else {
-//            throw new InvalidDataException("ERROR");
-//        }
-//    }
-
     public GetResponse get(RequestConfiguration configuration, Get get) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlGet;
         Header[] headers = createHeaders();
@@ -265,7 +252,7 @@ public class HttpClient {
 
         if (response.isSuccess() && getResponse.getResponseHeader().isSucceeded()) {
             return getResponse;
-        } else if (response.isSuccess() && getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erruer session ID (703)
+        } else if (response.isSuccess() && getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
             // create login request object
             Login login = new Login.LoginBuilder()
                     .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
@@ -280,6 +267,39 @@ public class HttpClient {
 
                 // recall get with new get request object
                 return this.get(configuration, get);
+            }else{
+                throw new InvalidDataException("bad ContractParams");
+            }
+        }else {
+            throw new InvalidDataException("ERROR");
+        }
+    }
+
+    public MyRefundResponse refund(RequestConfiguration configuration, Refund refund) {
+        String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlRefund;
+        Header[] headers = createHeaders();
+        String body = refund.toString();
+
+        StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
+        MyRefundResponse refundResponse = parser.fromJson(response.getContent(), MyRefundResponse.class);
+
+        if (response.isSuccess() && refundResponse.getResponseHeader().isSucceeded()) {
+            return refundResponse;
+        } else if (response.isSuccess() && refundResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
+            // create login request object
+            Login login = new Login.LoginBuilder()
+                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
+                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
+                    .build();
+            // call checkout connection
+            LoginResponse loginResponse = this.checkConnection(configuration, login);
+
+            if (loginResponse.getResponseHeader().isSucceeded()){
+                // set new sessionId to the get request object
+                refund.setSessionId(loginResponse.getSessionId());
+
+                // recall get with new get request object
+                return this.refund(configuration, refund);
             }else{
                 throw new InvalidDataException("bad ContractParams");
             }

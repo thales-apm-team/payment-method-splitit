@@ -1,4 +1,4 @@
-package com.payline.payment.splitit.bean.appel;
+package com.payline.payment.splitit.bean.request;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;

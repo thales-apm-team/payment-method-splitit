@@ -1,4 +1,4 @@
-package com.payline.payment.splitit.bean.appel;
+package com.payline.payment.splitit.bean.request;
 
 import com.payline.payment.splitit.MockUtils;
 import com.payline.payment.splitit.bean.EventsEndpoints;

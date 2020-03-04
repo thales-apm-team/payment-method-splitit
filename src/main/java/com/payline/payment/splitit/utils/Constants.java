@@ -16,6 +16,7 @@ public class Constants {
         public static String ATTEMPS_3D_SECURE = "attempt3DSecure";
         public static String FIRST_CHARGE_DATE = "firstChargeDate";
         public  static String REQUESTED_NUMBER_OF_INSTALLMENTS = "requestedNumberOfInstallments";
+        public  static String REFUND_STRATEGY = "refundStrategy";
 
         /* Static utility class : no need to instantiate it (Sonar bug fix) */
         private ContractConfigurationKeys() {

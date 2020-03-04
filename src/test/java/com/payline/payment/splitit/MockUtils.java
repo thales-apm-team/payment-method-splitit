@@ -348,6 +348,7 @@ public class MockUtils {
         contractProperties.put(Constants.ContractConfigurationKeys.PASSWORD, new ContractProperty("eZ7HJddV"));
         contractProperties.put(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
         contractProperties.put(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REFUND_STRATEGY, new ContractProperty("FutureInstallmentsFirst"));
 
         return new ContractConfiguration("SplitIt", contractProperties);
     }
@@ -872,18 +873,6 @@ public class MockUtils {
                 "}";
     }
 
-    public static final String responseVerifyPayment() {
-        return
-                "{" +
-                        "\"ResponseHeader\": {" +
-                            "\"Succeeded\": true," +
-                            "\"Errors\": null" +
-                        "}," +
-                        "\"IsPaid\": true," +
-                        "\"OriginalAmountPaid\": 2000" +
-                "}";
-    }
-
     public static final String appelInitiate() {
         return "{" +
                     "\"RequestHeader\":{" +
@@ -934,6 +923,67 @@ public class MockUtils {
                     "}" +
                 "}";
     }
+
+    public static final String appelRefund() {
+        return
+                "{" +
+                        "\"RequestHeader\":{" +
+                            "\"SessionId\":\"" + sessionId + "\"," +
+                            "\"ApiKey\":\"" + apiKey + "\"" +
+                        "}," +
+                        "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"," +
+                            "\"Amount\":{" +
+                                "\"Value\":\"" + amountValue + "\"," +
+                                "\"CurrencyCode\":\"" + currency + "\"" +
+                            "}," +
+                        "\"RefundStrategy\":\"FutureInstallmentsFirst\"" +
+                "}";
+    }
+
+    public static final String responseRefundSuccess() {
+        return
+                "{" +
+                        "\"ResponseHeader\": {" +
+                        "\"Succeeded\": true," +
+                        "\"Errors\": []" +
+                        "}," +
+                        "\"InstallmentPlan\": {" +
+                        "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
+                        "\"InstallmentPlanStatus\": {" +
+                        "\"Code\": \"Cleared\"," +
+                        "\"Id\": 6," +
+                        "\"Description\": \"Cleared\"" +
+                        "}" +
+                        "}" +
+                        "}";
+    }
+
+    public static final String responseRefundError() {
+        return
+                "{" +
+                        "\"ResponseHeader\": {" +
+                            "\"Succeeded\": false," +
+                            "\"Errors\": [" +
+                                "{" +
+                                    "\"ErrorCode\": \"562\"," +
+                                    "\"Message\": \"Refund requested amount exceeded the plan refundable amount\"," +
+                                    "\"AdditionalInfo\": \"\"" +
+                                "}" +
+                                "]" +
+                        "}," +
+                        "\"InstallmentPlan\": {" +
+                            "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
+                            "\"InstallmentPlanStatus\": {" +
+                                "\"Code\": \"Cleared\"," +
+                                "\"Id\": 6," +
+                                "\"Description\": \"Cleared\"" +
+                            "}" +
+                        "}" +
+                "}";
+    }
+
+
+
 
 
     public static String getSessionId() {

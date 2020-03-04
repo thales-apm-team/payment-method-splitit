@@ -1,6 +1,7 @@
 package com.payline.payment.splitit.service.impl;
 
-import com.payline.payment.splitit.bean.appel.Login;
+import com.payline.payment.splitit.bean.request.Login;
+import com.payline.payment.splitit.bean.request.Refund;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.LoginResponse;
 import com.payline.payment.splitit.exception.PluginException;
@@ -61,6 +62,20 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 "between 1 and 12");
         requestedNumberOfInstallments.setRequired(true);
         parameters.add(requestedNumberOfInstallments);
+
+        Map<String, String> refundStrategyMap = new HashMap<>();
+        refundStrategyMap.put(Refund.refundStrategyEnum.NoRefunds.toString(), "No refund");
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsFirst.toString(), "Future installment first");
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsLast.toString(), "Future installment last");
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsNotAllowed.toString(), "future installment not allowed");
+
+        ListBoxParameter refundStrategy = new ListBoxParameter();
+        refundStrategy.setKey(Constants.ContractConfigurationKeys.REFUND_STRATEGY);
+        refundStrategy.setList(refundStrategyMap);
+        refundStrategy.setLabel("refund strategy");
+        refundStrategy.setDescription("how would you refund your amount for your installment ?");
+        refundStrategy.setRequired(false);
+        parameters.add(refundStrategy);
 
         return parameters;
     }

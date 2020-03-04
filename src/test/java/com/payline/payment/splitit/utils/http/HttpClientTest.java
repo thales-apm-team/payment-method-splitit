@@ -3,13 +3,15 @@ package com.payline.payment.splitit.utils.http;
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
 import com.payline.payment.splitit.bean.RequestHeader;
-import com.payline.payment.splitit.bean.appel.Get;
-import com.payline.payment.splitit.bean.appel.Initiate;
-import com.payline.payment.splitit.bean.appel.Login;
+import com.payline.payment.splitit.bean.request.Get;
+import com.payline.payment.splitit.bean.request.Initiate;
+import com.payline.payment.splitit.bean.request.Login;
+import com.payline.payment.splitit.bean.request.Refund;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.GetResponse;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.bean.response.LoginResponse;
+import com.payline.payment.splitit.bean.response.MyRefundResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
 import org.junit.jupiter.api.Assertions;
@@ -221,42 +223,74 @@ class HttpClientTest {
         Assertions.assertEquals("81061838427155704844",response.getPlansList().get(0).getInstallmentPlanNumber());
     }
 
-//    @Test
-//    void verifyPaymentSuccess() {
-//        StringResponse stringResponse = MockUtils.mockStringResponse(200
-//                , "OK"
-//                , MockUtils.responseVerifyPayment()
-//                , null);
-//        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
-//
-//
-//        RequestConfiguration configuration = new RequestConfiguration(
-//                MockUtils.aContractConfiguration()
-//                , MockUtils.anEnvironment()
-//                , MockUtils.aPartnerConfiguration()
-//        );
-//
-//        VerifyPayment verifyPayment = new VerifyPayment.VerifyPaymentBuilder().build();
-//        VerifyPaymentResponse response = client.verifyPayment(configuration, verifyPayment);
-//        Assertions.assertTrue(response.isPaid());
-//    }
+    @Test
+    void refundSuccess() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(200
+                , "KO"
+                , MockUtils.responseRefundSuccess()
+                , null);
+        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
 
-//    @Test
-//    void verifyPaymentNotSuccess() {
-//        StringResponse stringResponse = MockUtils.mockStringResponse(400
-//                , "KO"
-//                , MockUtils.responseVerifyPayment()
-//                , null);
-//        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
-//
-//
-//        RequestConfiguration configuration = new RequestConfiguration(
-//                MockUtils.aContractConfiguration()
-//                , MockUtils.anEnvironment()
-//                , MockUtils.aPartnerConfiguration()
-//        );
-//
-//        VerifyPayment verifyPayment = new VerifyPayment.VerifyPaymentBuilder().build();
-//        Assertions.assertThrows(InvalidDataException.class, ()-> client.verifyPayment(configuration, verifyPayment));
-//    }
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Refund refund = new Refund.RefundBuilder().build();
+        MyRefundResponse response = client.refund(configuration, refund);
+        Assertions.assertEquals(response.getClass(), MyRefundResponse.class);
+    }
+
+    @Test
+    void refundError703() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(200
+                , "KO"
+                , MockUtils.responseError703()
+                , null);
+
+        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseRefundSuccess()
+                , null);
+
+        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseLogin()
+                , null).getContent(), LoginResponse.class);
+
+        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+
+        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Refund refund= new Refund.RefundBuilder().withRequestHeader(new RequestHeader()).build();
+        MyRefundResponse response = client.refund(configuration, refund);
+        Assertions.assertEquals(response.getClass(), MyRefundResponse.class);
+    }
+
+    @Test
+    void refundNotSuccess() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(400
+                , "KO"
+                , MockUtils.responseRefundSuccess()
+                , null);
+        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
+
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Refund refund= new Refund.RefundBuilder().build();
+        Assertions.assertThrows(InvalidDataException.class, ()-> client.refund(configuration, refund));
+    }
+
 }

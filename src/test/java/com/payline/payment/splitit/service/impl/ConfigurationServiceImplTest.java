@@ -35,7 +35,6 @@ class ConfigurationServiceImplTest {
 
     @Test
     void getParameters() {
-//        ConfigurationService.
     }
 
     @Test

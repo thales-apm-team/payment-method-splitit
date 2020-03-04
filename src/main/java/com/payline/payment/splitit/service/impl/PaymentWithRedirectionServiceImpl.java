@@ -3,7 +3,7 @@ package com.payline.payment.splitit.service.impl;
 import com.payline.payment.splitit.bean.InstallmentPlanStatus;
 import com.payline.payment.splitit.bean.QueryCriteria;
 import com.payline.payment.splitit.bean.RequestHeader;
-import com.payline.payment.splitit.bean.appel.Get;
+import com.payline.payment.splitit.bean.request.Get;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.GetResponse;
 import com.payline.payment.splitit.utils.Constants;

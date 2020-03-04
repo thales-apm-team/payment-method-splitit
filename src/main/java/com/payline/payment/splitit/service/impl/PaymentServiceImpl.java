@@ -1,8 +1,8 @@
 package com.payline.payment.splitit.service.impl;
 
 import com.payline.payment.splitit.bean.*;
-import com.payline.payment.splitit.bean.appel.Initiate;
-import com.payline.payment.splitit.bean.appel.Login;
+import com.payline.payment.splitit.bean.request.Initiate;
+import com.payline.payment.splitit.bean.request.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.utils.Constants;
