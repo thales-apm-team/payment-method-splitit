@@ -349,6 +349,7 @@ public class MockUtils {
         contractProperties.put(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
         contractProperties.put(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUND_STRATEGY, new ContractProperty("FutureInstallmentsFirst"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
 
         return new ContractConfiguration("SplitIt", contractProperties);
     }
@@ -1005,6 +1006,7 @@ public class MockUtils {
                 "}";
     }
 
+
     public static final String responseCancelSuccess() {
         return
                 "{" +
@@ -1022,6 +1024,7 @@ public class MockUtils {
                         "}" +
                 "}";
     }
+
 
     public static final String responseCancelFailure() {
         return
@@ -1068,21 +1071,5 @@ public class MockUtils {
 
     public static String getCurrency() {
         return currency;
-    }
-
-    public static String getFullName() {
-        return fullName;
-    }
-
-    public static String getEmail() {
-        return email;
-    }
-
-    public static String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public static String getCultureName() {
-        return cultureName;
     }
 }

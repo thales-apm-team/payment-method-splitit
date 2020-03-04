@@ -6,10 +6,7 @@ import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
 public class Cancel {
     public enum RefundUnderCancelation {
-        @SerializedName("OnlyIfAFullRefundIsPossible")
-        ONLY_IF_A_FULL_REFUND_IS_POSSIBLE,
-        @SerializedName("NoRefunds")
-        NO_REFUNDS
+        OnlyIfAFullRefundIsPossible, NoRefunds
     }
 
     @SerializedName("RequestHeader")

@@ -58,35 +58,34 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         AbstractParameter requestedNumberOfInstallments = new InputParameter();
         requestedNumberOfInstallments.setKey(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS);
-        requestedNumberOfInstallments.setLabel("requested number of installments");
-        requestedNumberOfInstallments.setDescription("Define a list of number of installments the shopper can choose " +
-                "between 1 and 12");
+        requestedNumberOfInstallments.setLabel(i18n.getMessage("requestedNumberOfInstallments.label", locale));
+        requestedNumberOfInstallments.setDescription(i18n.getMessage("requestedNumberOfInstallments.description", locale));
         requestedNumberOfInstallments.setRequired(true);
         parameters.add(requestedNumberOfInstallments);
 
         Map<String, String> refundStrategyMap = new HashMap<>();
-        refundStrategyMap.put(Refund.refundStrategyEnum.NoRefunds.toString(), "No refund");
-        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsFirst.toString(), "Future installment first");
-        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsLast.toString(), "Future installment last");
-        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsNotAllowed.toString(), "future installment not allowed");
+        refundStrategyMap.put(Refund.refundStrategyEnum.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsFirst.toString(), i18n.getMessage("FutureInstallmentsFirst.value", locale));
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsLast.toString(), i18n.getMessage("FutureInstallmentsLast.value", locale));
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsNotAllowed.toString(), i18n.getMessage("FutureInstallmentsNotAllowed.value", locale));
 
         ListBoxParameter refundStrategy = new ListBoxParameter();
         refundStrategy.setKey(Constants.ContractConfigurationKeys.REFUND_STRATEGY);
         refundStrategy.setList(refundStrategyMap);
-        refundStrategy.setLabel("refund strategy");
-        refundStrategy.setDescription("how would you refund your amount for your installment ?");
+        refundStrategy.setLabel(i18n.getMessage("refundStrategy.label", locale));
+        refundStrategy.setDescription(i18n.getMessage("refundStrategy.description", locale));
         refundStrategy.setRequired(false);
         parameters.add(refundStrategy);
 
         Map<String, String> refundUnderCancelationMap = new HashMap<>();
-        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.NO_REFUNDS.toString(), "NoRefunds");
-        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.ONLY_IF_A_FULL_REFUND_IS_POSSIBLE.toString(), "OnlyIfAFullRefundIsPossible");
+        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
+        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.OnlyIfAFullRefundIsPossible.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
 
         ListBoxParameter refundUnderCancelation = new ListBoxParameter();
         refundUnderCancelation.setKey(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELATION);
         refundUnderCancelation.setList(refundUnderCancelationMap);
-        refundUnderCancelation.setLabel("refund under cancelation");
-        refundUnderCancelation.setDescription("how do you want to cancel your installmentPlan ?");
+        refundUnderCancelation.setLabel(i18n.getMessage("refundUnderCancelation.label", locale));
+        refundUnderCancelation.setDescription(i18n.getMessage("refundUnderCancelation.description", locale));
         refundUnderCancelation.setRequired(false);
         parameters.add(refundUnderCancelation);
 

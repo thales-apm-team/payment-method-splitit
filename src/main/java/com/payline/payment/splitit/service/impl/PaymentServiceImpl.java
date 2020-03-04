@@ -1,9 +1,8 @@
 package com.payline.payment.splitit.service.impl;
 
+import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.nesteed.*;
 import com.payline.payment.splitit.bean.request.Initiate;
-import com.payline.payment.splitit.bean.request.Login;
-import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.PluginUtils;
@@ -20,20 +19,19 @@ import com.payline.pmapi.service.PaymentService;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.*;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS;
 
 public class PaymentServiceImpl implements PaymentService {
     private HttpClient httpClient = HttpClient.getInstance();
 
     @Override
     public PaymentResponse paymentRequest(PaymentRequest request) {
-
-        // POST /Login
         try {
             // POST /Initiate
             Initiate initiate = initiateCreate(request);
             return initiateCall(request, initiate);
-            // POST /Login doesn't worked
+            // POST /Initiate doesn't worked
         } catch (Exception e) {
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)

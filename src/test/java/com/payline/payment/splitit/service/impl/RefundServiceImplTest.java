@@ -4,9 +4,6 @@ import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
 import com.payline.payment.splitit.bean.response.MyRefundResponse;
 import com.payline.payment.splitit.utils.http.HttpClient;
-import com.payline.pmapi.bean.payment.response.PaymentResponse;
-import com.payline.pmapi.bean.payment.response.impl.PaymentResponseFailure;
-import com.payline.pmapi.bean.refund.request.RefundRequest;
 import com.payline.pmapi.bean.refund.response.RefundResponse;
 import com.payline.pmapi.bean.refund.response.impl.RefundResponseFailure;
 import com.payline.pmapi.bean.refund.response.impl.RefundResponseSuccess;
@@ -18,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 class RefundServiceImplTest {
