@@ -2,7 +2,7 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.*;

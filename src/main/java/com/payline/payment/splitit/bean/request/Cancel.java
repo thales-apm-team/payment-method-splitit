@@ -2,7 +2,7 @@ package com.payline.payment.splitit.bean.request;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.payline.payment.splitit.bean.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
 public class Cancel {
     public enum RefundUnderCancelation {

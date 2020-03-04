@@ -1,6 +1,6 @@
 package com.payline.payment.splitit.service.impl;
 
-import com.payline.payment.splitit.bean.*;
+import com.payline.payment.splitit.bean.nesteed.*;
 import com.payline.payment.splitit.bean.request.Initiate;
 import com.payline.payment.splitit.bean.request.Login;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
@@ -27,27 +27,13 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse paymentRequest(PaymentRequest request) {
-        final RequestConfiguration configuration = configurationCreate(request);
-        Login login = loginCreate(request);
 
-        // appel du POST /Login
+        // POST /Login
         try {
-//            LoginResponse response = httpClient.checkConnection(configuration, login);
-//            // en fonction du result faire l'appel initiate
-//
-//
-//            // Appel du POST /Initiate
-//            if (response.getResponseHeader().isSucceeded()) {
-                Initiate initiate = initiateCreate(request);
-                return initiateCall(request, initiate);
-//
-//            } else {
-//                return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-//                        .withErrorCode(response.getResponseHeader().getErrors().get(0).getErrorCode())
-//                        .withFailureCause(FailureCause.INVALID_DATA)
-//                        .build();
-//            }
-            // On n'a pas pu faire le login
+            // POST /Initiate
+            Initiate initiate = initiateCreate(request);
+            return initiateCall(request, initiate);
+            // POST /Login doesn't worked
         } catch (Exception e) {
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)
@@ -131,13 +117,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .withPaymentWizardData(paymentWizardData)
                 .withRedirectUrl(redirectUrl)
                 .withEventsEndpoints(eventsEndpoints)
-                .build();
-    }
-
-    public Login loginCreate(PaymentRequest request) {
-        return new Login.LoginBuilder()
-                .withUsername(request.getContractConfiguration().getProperty(USERNAME).getValue())
-                .withPassword(request.getContractConfiguration().getProperty(PASSWORD).getValue())
                 .build();
     }
 

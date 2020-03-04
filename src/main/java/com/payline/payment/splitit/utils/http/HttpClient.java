@@ -195,7 +195,7 @@ public class HttpClient {
         LoginResponse loginResponse = parser.fromJson(response.getContent(), LoginResponse.class);
 
         if (!response.isSuccess()) {
-            throw new InvalidDataException("page introuvable, mauvaise URL");
+            throw new InvalidDataException("wrong URL");
         } else {
             return loginResponse;
         }

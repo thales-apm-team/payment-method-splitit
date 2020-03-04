@@ -1,7 +1,6 @@
 package com.payline.payment.splitit;
 
-import com.payline.payment.splitit.bean.*;
-import com.payline.payment.splitit.bean.request.Cancel;
+import com.payline.payment.splitit.bean.nesteed.*;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.http.StringResponse;
 import com.payline.pmapi.bean.common.Buyer;
@@ -787,6 +786,18 @@ public class MockUtils {
                         "}";
     }
 
+    public static final String callGet() {
+        return "{" +
+                    "\"RequestHeader\":{" +
+                        "\"SessionId\":\"" + sessionId + "\"," +
+                        "\"ApiKey\":\"" + apiKey + "\"" +
+                    "}," +
+                    "\"QueryCriteria\":{" +
+                        "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"" +
+                    "}" +
+                "}";
+    }
+
     public static final String responseGetOK(String code) {
         return
         "{" +
@@ -874,7 +885,7 @@ public class MockUtils {
                 "}";
     }
 
-    public static final String appelInitiate() {
+    public static final String callInitiate() {
         return "{" +
                     "\"RequestHeader\":{" +
                         "\"SessionId\":\"" + sessionId + "\"," +
@@ -925,7 +936,7 @@ public class MockUtils {
                 "}";
     }
 
-    public static final String appelRefund() {
+    public static final String callRefund() {
         return
                 "{" +
                         "\"RequestHeader\":{" +
@@ -983,7 +994,7 @@ public class MockUtils {
                 "}";
     }
 
-    public static  final String appelCancel() {
+    public static  final String callCancel() {
         return "{" +
                     "\"RequestHeader\":{" +
                         "\"SessionId\":\"" + sessionId + "\"," +
@@ -1057,18 +1068,6 @@ public class MockUtils {
 
     public static String getCurrency() {
         return currency;
-    }
-
-    public static Date getFirstChargeDate() {
-        return firstChargeDate;
-    }
-
-    public static String getNumberOfInstallments() {
-        return numberOfInstallments;
-    }
-
-    public static String getRefOrderNumber() {
-        return refOrderNumber;
     }
 
     public static String getFullName() {

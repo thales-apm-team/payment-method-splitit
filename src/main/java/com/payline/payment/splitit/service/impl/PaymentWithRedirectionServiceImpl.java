@@ -1,8 +1,8 @@
 package com.payline.payment.splitit.service.impl;
 
-import com.payline.payment.splitit.bean.InstallmentPlanStatus;
-import com.payline.payment.splitit.bean.QueryCriteria;
-import com.payline.payment.splitit.bean.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.InstallmentPlanStatus;
+import com.payline.payment.splitit.bean.nesteed.QueryCriteria;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.request.Get;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.GetResponse;
@@ -36,7 +36,6 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                 .withApiKey(redirectionPaymentRequest.getRequestContext().getRequestData().get(Constants.PartnerConfigurationKeys.API_KEY))
                 .build();
 
-        // on lance le get et on verifie le champ Code
         String partnerTransactionId = redirectionPaymentRequest.getRequestContext().getRequestData().get(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER);
 
         Get get = new Get.GetBuilder()
@@ -46,10 +45,11 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                         .build())
                 .build();
 
+        // POST /Get and look at the champ Code
         try {
             GetResponse getResponse = httpClient.get(configuration, get);
 
-            // mauvais installmentPlanNumber => PlanData liste vide
+            // wrong installmentPlanNumber => PlanData list empty
             if (getResponse.getResponseHeader().isSucceeded()
                     && getResponse.getPlansList().isEmpty()) {
                 return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
@@ -100,7 +100,7 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
             } else if (!getResponse.getResponseHeader().isSucceeded()) {
                 return PluginUtils.paymentResponseFailure(getResponse.getResponseHeader().getErrors().get(0).getErrorCode());
             }
-            // echec du get
+            // get Failure
         } catch (Exception e) {
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)

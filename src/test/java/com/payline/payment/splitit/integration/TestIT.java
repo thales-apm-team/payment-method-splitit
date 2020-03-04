@@ -106,21 +106,19 @@ public class TestIT extends AbstractPaymentIntegration {
     // scenario nominal
     void fullPaymentTest() {
 
-        // on se log
+        // Login
         Map<String, String> errors = configurationService.check(MockUtils.aContractParametersCheckRequest());
         Assertions.assertEquals(0, errors.size());
 
-        // on initialise un payement
+        // Initialise a payment
         PaymentRequest request = createDefaultPaymentRequest();
         PaymentResponse paymentResponseFromPaymentRequest = paymentService.paymentRequest(request);
         Assertions.assertEquals(PaymentResponseRedirect.class, paymentResponseFromPaymentRequest.getClass());
 
-        // on a passe l'initialisation, on fait le PaymentWithRedirectionService
+        // PaymentWithRedirectionService
         PaymentResponseRedirect paymentResponseRedirect = (PaymentResponseRedirect)paymentResponseFromPaymentRequest;
-//        String partnerTransactionId = paymentResponseRedirect.getPartnerTransactionId();
         String partnerUrl = paymentResponseRedirect.getRedirectionRequest().getUrl().toString();
 
-//        String redirectionUrl = this.payOnPartnerWebsite(partnerUrl);
         this.payOnPartnerWebsite(partnerUrl);
 
         RedirectionPaymentRequest redirectionPaymentRequest = (RedirectionPaymentRequest)RedirectionPaymentRequest.builder()

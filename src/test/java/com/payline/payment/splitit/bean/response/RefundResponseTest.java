@@ -2,7 +2,7 @@ package com.payline.payment.splitit.bean.response;
 
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.InstallmentPlanStatus;
+import com.payline.payment.splitit.bean.nesteed.InstallmentPlanStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

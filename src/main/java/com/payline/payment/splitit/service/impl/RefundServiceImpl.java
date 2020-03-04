@@ -1,7 +1,7 @@
 package com.payline.payment.splitit.service.impl;
 
-import com.payline.payment.splitit.bean.Amount;
-import com.payline.payment.splitit.bean.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.Amount;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.request.Refund;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.MyRefundResponse;
@@ -36,23 +36,20 @@ public class RefundServiceImpl implements RefundService {
                     .withCurrency(refundRequest.getAmount().getCurrency().toString())
                     .build();
 
-            // creer l'objet refund request
+            // create refund request object
             Refund refund = new Refund.RefundBuilder()
                     .withRequestHeader(requestHeader)
                     .withInstallmentPlanNumber(refundRequest.getPartnerTransactionId())
                     .withAmount(amount)
-//                    .withrefundStrategy(Refund.refundStrategyEnum.get(test))
                     .withrefundStrategy(Refund.refundStrategyEnum.valueOf(refundRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_STRATEGY).getValue()))
-//                    .withrefundStrategy(Refund.refundStrategyEnum.valueOf(refundRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_STRATEGY)))
                     .build();
 
-            // on appel la methode http
+            // call http method refund
             try {
                 MyRefundResponse refundResponse = client.refund(configuration, refund);
 
-                // en fonction de la reponse, renvoyer une PaymentRefundSuccess ou Failure
+                // PaymentRefundSuccess
                 if (refundResponse.getResponseHeader().isSucceeded()) {
-                    // return RefundResponseSuccess
                     return RefundResponseSuccess.RefundResponseSuccessBuilder.aRefundResponseSuccess()
                             .withPartnerTransactionId(refundResponse.getInstallmentPlan().getInstallmentPlanNumber())
                             .withStatusCode(String.valueOf(refundResponse.getInstallmentPlan().getInstallmentPlanStatus().getCode()))

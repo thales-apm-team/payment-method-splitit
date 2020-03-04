@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LoginResponseTest {
 
     @Test
-    void testInitChampsOK() {
+    void nonEmpty() {
         LoginResponse response = new GsonBuilder().create().fromJson(MockUtils.responseLogin(), LoginResponse.class);
 
         Assertions.assertNotNull(response.getResponseHeader());
@@ -20,7 +20,7 @@ class LoginResponseTest {
     }
 
     @Test
-    void testInitChampsKO() {
+    void nonEmptyKO() {
         LoginResponse response = new GsonBuilder().create().fromJson(MockUtils.responseLoginKO(), LoginResponse.class);
 
         Assertions.assertNotNull(response.getResponseHeader());

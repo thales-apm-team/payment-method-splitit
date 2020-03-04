@@ -2,17 +2,13 @@ package com.payline.payment.splitit.bean.response;
 
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.InstallmentPlanStatus;
-import org.apache.logging.log4j.core.util.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GetResponseTest {
 
     @Test
-    void nonVide() {
+    void nonEmpty() {
         GetResponse response = new GsonBuilder().create().fromJson(MockUtils.responseGetOK("Cleared"), GetResponse.class);
 
         Assertions.assertNotNull(response.getPlansList().get(0).getInstallmentPlanNumber());
@@ -33,7 +29,4 @@ class GetResponseTest {
         Assertions.assertNotNull(response.getPlansList().get(0).getActiveCard().getFullName());
     }
 
-    @Test
-    void testToString() {
-    }
 }

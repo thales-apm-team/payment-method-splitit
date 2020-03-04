@@ -1,7 +1,7 @@
 package com.payline.payment.splitit.bean.request;
 
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.EventsEndpoints;
+import com.payline.payment.splitit.bean.nesteed.EventsEndpoints;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +69,7 @@ class InitiateTest {
     @Test
     void testToString() {
         Initiate initiate = creation();
-        String expected = MockUtils.appelInitiate();
+        String expected = MockUtils.callInitiate();
 
         Assertions.assertEquals(expected, initiate.toString());
     }

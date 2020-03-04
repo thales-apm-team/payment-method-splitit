@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InitiateResponseTest {
 
     @Test
-    void testInitChamps() {
+    void nonEmpty() {
         InitiateResponse initiateResponse = new GsonBuilder().create().fromJson(MockUtils.responseInitiate(), InitiateResponse.class);
 
         Assertions.assertTrue(initiateResponse.getResponseHeader().isSucceeded());

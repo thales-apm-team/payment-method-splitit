@@ -1,7 +1,7 @@
 package com.payline.payment.splitit.bean.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.payline.payment.splitit.bean.InstallmentPlan;
+import com.payline.payment.splitit.bean.nesteed.InstallmentPlan;
 
 import java.net.URL;
 

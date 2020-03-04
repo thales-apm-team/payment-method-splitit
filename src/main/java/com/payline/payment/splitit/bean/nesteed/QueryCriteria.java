@@ -1,4 +1,4 @@
-package com.payline.payment.splitit.bean;
+package com.payline.payment.splitit.bean.nesteed;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -26,8 +26,4 @@ public class QueryCriteria {
         return installmentPlanNumber;
     }
 
-    public String toString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
 }

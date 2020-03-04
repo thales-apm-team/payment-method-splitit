@@ -1,6 +1,6 @@
 package com.payline.payment.splitit.service.impl;
 
-import com.payline.payment.splitit.bean.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.request.Cancel;
 import com.payline.payment.splitit.bean.response.CancelResponse;
@@ -19,7 +19,7 @@ public class ResetServiceImpl implements ResetService {
 
     @Override
     public ResetResponse resetRequest(ResetRequest resetRequest) {
-        // construire l'objet reset
+        // create reset request object
         try {
 
             RequestConfiguration configuration = new RequestConfiguration(
@@ -39,16 +39,16 @@ public class ResetServiceImpl implements ResetService {
                     .withRefundUnderCancelation(Cancel.RefundUnderCancelation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELATION).getValue()))
                     .build();
 
-        // faire l'appel http
+        // call http method reset
             try {
                 CancelResponse cancelResponse = client.cancel(configuration, cancel);
-                // response success
+                // ResetResponseSuccess
                 if (cancelResponse.getResponseHeader().isSucceeded()) {
                     return ResetResponseSuccess.ResetResponseSuccessBuilder.aResetResponseSuccess()
                             .withPartnerTransactionId(cancelResponse.getInstallmentPlan().getInstallmentPlanNumber())
                             .withStatusCode(String.valueOf(cancelResponse.getInstallmentPlan().getInstallmentPlanStatus().getCode()))
                             .build();
-                    // response failure
+                    // ResetResponseFailure
                 } else {
                     return ResetResponseFailure.ResetResponseFailureBuilder.aResetResponseFailure()
                             .withErrorCode(cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode())
@@ -57,12 +57,13 @@ public class ResetServiceImpl implements ResetService {
                             .build();
                 }
             } catch (Exception e) {
-                // response failure
+                // ResetResponseFailure
                 return ResetResponseFailure.ResetResponseFailureBuilder.aResetResponseFailure()
                         .withFailureCause(FailureCause.INVALID_DATA)
                         .build();
             }
         } catch (Exception e) {
+            // ResetResponseFailure
             return ResetResponseFailure.ResetResponseFailureBuilder.aResetResponseFailure()
                     .withFailureCause(FailureCause.INVALID_DATA)
                     .build();
