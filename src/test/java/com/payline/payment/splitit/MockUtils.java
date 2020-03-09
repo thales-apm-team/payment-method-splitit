@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 public class MockUtils {
     private static String sessionId = "9b358c4a-1237-46a7-8167-b62f66dd4a8d";
     private static String apiKey = "f661600c-5f1a-4d4c-829d-768fbc40be6c";
-    private static String installmentPlanNumber = "81061838427155704844";
+    private static String installmentPlanNumber = "87064835030438485643";
 
     private static String TRANSACTIONID = "123456789012345678901";
     private static String PARTNER_TRANSACTIONID = installmentPlanNumber;
@@ -54,6 +54,8 @@ public class MockUtils {
     private static String email = "JohnS@splitit.com";
     private static String phoneNumber = "1-844-775-4848";
     private static String cultureName = "en-us";
+
+    private static int refundAmount = 1;
 
 
     /**------------------------------------------------------------------------------------------------------------------*/
@@ -140,7 +142,7 @@ public class MockUtils {
      * Generate a valid Payline Amount.
      */
     public static com.payline.pmapi.bean.common.Amount aPaylineAmount() {
-        return aPaylineAmount(1234);
+        return aPaylineAmount(refundAmount);
     }
 
     public static com.payline.pmapi.bean.common.Amount aPaylineAmount(int amount) {
@@ -282,6 +284,7 @@ public class MockUtils {
                 .withEnvironment(anEnvironment())
                 .withTransactionId(TRANSACTIONID)
                 .withPartnerTransactionId(PARTNER_TRANSACTIONID)
+                .withRequestContext(aRequestContext(sessionId, apiKey, installmentPlanNumber))
                 .withPartnerConfiguration(aPartnerConfiguration());
     }
 
@@ -297,6 +300,7 @@ public class MockUtils {
                 .withBuyer(aBuyer())
                 .withContractConfiguration(aContractConfiguration())
                 .withEnvironment(anEnvironment())
+                .withRequestContext(aRequestContext(sessionId, apiKey, installmentPlanNumber))
                 .withTransactionId(TRANSACTIONID)
                 .withPartnerTransactionId(PARTNER_TRANSACTIONID)
                 .withPartnerConfiguration(aPartnerConfiguration());
@@ -348,8 +352,8 @@ public class MockUtils {
         Map<String, ContractProperty> contractProperties = new HashMap<>();
         contractProperties.put(Constants.ContractConfigurationKeys.USERNAME, new ContractProperty("monextTest"));
         contractProperties.put(Constants.ContractConfigurationKeys.PASSWORD, new ContractProperty("eZ7HJddV"));
-        contractProperties.put(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
-        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
+        contractProperties.put(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS, new ContractProperty("2"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS, new ContractProperty("2"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUND_STRATEGY, new ContractProperty("FutureInstallmentsFirst"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
 
@@ -584,7 +588,7 @@ public class MockUtils {
                         "\"Description\": \"Initializing\"" +
                         "}," +
                         "\"Amount\": {" +
-                        "\"Value\": 5.0," +
+                        "\"Value\": 100.0," +
                         "\"Currency\": {" +
                         "\"Symbol\": \"US$\"," +
                         "\"Id\": 1," +

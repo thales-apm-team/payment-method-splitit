@@ -17,7 +17,7 @@ public class Constants {
         public static String FIRST_CHARGE_DATE = "firstChargeDate";
         public  static String REQUESTED_NUMBER_OF_INSTALLMENTS = "requestedNumberOfInstallments";
         public  static String REFUND_STRATEGY = "refundStrategy";
-        public static String REFUND_UNDER_CANCELLATION = "refundUndercancellation";
+        public static String REFUND_UNDER_CANCELLATION = "refundUndercanCellation";
 
         /* Static utility class : no need to instantiate it (Sonar bug fix) */
         private ContractConfigurationKeys() {

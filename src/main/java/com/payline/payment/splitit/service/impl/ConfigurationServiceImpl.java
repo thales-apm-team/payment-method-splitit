@@ -78,8 +78,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         parameters.add(refundStrategy);
 
         Map<String, String> refundUnderCancellationMap = new HashMap<>();
-        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.NO_REFUNDS.toString(), i18n.getMessage("noRefund.value", locale));
-        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.ONLY_IF_A_FULL_REFUND_IS_POSSIBLE.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
+        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
+        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
 
         ListBoxParameter refundUnderCancellation = new ListBoxParameter();
         refundUnderCancellation.setKey(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION);

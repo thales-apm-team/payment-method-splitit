@@ -4,10 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Cancel extends Request {
     public enum RefundUnderCancellation {
-        @SerializedName("OnlyIfAFullRefundIsPossible")
-        ONLY_IF_A_FULL_REFUND_IS_POSSIBLE,
+        OnlyIfAFullRefundIsPossible,
         @SerializedName("NoRefunds")
-        NO_REFUNDS;
+        NoRefunds;
     }
 
     @SerializedName("InstallmentPlanNumber")

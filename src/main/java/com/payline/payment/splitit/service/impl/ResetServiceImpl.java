@@ -38,8 +38,8 @@ public class ResetServiceImpl implements ResetService {
             }
 
             if (resetRequest.getContractConfiguration() == null
-                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION).getValue()) != Cancel.RefundUnderCancellation.ONLY_IF_A_FULL_REFUND_IS_POSSIBLE
-                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION).getValue()) != Cancel.RefundUnderCancellation.NO_REFUNDS) {
+                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION).getValue()) != Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible
+                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION).getValue()) != Cancel.RefundUnderCancellation.NoRefunds) {
 
             }
 

@@ -12,7 +12,7 @@ class CancelTest {
         return new Cancel.CancelBuilder()
                 .withRequestHeader(MockUtils.requestHeaderTest())
                 .withInstallmentPlanNumber(MockUtils.getInstallmentPlanNumber())
-                .withRefundUnderCancellation(Cancel.RefundUnderCancellation.ONLY_IF_A_FULL_REFUND_IS_POSSIBLE)
+                .withRefundUnderCancellation(Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible)
                 .build();
     }
 
@@ -28,7 +28,7 @@ class CancelTest {
         Assertions.assertEquals(MockUtils.getSessionId(), cancel.getRequestHeader().getSessionId());
         Assertions.assertEquals(MockUtils.getApiKey(), cancel.getRequestHeader().getApiKey());
         Assertions.assertEquals(MockUtils.getInstallmentPlanNumber(), cancel.getInstallmentPlanNumber());
-        Assertions.assertEquals(Cancel.RefundUnderCancellation.ONLY_IF_A_FULL_REFUND_IS_POSSIBLE, cancel.getRefundUnderCancellation());
+        Assertions.assertEquals(Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible, cancel.getRefundUnderCancellation());
     }
 
     @Test
