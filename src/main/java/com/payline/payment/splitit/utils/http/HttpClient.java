@@ -9,6 +9,7 @@ import com.payline.payment.splitit.bean.response.*;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
+import com.payline.payment.splitit.utils.PluginUtils;
 import com.payline.payment.splitit.utils.properties.ConfigProperties;
 import com.payline.pmapi.bean.common.FailureCause;
 import com.payline.pmapi.logger.LogManager;
@@ -189,16 +190,12 @@ public class HttpClient {
             return initiateResponse;
             // 703: sessionId invalid
             // 704: session expired
-        } else if (response.isSuccess() && (
-                initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
+        } else if (response.isSuccess() &&
+                (initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
                         || initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
-            // create login request object
-            Login login = new Login.LoginBuilder()
-                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
-                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
-                    .build();
-            // call checkout connection
-            LoginResponse loginResponse = this.checkConnection(configuration, login);
+
+            // try login
+            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the initiate request object
@@ -228,14 +225,12 @@ public class HttpClient {
 
         if (response.isSuccess() && getResponse.getResponseHeader().isSucceeded()) {
             return getResponse;
-        } else if (response.isSuccess() && getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
-            // create login request object
-            Login login = new Login.LoginBuilder()
-                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
-                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
-                    .build();
-            // call checkout connection
-            LoginResponse loginResponse = this.checkConnection(configuration, login);
+        } else if (response.isSuccess() &&
+                (getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
+                        || getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
+
+            // try login
+            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object
@@ -263,14 +258,12 @@ public class HttpClient {
 
         if (response.isSuccess() && refundResponse.getResponseHeader().isSucceeded()) {
             return refundResponse;
-        } else if (response.isSuccess() && refundResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
-            // create login request object
-            Login login = new Login.LoginBuilder()
-                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
-                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
-                    .build();
-            // call checkout connection
-            LoginResponse loginResponse = this.checkConnection(configuration, login);
+        } else if (response.isSuccess() &&
+                (refundResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
+                        || refundResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
+
+            // try login
+            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object
@@ -298,14 +291,12 @@ public class HttpClient {
 
         if (response.isSuccess() && cancelResponse.getResponseHeader().isSucceeded()) {
             return cancelResponse;
-        } else if (response.isSuccess() && cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
-            // create login request object
-            Login login = new Login.LoginBuilder()
-                    .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
-                    .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
-                    .build();
-            // call checkout connection
-            LoginResponse loginResponse = this.checkConnection(configuration, login);
+        } else if (response.isSuccess() &&
+                (cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
+                        || cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
+
+            // try login
+            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object

@@ -2,6 +2,11 @@ package com.payline.payment.splitit.utils;
 
 
 import com.google.gson.JsonParser;
+import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
+import com.payline.payment.splitit.bean.request.Initiate;
+import com.payline.payment.splitit.bean.request.Login;
+import com.payline.payment.splitit.bean.response.LoginResponse;
+import com.payline.payment.splitit.utils.http.HttpClient;
 import com.payline.pmapi.bean.common.Amount;
 import com.payline.pmapi.bean.common.FailureCause;
 import com.payline.pmapi.bean.payment.response.impl.PaymentResponseFailure;
@@ -16,6 +21,7 @@ import java.util.stream.Collectors;
 
 public class PluginUtils {
     static JsonParser parser = new JsonParser();
+    private static HttpClient client = HttpClient.getInstance();
 
 
     private PluginUtils() {
@@ -86,9 +92,9 @@ public class PluginUtils {
                 cause = FailureCause.INVALID_FIELD_FORMAT;
                 break;
 
-            case "704":
-                cause = FailureCause.SESSION_EXPIRED;
-                break;
+//            case "704":
+//                cause = FailureCause.SESSION_EXPIRED;
+//                break;
 
             default:
                 cause = FailureCause.INVALID_DATA;
@@ -97,6 +103,16 @@ public class PluginUtils {
                 .withErrorCode(errorCode)
                 .withFailureCause(cause)
                 .build();
+    }
+
+    public static LoginResponse tryLogin(RequestConfiguration configuration) {
+        // create login request object
+        Login login = new Login.LoginBuilder()
+                .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
+                .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
+                .build();
+        // call checkout connection
+        return client.checkConnection(configuration, login);
     }
 
 }

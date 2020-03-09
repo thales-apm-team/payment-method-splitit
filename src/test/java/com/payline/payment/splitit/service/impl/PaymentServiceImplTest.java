@@ -30,15 +30,15 @@ class PaymentServiceImplTest {
         MockitoAnnotations.initMocks(this);
     }
 
-//    @Test
-//    void paymentRequest() {
-//        InitiateResponse initiateResponse = new GsonBuilder().create().fromJson(MockUtils.responseInitiate(), InitiateResponse.class);
-//        Mockito.doReturn(initiateResponse).when(client).initiate(any(), any());
-//        PaymentResponse response = paymentService.paymentRequest(
-//                MockUtils.aPaylinePaymentRequest()
-//        );
-//        Assertions.assertEquals(PaymentResponseRedirect.class, response.getClass());
-//    }
+    @Test
+    void paymentRequest() {
+        InitiateResponse initiateResponse = new GsonBuilder().create().fromJson(MockUtils.responseInitiate(), InitiateResponse.class);
+        Mockito.doReturn(initiateResponse).when(client).initiate(any(), any());
+        PaymentResponse response = paymentService.paymentRequest(
+                MockUtils.aPaylinePaymentRequest()
+        );
+        Assertions.assertEquals(PaymentResponseRedirect.class, response.getClass());
+    }
 
     @Test
     void initiateCall() {
@@ -49,14 +49,7 @@ class PaymentServiceImplTest {
     }
 
     @Test
-    void loginCreate() {
-    }
-
-    @Test
     void configurationCreate() {
     }
 
-    @Test
-    void initiateResponseSuccess() {
-    }
 }
