@@ -1,52 +1,44 @@
 package com.payline.payment.splitit.bean.request;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
-public class Cancel {
-    public enum RefundUnderCancelation {
-        OnlyIfAFullRefundIsPossible, NoRefunds
+public class Cancel extends Request {
+    public enum RefundUnderCancellation {
+        @SerializedName("OnlyIfAFullRefundIsPossible")
+        ONLY_IF_A_FULL_REFUND_IS_POSSIBLE,
+        @SerializedName("NoRefunds")
+        NO_REFUNDS;
     }
 
-    @SerializedName("RequestHeader")
-    RequestHeader requestHeader;
     @SerializedName("InstallmentPlanNumber")
-    String installmentPlanNumber;
+    private String installmentPlanNumber;
     @SerializedName("RefundUnderCancelation")
-    RefundUnderCancelation refundUnderCancelation;
+    private RefundUnderCancellation refundUnderCancellation;
 
-    public static class CancelBuilder {
-        RequestHeader requestHeader;
-        String installmentPlanNumber;
-        RefundUnderCancelation refundUnderCancelation;
+    private Cancel(CancelBuilder builder) {
+        super(builder);
+        installmentPlanNumber = builder.installmentPlanNumber;
+        refundUnderCancellation = builder.refundUnderCancellation;
+    }
 
-        public CancelBuilder withRequestHeader(RequestHeader requestHeader) {
-            this.requestHeader = requestHeader;
-            return this;
-        }
+    public static class CancelBuilder extends RequestBuilder<CancelBuilder> {
+        private String installmentPlanNumber;
+        private RefundUnderCancellation refundUnderCancellation;
+
 
         public CancelBuilder withInstallmentPlanNumber(String installmentPlanNumber) {
             this.installmentPlanNumber = installmentPlanNumber;
             return this;
         }
 
-        public CancelBuilder withRefundUnderCancelation(RefundUnderCancelation refundUnderCancelation) {
-            this.refundUnderCancelation = refundUnderCancelation;
+        public CancelBuilder withRefundUnderCancellation(RefundUnderCancellation refundUnderCancellation) {
+            this.refundUnderCancellation = refundUnderCancellation;
             return this;
         }
 
         public Cancel build() {
-            Cancel cancel = new Cancel();
-            cancel.requestHeader = requestHeader;
-            cancel.installmentPlanNumber = installmentPlanNumber;
-            cancel.refundUnderCancelation = refundUnderCancelation;
-            return cancel;
+            return new Cancel(this);
         }
-    }
-
-    public void setSessionId(String sessionId) {
-        this.requestHeader.setSessionId(sessionId);
     }
 
     public RequestHeader getRequestHeader() {
@@ -57,12 +49,11 @@ public class Cancel {
         return installmentPlanNumber;
     }
 
-    public RefundUnderCancelation getRefundUnderCancelation() {
-        return refundUnderCancelation;
+    public RefundUnderCancellation getRefundUnderCancellation() {
+        return refundUnderCancellation;
     }
 
     public String toString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return super.toString();
     }
 }

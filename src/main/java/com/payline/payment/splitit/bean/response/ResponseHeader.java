@@ -6,9 +6,9 @@ import java.util.List;
 
 public class ResponseHeader {
     @SerializedName("Succeeded")
-    boolean succeeded;
+    private boolean succeeded;
     @SerializedName("Errors")
-    List<ResponseErrors> errors;
+    private List<ResponseErrors> errors;
 
     public boolean isSucceeded() {
         return succeeded;

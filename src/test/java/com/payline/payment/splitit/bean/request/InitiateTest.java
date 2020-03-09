@@ -49,6 +49,7 @@ class InitiateTest {
         Assertions.assertNotNull(initiate.getConsumerData().getPhoneNumber());
         Assertions.assertNotNull(initiate.getConsumerData().getCultureName());
         Assertions.assertNotNull(initiate.getPaymentWizardData().getRequestednumberOfInstallments());
+        Assertions.assertFalse(initiate.getPaymentWizardData().isOpenedInIframe());
         Assertions.assertNotNull(initiate.getRedirectUrl().getSucceeded());
         Assertions.assertNotNull(initiate.getRedirectUrl().getCanceled());
         Assertions.assertNotNull(initiate.getRedirectUrl().getFailed());
@@ -70,6 +71,9 @@ class InitiateTest {
     void testToString() {
         Initiate initiate = creation();
         String expected = MockUtils.callInitiate();
+
+        System.out.println(initiate);
+        System.out.println(expected);
 
         Assertions.assertEquals(expected, initiate.toString());
     }

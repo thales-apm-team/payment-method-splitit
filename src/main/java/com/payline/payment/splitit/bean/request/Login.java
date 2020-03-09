@@ -5,13 +5,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Login {
     @SerializedName("UserName")
-    String username;
+    private String username;
     @SerializedName("Password")
-    String password;
+    private String password;
+
+    private Login() {
+    }
 
     public static class LoginBuilder {
-        String username;
-        String password;
+        private String username;
+        private String password;
 
         public LoginBuilder withUsername(String username) {
             this.username = username;

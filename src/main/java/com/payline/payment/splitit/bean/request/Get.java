@@ -1,28 +1,19 @@
 package com.payline.payment.splitit.bean.request;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.payline.payment.splitit.bean.nesteed.QueryCriteria;
-import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
-public class Get {
-    @SerializedName("RequestHeader")
-    RequestHeader requestHeader;
+public class Get extends Request {
     @SerializedName("QueryCriteria")
-    QueryCriteria queryCriteria;
+    private QueryCriteria queryCriteria;
 
-    public void setSessionId(String sessionId){
-        this.requestHeader.setSessionId(sessionId);
+    private Get(GetBuilder builder) {
+        super(builder);
+        queryCriteria = builder.queryCriteria;
     }
 
-    public static class GetBuilder {
-        RequestHeader requestHeader;
-        QueryCriteria queryCriteria;
-
-        public GetBuilder withRequestHearder(RequestHeader requestHearder) {
-            this.requestHeader = requestHearder;
-            return this;
-        }
+    public static class GetBuilder extends RequestBuilder<Get.GetBuilder> {
+        private QueryCriteria queryCriteria;
 
         public GetBuilder withQueryCriteria(QueryCriteria queryCriteria) {
             this.queryCriteria = queryCriteria;
@@ -30,15 +21,8 @@ public class Get {
         }
 
         public Get build() {
-            Get get = new Get();
-            get.requestHeader = requestHeader;
-            get.queryCriteria = queryCriteria;
-            return  get;
+            return new Get(this);
         }
-    }
-
-    public RequestHeader getRequestHeader() {
-        return requestHeader;
     }
 
     public QueryCriteria getQueryCriteria() {
@@ -46,7 +30,6 @@ public class Get {
     }
 
     public String toString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return super.toString();
     }
 }

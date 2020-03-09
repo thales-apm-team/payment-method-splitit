@@ -1,6 +1,5 @@
 package com.payline.payment.splitit.bean.nesteed;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class ConsumerData {
@@ -13,11 +12,14 @@ public class ConsumerData {
     @SerializedName("CultureName")
     private String cultureName;
 
+    private ConsumerData() {
+    }
+
     public static class ConsumerDataBuilder {
-        String fullName;
-        String email;
-        String phoneNumber;
-        String cultureName;
+        private String fullName;
+        private String email;
+        private String phoneNumber;
+        private String cultureName;
 
         public ConsumerDataBuilder withFullName(String fullName) {
             this.fullName = fullName;

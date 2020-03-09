@@ -39,8 +39,8 @@ class PaymentWithRedirectionServiceImplTest {
         Mockito.doReturn(getResponse).when(client).get(any(), any());
         PaymentResponse response = paymentWithRedirectionService.finalizeRedirectionPayment(
                 MockUtils.aRedirectionPaymentRequestBuilder()
-                .withRequestContext(MockUtils.aRequestContext(sessionId, apiKey, installmentPlanNumber))
-        .build());
+                        .withRequestContext(MockUtils.aRequestContext(sessionId, apiKey, installmentPlanNumber))
+                        .build());
         Assertions.assertEquals(PaymentResponseSuccess.class, response.getClass());
     }
 

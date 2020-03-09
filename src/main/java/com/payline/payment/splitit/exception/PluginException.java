@@ -5,6 +5,7 @@ import com.payline.pmapi.bean.common.FailureCause;
 import com.payline.pmapi.bean.payment.response.impl.PaymentResponseFailure;
 import com.payline.pmapi.bean.paymentform.response.configuration.impl.PaymentFormConfigurationResponseFailure;
 import com.payline.pmapi.bean.refund.response.impl.RefundResponseFailure;
+import com.payline.pmapi.bean.reset.response.impl.ResetResponseFailure;
 
 /**
  * Generic exception which can be converted into the various ResponseFailure objects from the PM-API.
@@ -85,6 +86,12 @@ public class PluginException extends RuntimeException {
      */
     public RefundResponseFailure.RefundResponseFailureBuilder toRefundResponseFailureBuilder() {
         return RefundResponseFailure.RefundResponseFailureBuilder.aRefundResponseFailure()
+                .withFailureCause(failureCause)
+                .withErrorCode(errorCode);
+    }
+
+    public ResetResponseFailure.ResetResponseFailureBuilder toResetResponseFailureBuilder() {
+        return ResetResponseFailure.ResetResponseFailureBuilder.aResetResponseFailure()
                 .withFailureCause(failureCause)
                 .withErrorCode(errorCode);
     }

@@ -14,7 +14,8 @@ class InitiateResponseTest {
         InitiateResponse initiateResponse = new GsonBuilder().create().fromJson(MockUtils.responseInitiate(), InitiateResponse.class);
 
         Assertions.assertTrue(initiateResponse.getResponseHeader().isSucceeded());
-        Assertions.assertEquals(0, initiateResponse.getResponseHeader().errors.size());
+//        Assertions.assertEquals(0, initiateResponse.getResponseHeader().errors.size());
+        Assertions.assertEquals(0, initiateResponse.getResponseHeader().getErrors().size());
         Assertions.assertNotNull(initiateResponse.getInstallmentPlan().getInstallmentPlanNumber());
         Assertions.assertNotNull(initiateResponse.getInstallmentPlan().getInstallmentPlanStatus());
         Assertions.assertNotNull(initiateResponse.getInstallmentPlan().getInstallmentPlanStatus().getId());

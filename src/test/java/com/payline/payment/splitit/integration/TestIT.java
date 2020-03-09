@@ -103,7 +103,7 @@ public class TestIT extends AbstractPaymentIntegration {
     }
 
     @Test
-    // scenario nominal
+        // scenario nominal
     void fullPaymentTest() {
 
         // Login

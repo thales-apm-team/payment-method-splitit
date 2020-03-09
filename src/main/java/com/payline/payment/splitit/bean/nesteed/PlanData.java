@@ -6,30 +6,33 @@ import java.util.Date;
 
 public class PlanData {
     @SerializedName("Amount")
-    Amount amount;
+    private Amount amount;
     @SerializedName("NumberOfInstallments")
-    String numberOfInstallments;
+    private String numberOfInstallments;
     @SerializedName("RefOrderNumber")
-    String refOrderNumber;
+    private String refOrderNumber;
     @SerializedName("AutoCapture")
-    boolean autoCapture;
+    private boolean autoCapture;
     @SerializedName("FirstInstallmentAmount")
-    Amount firstInstallmentAmount;
+    private Amount firstInstallmentAmount;
     @SerializedName("PurchaseMethod")
-    String purchaseMethode = "ECommerce";
+    private String purchaseMethode = "ECommerce";
     @SerializedName("Attempt3DSecure")
-    boolean attempt3DSecure = false;
+    private boolean attempt3DSecure = false;
     @SerializedName("FirstChargeDate")
-    Date firstChargeDate;
+    private Date firstChargeDate;
+
+    private PlanData() {
+    }
 
     public static class PlanDataBuilder {
-        Amount amount;
-        String numberOfInstallments;
-        String refOrderNumber;
-        boolean autoCapture;
-        Amount firstInstallmentAmount;
-        boolean attempt3DSecure = false;
-        Date firstChargeDate;
+        private Amount amount;
+        private String numberOfInstallments;
+        private String refOrderNumber;
+        private boolean autoCapture;
+        private Amount firstInstallmentAmount;
+        private boolean attempt3DSecure = false;
+        private Date firstChargeDate;
 
         public PlanDataBuilder withAmount(Amount amount) {
             this.amount = amount;

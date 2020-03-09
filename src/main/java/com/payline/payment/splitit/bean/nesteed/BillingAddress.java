@@ -4,25 +4,29 @@ import com.google.gson.annotations.SerializedName;
 
 public class BillingAddress {
     @SerializedName("AddressLine")
-    String addressLine;
+    private String addressLine;
     @SerializedName("AddressLine2")
-    String addressLine2;
+    private String addressLine2;
     @SerializedName("City")
-    String city;
+    private String city;
     @SerializedName("State")
-    String state;
+    private String state;
     @SerializedName("Country")
-    String country;
+    private String country;
     @SerializedName("Zip")
-    String zip;
+    private String zip;
+
+    private BillingAddress() {
+    }
+
 
     public static class BillingAddressBuilder {
-        String addressLine;
-        String addressLine2;
-        String city;
-        String state;
-        String country;
-        String zip;
+        private String addressLine;
+        private String addressLine2;
+        private String city;
+        private String state;
+        private String country;
+        private String zip;
 
         public BillingAddressBuilder withAddressLine(String addressLine) {
             this.addressLine = addressLine;

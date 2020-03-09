@@ -2,7 +2,6 @@ package com.payline.payment.splitit.bean.request;
 
 import com.payline.payment.splitit.MockUtils;
 import com.payline.payment.splitit.bean.nesteed.QueryCriteria;
-import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ class GetTest {
 
     public Get creation() {
         return new Get.GetBuilder()
-                .withRequestHearder(MockUtils.requestHeaderTest())
+                .withRequestHeader(MockUtils.requestHeaderTest())
                 .withQueryCriteria(queryCriteria)
                 .build();
     }
@@ -43,9 +42,6 @@ class GetTest {
     void testToString() {
         Get get = creation();
         String expected = MockUtils.callGet();
-
-        System.out.println(get.toString());
-        System.out.println(expected);
 
         Assertions.assertEquals(expected, get.toString());
     }

@@ -1,6 +1,5 @@
 package com.payline.payment.splitit.bean.response;
 
-import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.utils.http.StringResponse;
 
 public class ResponseParse {
@@ -21,8 +20,8 @@ public class ResponseParse {
         }
     }
 
-    public boolean loginSuccess() {
-        LoginResponse body = new GsonBuilder().create().fromJson(response.getContent(), LoginResponse.class);
-        return (body.sessionId != null) && (body.responseHeader.succeeded == true);
-    }
+//    public boolean loginSuccess() {
+//        LoginResponse body = new GsonBuilder().create().fromJson(response.getContent(), LoginResponse.class);
+//        return (body.sessionId != null) && (body.responseHeader.succeeded == true);
+//    }
 }

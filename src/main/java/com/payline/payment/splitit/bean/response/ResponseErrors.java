@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class ResponseErrors {
     @SerializedName("ErrorCode")
-    String errorCode;
+    private String errorCode;
     @SerializedName("Message")
-    String message;
+    private String message;
     @SerializedName("AdditionalInfo")
-    String additionalInfo;
+    private String additionalInfo;
 
     public String getErrorCode() {
         return errorCode;

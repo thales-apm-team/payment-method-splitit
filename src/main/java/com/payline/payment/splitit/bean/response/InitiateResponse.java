@@ -5,20 +5,13 @@ import com.payline.payment.splitit.bean.nesteed.InstallmentPlan;
 
 import java.net.URL;
 
-public class InitiateResponse {
-    @SerializedName("ResponseHeader")
-    ResponseHeader responseHeader;
+public class InitiateResponse extends Response {
     @SerializedName("CheckoutUrl")
-    URL checkoutUrl;
+    private URL checkoutUrl;
     @SerializedName("SessionId")
-    String sessionId;
+    private String sessionId;
     @SerializedName("InstallmentPlan")
-    InstallmentPlan installmentPlan;
-
-
-    public ResponseHeader getResponseHeader() {
-        return responseHeader;
-    }
+    private InstallmentPlan installmentPlan;
 
     public URL getCheckoutUrl() {
         return checkoutUrl;
@@ -32,4 +25,7 @@ public class InitiateResponse {
         return installmentPlan;
     }
 
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 }

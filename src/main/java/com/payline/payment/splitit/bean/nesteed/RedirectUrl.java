@@ -1,16 +1,17 @@
 package com.payline.payment.splitit.bean.nesteed;
 
-
 import com.google.gson.annotations.SerializedName;
 
 public class RedirectUrl {
     @SerializedName("Succeeded")
-    String succeeded;
+    private String succeeded;
     @SerializedName("Failed")
-    String failed;
+    private String failed;
     @SerializedName("Canceled")
-    String canceled;
+    private String canceled;
 
+    private RedirectUrl(){
+    }
 
     public static class RedirectUrlBuilder {
         String succeeded;

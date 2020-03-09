@@ -2,7 +2,6 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.*;
@@ -89,7 +88,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Initiate initiate = new Initiate.InitiateBuilder().build();
+        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(), Initiate.class);
         InitiateResponse response = client.initiate(configuration, initiate);
         Assertions.assertEquals("36718353567647855177",response.getInstallmentPlan().getInstallmentPlanNumber());
     }
@@ -139,7 +138,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Initiate initiate = new Initiate.InitiateBuilder().withRequestHeader(new RequestHeader()).build();
+        Initiate initiate = new Initiate.InitiateBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
         client.initiate(configuration, initiate);
 
         InitiateResponse response = client.initiate(configuration, initiate);
@@ -212,7 +211,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Get get = new Get.GetBuilder().withRequestHearder(new RequestHeader()).build();
+        Get get = new Get.GetBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
         GetResponse response = client.get(configuration, get);
         Assertions.assertEquals("81061838427155704844",response.getPlansList().get(0).getInstallmentPlanNumber());
     }
@@ -263,7 +262,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Refund refund= new Refund.RefundBuilder().withRequestHeader(new RequestHeader()).build();
+        Refund refund= new Refund.RefundBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
         MyRefundResponse response = client.refund(configuration, refund);
         Assertions.assertEquals(response.getClass(), MyRefundResponse.class);
     }
@@ -333,7 +332,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Cancel cancel= new Cancel.CancelBuilder().withRequestHeader(new RequestHeader()).build();
+        Cancel cancel= new Cancel.CancelBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
         CancelResponse response = client.cancel(configuration, cancel);
         Assertions.assertEquals(response.getClass(), CancelResponse.class);
     }

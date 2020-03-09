@@ -8,8 +8,8 @@ import com.payline.pmapi.bean.paymentform.response.configuration.PaymentFormConf
 import com.payline.pmapi.bean.paymentform.response.configuration.impl.PaymentFormConfigurationResponseSpecific;
 
 public class PaymentFormConfigurationServiceImpl extends LogoPaymentFormConfigurationService {
-    private static final String NO_FIELD_TEXT = "form.button.text";
-    private static final String NO_FIELD_DESCRIPTION = "form.button.description";
+    private static final String NO_FIELD_TEXT = "noFieldText";
+    private static final String NO_FIELD_DESCRIPTION = "noFieldDescription";
 
     private I18nService i18n = I18nService.getInstance();
 

@@ -4,10 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class EventsEndpoints {
     @SerializedName("CreateSucceeded")
-    String createSucceeded;
+    private String createSucceeded;
+
+    private EventsEndpoints() {
+    }
 
     public static class EventEndpointsBuilder {
-        String createSucceeded;
+        private String createSucceeded;
 
         public EventEndpointsBuilder withCreateSucceeded(String createSucceeded) {
             this.createSucceeded = createSucceeded;

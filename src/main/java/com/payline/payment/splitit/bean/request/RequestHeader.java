@@ -1,21 +1,23 @@
-package com.payline.payment.splitit.bean.nesteed;
+package com.payline.payment.splitit.bean.request;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class RequestHeader {
     @SerializedName("SessionId")
-    String sessionId;
+    private String sessionId;
     @SerializedName("ApiKey")
-    String apiKey;
+    private String apiKey;
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 
+    private RequestHeader() {
+    }
+
     public static class RequestHeaderBuilder {
-        String sessionId;
-        String apiKey;
+        private String sessionId;
+        private String apiKey;
 
         public RequestHeaderBuilder withSessionId(String sessionId) {
             this.sessionId = sessionId;

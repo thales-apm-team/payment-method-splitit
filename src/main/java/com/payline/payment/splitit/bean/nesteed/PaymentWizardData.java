@@ -3,16 +3,18 @@ package com.payline.payment.splitit.bean.nesteed;
 import com.google.gson.annotations.SerializedName;
 
 public class PaymentWizardData {
-
-    // ATTENTION du type "2,3,4", 1<requestedNumberOfInstallments<13
+    // ATTENTION type "2,3,4", 1<requestedNumberOfInstallments<13
     @SerializedName("RequestedNumberOfInstallments")
-    String requestednumberOfInstallments;
+    private String requestednumberOfInstallments;
     @SerializedName("IsOpenedInIframe")
-    boolean isOpenedInIframe;
+    private boolean isOpenedInIframe;
+
+    private PaymentWizardData() {
+    }
 
     public static class PaymentWizardDataBuilder {
-        String requestednumberOfInstallments;
-        boolean isOpenedInIframe = false;
+        private String requestednumberOfInstallments;
+        private boolean isOpenedInIframe = false;
 
         public PaymentWizardDataBuilder withRequestednumberOfInstallments(String requestednumberOfInstallments) {
             this.requestednumberOfInstallments = requestednumberOfInstallments;

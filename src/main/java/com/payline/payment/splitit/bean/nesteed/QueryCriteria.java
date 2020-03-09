@@ -1,14 +1,15 @@
 package com.payline.payment.splitit.bean.nesteed;
-
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class QueryCriteria {
     @SerializedName("InstallmentPlanNumber")
-    String installmentPlanNumber;
+    private String installmentPlanNumber;
+
+    private QueryCriteria() {
+    }
 
     public static class QueryCriteriaBuilder {
-        String installmentPlanNumber;
+        private String installmentPlanNumber;
 
         public QueryCriteriaBuilder withInstallmentPlanNumber(String installmentPlanNumber) {
             this.installmentPlanNumber = installmentPlanNumber;

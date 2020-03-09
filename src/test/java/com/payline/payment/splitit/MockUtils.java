@@ -1,6 +1,7 @@
 package com.payline.payment.splitit;
 
 import com.payline.payment.splitit.bean.nesteed.*;
+import com.payline.payment.splitit.bean.request.RequestHeader;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.http.StringResponse;
 import com.payline.pmapi.bean.common.Buyer;
@@ -37,7 +38,7 @@ public class MockUtils {
     private static String installmentPlanNumber = "81061838427155704844";
 
     private static String TRANSACTIONID = "123456789012345678901";
-    private static String PARTNER_TRANSACTIONID = "098765432109876543210";
+    private static String PARTNER_TRANSACTIONID = installmentPlanNumber;
 
 
     /*------------------------------------------------------------------------------------------------------------------*/
@@ -263,6 +264,7 @@ public class MockUtils {
                 .withOrder(aPaylineOrder())
                 .withPartnerConfiguration(aPartnerConfiguration())
                 .withPaymentFormContext(aPaymentFormContext())
+                .withRequestContext(aRequestContext(sessionId, apiKey, installmentPlanNumber))
                 .withSoftDescriptor("softDescriptor")
                 .withTransactionId(TRANSACTIONID);
     }
@@ -349,7 +351,7 @@ public class MockUtils {
         contractProperties.put(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
         contractProperties.put(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS, new ContractProperty("10"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUND_STRATEGY, new ContractProperty("FutureInstallmentsFirst"));
-        contractProperties.put(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
 
         return new ContractConfiguration("SplitIt", contractProperties);
     }
@@ -547,79 +549,79 @@ public class MockUtils {
 
     public static final String responseLoginKO() {
         return
-            "{" +
-                "\"ResponseHeader\": {" +
-                "\"Succeeded\": false," +
-                "\"Errors\": [" +
-                     "{" +
+                "{" +
+                        "\"ResponseHeader\": {" +
+                        "\"Succeeded\": false," +
+                        "\"Errors\": [" +
+                        "{" +
                         "\"ErrorCode\": \"700\"," +
                         "\"Message\": \"Invalid credentials\"," +
                         "\"AdditionalInfo\": \"\"" +
-                     "}" +
-                   "]" +
-                "}," +
-                "\"SessionId\": null" +
-            "}";
+                        "}" +
+                        "]" +
+                        "}," +
+                        "\"SessionId\": null" +
+                        "}";
     }
 
     public static final String responseInitiate() {
         return
-        "{" +
-                "\"CheckoutUrl\": \"https://checkout.sandbox.splitit.com/v2/?token=2b7cd23f-2c55-4353-a206-34925a42aedd&culture=en-US\"," +
-                "\"ApprovalUrl\": \"https://landing.sandbox.splitit.com/en-US/InstallmentPlan/ShowAgreement/?PublicToken=2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
-                "\"TermsAndConditionsUrl\": \"https://www.splitit.com/legals/splitit-shopper-terms-conditions/\"," +
-                "\"InstallmentPlanInfoUrl\": \"https://landing.sandbox.splitit.com/en-US/InstallmentPlan/ShowAgreement/?PublicToken=2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
-                "\"PublicToken\": \"2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
-                "\"ResponseHeader\": {" +
-                    "\"Succeeded\": true," +
-                    "\"Errors\": []" +
-                "}," +
-                "\"InstallmentPlan\": {" +
-                    "\"InstallmentPlanNumber\": \"36718353567647855177\"," +
-                    "\"InstallmentPlanStatus\": {" +
+                "{" +
+                        "\"CheckoutUrl\": \"https://checkout.sandbox.splitit.com/v2/?token=2b7cd23f-2c55-4353-a206-34925a42aedd&culture=en-US\"," +
+                        "\"ApprovalUrl\": \"https://landing.sandbox.splitit.com/en-US/InstallmentPlan/ShowAgreement/?PublicToken=2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
+                        "\"TermsAndConditionsUrl\": \"https://www.splitit.com/legals/splitit-shopper-terms-conditions/\"," +
+                        "\"InstallmentPlanInfoUrl\": \"https://landing.sandbox.splitit.com/en-US/InstallmentPlan/ShowAgreement/?PublicToken=2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
+                        "\"PublicToken\": \"2b7cd23f-2c55-4353-a206-34925a42aedd\"," +
+                        "\"ResponseHeader\": {" +
+                        "\"Succeeded\": true," +
+                        "\"Errors\": []" +
+                        "}," +
+                        "\"InstallmentPlan\": {" +
+                        "\"InstallmentPlanNumber\": \"36718353567647855177\"," +
+                        "\"InstallmentPlanStatus\": {" +
                         "\"Code\": \"Initializing\"," +
                         "\"Id\": 11," +
                         "\"Description\": \"Initializing\"" +
-                    "}," +
-                    "\"Amount\": {" +
+                        "}," +
+                        "\"Amount\": {" +
                         "\"Value\": 5.0," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"OutstandingAmount\": {" +
+                        "}," +
+                        "\"OutstandingAmount\": {" +
                         "\"Value\": 5.0," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"NumberOfInstallments\": 2," +
-                    "\"NumberOfProcessedInstallments\": 0," +
-                    "\"OriginalAmount\": {" +
+                        "}," +
+                        "\"NumberOfInstallments\": 2," +
+                        "\"NumberOfProcessedInstallments\": 0," +
+                        "\"OriginalAmount\": {" +
                         "\"Value\": 5.0," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"RefundAmount\": {" +
+                        "}," +
+                        "\"RefundAmount\": {" +
                         "\"Value\": 0.0," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"Consumer\": {" +
+                        "}," +
+                        "\"Consumer\": {" +
                         "\"Id\": \"0\"," +
                         "\"UserName\": \"XXZ5P\"," +
                         "\"FullName\": \"John Smith\"," +
@@ -629,219 +631,219 @@ public class MockUtils {
                         "\"RoleName\": null," +
                         "\"IsLocked\": false," +
                         "\"IsDataRestricted\": false" +
-                    "}," +
-                    "\"ActiveCard\": null," +
-                    "\"FraudCheck\": null," +
-                    "\"Terminal\": {" +
+                        "}," +
+                        "\"ActiveCard\": null," +
+                        "\"FraudCheck\": null," +
+                        "\"Terminal\": {" +
                         "\"Id\": 30675," +
                         "\"Code\": \"30553\"," +
                         "\"Description\": \"monext\"" +
-                    "}," +
-                    "\"Merchant\": {" +
+                        "}," +
+                        "\"Merchant\": {" +
                         "\"Id\": 30533," +
                         "\"Code\": \"monext\"," +
                         "\"Description\": \"monext\"" +
-                    "}," +
-                    "\"RefOrderNumber\": \"012AB\"," +
-                    "\"PurchaseMethod\": {" +
+                        "}," +
+                        "\"RefOrderNumber\": \"012AB\"," +
+                        "\"PurchaseMethod\": {" +
                         "\"Code\": \"ECommerce\"," +
                         "\"Id\": 3," +
                         "\"Description\": \"E-Commerce\"" +
-                    "}," +
-                    "\"Strategy\": {" +
+                        "}," +
+                        "\"Strategy\": {" +
                         "\"Code\": \"SecuredPlan\"," +
                         "\"Id\": 1," +
                         "\"Description\": \"Secured\"" +
-                    "}," +
-                    "\"DelayResolution\": null," +
-                    "\"ExtendedParams\": {" +
+                        "}," +
+                        "\"DelayResolution\": null," +
+                        "\"ExtendedParams\": {" +
                         "\"AnyParameterKey1\": \"AnyParameterVal1\"," +
                         "\"AnyParameterKey2\": \"AnyParameterVal2\"" +
-                    "}," +
-                    "\"IsFullCaptured\": false," +
-                    "\"IsChargedBack\": false," +
-                    "\"ArePaymentsOnHold\": false," +
-                    "\"ScpFundingPercent\": 0.0," +
-                    "\"TestMode\": \"None\"," +
-                    "\"CreationDateTime\": \"2020-02-21T07:58:20.7411517+00:00\"," +
-                    "\"Installments\": [" +
-                    "{" +
+                        "}," +
+                        "\"IsFullCaptured\": false," +
+                        "\"IsChargedBack\": false," +
+                        "\"ArePaymentsOnHold\": false," +
+                        "\"ScpFundingPercent\": 0.0," +
+                        "\"TestMode\": \"None\"," +
+                        "\"CreationDateTime\": \"2020-02-21T07:58:20.7411517+00:00\"," +
+                        "\"Installments\": [" +
+                        "{" +
                         "\"InstallmentNumber\": 1," +
                         "\"Amount\": {" +
                         "\"Value\": 2.5," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    " }," +
-                    "\"OriginalAmount\": {" +
+                        " }," +
+                        "\"OriginalAmount\": {" +
                         "\"Value\": 2.5," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"RefundAmount\": {" +
+                        "}," +
+                        "\"RefundAmount\": {" +
                         "\"Value\": 0.0," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"ProcessDateTime\": \"2020-02-21T07:58:20.867411Z\"," +
-                    "\"IsRefund\": false," +
-                    "\"RequiredCredit\": {" +
+                        "}," +
+                        "\"ProcessDateTime\": \"2020-02-21T07:58:20.867411Z\"," +
+                        "\"IsRefund\": false," +
+                        "\"RequiredCredit\": {" +
                         "\"Value\": 5.0," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"CreatedDateTime\": \"2020-02-21T07:58:20.8702427Z\"," +
-                    "\"Status\": {" +
+                        "}," +
+                        "\"CreatedDateTime\": \"2020-02-21T07:58:20.8702427Z\"," +
+                        "\"Status\": {" +
                         "\"Code\": \"WaitingForProcessDate\"," +
                         "\"Id\": 2," +
                         "\"Description\": \"Waiting for process date\"" +
-                    "}," +
-                    "\"TransactionResults\": []," +
-                    "\"CardDetails\": null," +
-                    "\"Result\": null" +
-                    "}," +
-                    "{" +
-                    "\"InstallmentNumber\": 2," +
-                    "\"Amount\": {" +
+                        "}," +
+                        "\"TransactionResults\": []," +
+                        "\"CardDetails\": null," +
+                        "\"Result\": null" +
+                        "}," +
+                        "{" +
+                        "\"InstallmentNumber\": 2," +
+                        "\"Amount\": {" +
                         "\"Value\": 2.5," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"OriginalAmount\": {" +
+                        "}," +
+                        "\"OriginalAmount\": {" +
                         "\"Value\": 2.5," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"RefundAmount\": {" +
+                        "}," +
+                        "\"RefundAmount\": {" +
                         "\"Value\": 0.0," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"ProcessDateTime\": \"2020-03-21T07:58:20.8702487Z\"," +
-                    "\"IsRefund\": false," +
-                    "\"RequiredCredit\": {" +
+                        "}," +
+                        "\"ProcessDateTime\": \"2020-03-21T07:58:20.8702487Z\"," +
+                        "\"IsRefund\": false," +
+                        "\"RequiredCredit\": {" +
                         "\"Value\": 2.5," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"US$\"," +
-                            "\"Id\": 1," +
-                            "\"Code\": \"USD\"," +
-                            "\"Description\": \"US Dollar\"" +
+                        "\"Symbol\": \"US$\"," +
+                        "\"Id\": 1," +
+                        "\"Code\": \"USD\"," +
+                        "\"Description\": \"US Dollar\"" +
                         "}" +
-                    "}," +
-                    "\"CreatedDateTime\": \"2020-02-21T07:58:20.8702526Z\"," +
-                    "\"Status\": {" +
+                        "}," +
+                        "\"CreatedDateTime\": \"2020-02-21T07:58:20.8702526Z\"," +
+                        "\"Status\": {" +
                         "\"Code\": \"WaitingForProcessDate\"," +
                         "\"Id\": 2," +
                         "\"Description\": \"Waiting for process date\"" +
-                    "}," +
-                    "\"TransactionResults\": []," +
-                    "\"CardDetails\": null," +
-                    "\"Result\": null" +
-                "}" +
-                "]," +
-                "\"SecureAuthorizations\": null" +
-            "}" +
-        "}";
+                        "}," +
+                        "\"TransactionResults\": []," +
+                        "\"CardDetails\": null," +
+                        "\"Result\": null" +
+                        "}" +
+                        "]," +
+                        "\"SecureAuthorizations\": null" +
+                        "}" +
+                        "}";
     }
 
     public static final String responseError703() {
         return
                 "{" +
                         "\"ResponseHeader\": {" +
-                            "\"Succeeded\": false," +
-                            "\"Errors\": [" +
-                                "{" +
-                                    "\"ErrorCode\": \"703\"," +
-                                    "\"Message\": \"Session is not valid\"," +
-                                    "\"AdditionalInfo\": \"\"" +
-                                "}" +
-                            "]" +
+                        "\"Succeeded\": false," +
+                        "\"Errors\": [" +
+                        "{" +
+                        "\"ErrorCode\": \"703\"," +
+                        "\"Message\": \"Session is not valid\"," +
+                        "\"AdditionalInfo\": \"\"" +
+                        "}" +
+                        "]" +
                         "}" +
                         "}";
     }
 
     public static final String callGet() {
         return "{" +
-                    "\"RequestHeader\":{" +
-                        "\"SessionId\":\"" + sessionId + "\"," +
-                        "\"ApiKey\":\"" + apiKey + "\"" +
-                    "}," +
-                    "\"QueryCriteria\":{" +
-                        "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"" +
-                    "}" +
+                "\"QueryCriteria\":{" +
+                "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"" +
+                "}," +
+                "\"RequestHeader\":{" +
+                "\"SessionId\":\"" + sessionId + "\"," +
+                "\"ApiKey\":\"" + apiKey + "\"" +
+                "}" +
                 "}";
     }
 
     public static final String responseGetOK(String code) {
         return
-        "{" +
-                "\"ResponseHeader\": {" +
-                    "\"Succeeded\": true," +
-                    "\"Errors\": []" +
-                "}," +
-                "\"PlansList\": [" +
                 "{" +
-                    "\"InstallmentPlanNumber\": \"81061838427155704844\"," +
-                    "\"InstallmentPlanStatus\": {" +
+                        "\"ResponseHeader\": {" +
+                        "\"Succeeded\": true," +
+                        "\"Errors\": []" +
+                        "}," +
+                        "\"PlansList\": [" +
+                        "{" +
+                        "\"InstallmentPlanNumber\": \"81061838427155704844\"," +
+                        "\"InstallmentPlanStatus\": {" +
                         "\"Code\": " + code + "," +
                         "\"Id\": 3," +
                         "\"Description\": \"In Progress\"" +
-                    "}," +
-                    "\"Amount\": {" +
+                        "}," +
+                        "\"Amount\": {" +
                         "\"Value\": 800," +
                         "\"Currency\": {" +
-                            "\"Symbol\": \"€\"," +
-                            "\"Id\": 4," +
-                            "\"Code\": \"EUR\"," +
-                            "\"Description\": \"Euro\"" +
+                        "\"Symbol\": \"€\"," +
+                        "\"Id\": 4," +
+                        "\"Code\": \"EUR\"," +
+                        "\"Description\": \"Euro\"" +
                         "}" +
-                    "}," +
-                    "\"ActiveCard\": {" +
-                    "\"CardId\": null," +
-                    "\"CardNumber\": \"**** **** **** 1111\"," +
-                    "\"CardExpMonth\": \"3\"," +
-                    "\"CardExpYear\": \"2022\"," +
-                    "\"CardBrand\": {" +
+                        "}," +
+                        "\"ActiveCard\": {" +
+                        "\"CardId\": null," +
+                        "\"CardNumber\": \"**** **** **** 1111\"," +
+                        "\"CardExpMonth\": \"3\"," +
+                        "\"CardExpYear\": \"2022\"," +
+                        "\"CardBrand\": {" +
                         "\"Code\": \"Visa\"," +
                         "\"Id\": 2," +
                         "\"Description\": \"VISA\"" +
-                    "}," +
-                    "\"CardType\": {" +
+                        "}," +
+                        "\"CardType\": {" +
                         "\"Code\": \"Credit\"," +
                         "\"Id\": 1," +
                         "\"Description\": \"CREDIT\"" +
-                    "}," +
-                    "\"Bin\": \"411111\"," +
-                    "\"CardHolderFullName\": \"John Smith\"," +
-                    "\"CardCvv\": \"[Filtered]\"," +
-                    "\"Address\": {" +
+                        "}," +
+                        "\"Bin\": \"411111\"," +
+                        "\"CardHolderFullName\": \"John Smith\"," +
+                        "\"CardCvv\": \"[Filtered]\"," +
+                        "\"Address\": {" +
                         "\"AddressLine\": \"260 Madison Avenue.\"," +
                         "\"AddressLine2\": \"Appartment 1\"," +
                         "\"City\": \"New York\"," +
@@ -849,108 +851,108 @@ public class MockUtils {
                         "\"State\": \"NY\"," +
                         "\"Zip\": \"10016\"," +
                         "\"FullAddressLine\": \"260 Madison Avenue.,Appartment 1,New York,NY,US\"" +
-                    "}," +
-                    "\"Token\": \"b8f60b30-ebd9-40aa-820d-584c93d34075\"" +
-                    "}"+
-                "}" +
-                "]" +
-        "}";
+                        "}," +
+                        "\"Token\": \"b8f60b30-ebd9-40aa-820d-584c93d34075\"" +
+                        "}"+
+                        "}" +
+                        "]" +
+                        "}";
     }
 
     public static final String responseGetNoInstallmentPlanNumber(){
         return "{" +
                 "\"PlansList\": []," +
                 "\"ResponseHeader\": {" +
-                    "\"Succeeded\": true," +
-                    "\"Errors\": []" +
+                "\"Succeeded\": true," +
+                "\"Errors\": []" +
                 "}," +
                 "\"PagingResponseHeader\": {" +
                 "\"TotalNumber\": 0" +
                 "}" +
-        "}";
+                "}";
     }
 
     public static final String responseGetNotSuccess() {
         return
                 "{" +
                         "\"ResponseHeader\": {" +
-                            "\"Succeeded\": false," +
-                            "\"Errors\": [" +
-                                "{" +
-                                    "\"ErrorCode\": \"705\"," +
-                                    "\"Message\": \"error??\"," +
-                                    "\"AdditionalInfo\": \"\"" +
-                                "}" +
-                            "]" +
+                        "\"Succeeded\": false," +
+                        "\"Errors\": [" +
+                        "{" +
+                        "\"ErrorCode\": \"705\"," +
+                        "\"Message\": \"error??\"," +
+                        "\"AdditionalInfo\": \"\"" +
                         "}" +
-                "}";
+                        "]" +
+                        "}" +
+                        "}";
     }
 
     public static final String callInitiate() {
         return "{" +
-                    "\"RequestHeader\":{" +
-                        "\"SessionId\":\"" + sessionId + "\"," +
-                        "\"ApiKey\":\"" + apiKey + "\"" +
-                    "}," +
-                    "\"PlanData\":{" +
-                        "\"Amount\":{" +
-                            "\"Value\":\"" + amountValue + "\"," +
-                            "\"CurrencyCode\":\"" + currency  + "\"" +
-                        "}," +
-                        "\"NumberOfInstallments\":\"" + numberOfInstallments + "\"," +
-                        "\"RefOrderNumber\":\"" + refOrderNumber + "\"," +
-                        "\"AutoCapture\":true," +
-                        "\"FirstInstallmentAmount\":{" +
-                            "\"Value\":\"" + amountValue + "\"," +
-                            "\"CurrencyCode\":\"" + currency  + "\"" +
-                        "}," +
-                        "\"PurchaseMethod\":\"ECommerce\"," +
-                        "\"Attempt3DSecure\":true," +
-                        "\"FirstChargeDate\":\"Jan 19, 1970, 8:41:40 AM\"" +
-                    "}," +
-                    "\"BillingAddress\":{" +
-                        "\"AddressLine\":\"street1\"," +
-                        "\"AddressLine2\":\"street2\"," +
-                        "\"City\":\"New York\"," +
-                        "\"State\":\"NY\"," +
-                        "\"Country\":\"USA\"," +
-                        "\"Zip\":\"10016\"" +
-                    "}," +
-                    "\"ConsumerData\":{" +
-                        "\"FullName\":\"" + fullName + "\"," +
-                        "\"Email\":\"" + email + "\"," +
-                        "\"PhoneNumber\":\"" + phoneNumber + "\"," +
-                        "\"CultureName\":\"" + cultureName + "\"" +
-                    "}," +
-                    "\"PaymentWizardData\":{" +
-                        "\"RequestedNumberOfInstallments\":\"" + requestedNumberOfInstallments + "\"," +
-                        "\"IsOpenedInIframe\":false" +
-                    "}," +
-                    "\"RedirectUrls\":{" +
-                        "\"Succeeded\":\"https://www.success.com/\"," +
-                        "\"Failed\":\"https://www.failed.com/\"," +
-                        "\"Canceled\":\"https://www.canceled.com/\"" +
-                    "}," +
-                    "\"EventsEndpoints\":{" +
-                        "\"CreateSucceeded\":\"https://www.async-success.com/\"" +
-                    "}" +
+                "\"PlanData\":{" +
+                "\"Amount\":{" +
+                "\"Value\":\"" + amountValue + "\"," +
+                "\"CurrencyCode\":\"" + currency  + "\"" +
+                "}," +
+                "\"NumberOfInstallments\":\"" + numberOfInstallments + "\"," +
+                "\"RefOrderNumber\":\"" + refOrderNumber + "\"," +
+                "\"AutoCapture\":true," +
+                "\"FirstInstallmentAmount\":{" +
+                "\"Value\":\"" + amountValue + "\"," +
+                "\"CurrencyCode\":\"" + currency  + "\"" +
+                "}," +
+                "\"PurchaseMethod\":\"ECommerce\"," +
+                "\"Attempt3DSecure\":true," +
+                "\"FirstChargeDate\":\"Jan 19, 1970, 8:41:40 AM\"" +
+                "}," +
+                "\"BillingAddress\":{" +
+                "\"AddressLine\":\"street1\"," +
+                "\"AddressLine2\":\"street2\"," +
+                "\"City\":\"New York\"," +
+                "\"State\":\"NY\"," +
+                "\"Country\":\"USA\"," +
+                "\"Zip\":\"10016\"" +
+                "}," +
+                "\"ConsumerData\":{" +
+                "\"FullName\":\"" + fullName + "\"," +
+                "\"Email\":\"" + email + "\"," +
+                "\"PhoneNumber\":\"" + phoneNumber + "\"," +
+                "\"CultureName\":\"" + cultureName + "\"" +
+                "}," +
+                "\"PaymentWizardData\":{" +
+                "\"RequestedNumberOfInstallments\":\"" + requestedNumberOfInstallments + "\"," +
+                "\"IsOpenedInIframe\":false" +
+                "}," +
+                "\"RedirectUrls\":{" +
+                "\"Succeeded\":\"https://www.success.com/\"," +
+                "\"Failed\":\"https://www.failed.com/\"," +
+                "\"Canceled\":\"https://www.canceled.com/\"" +
+                "}," +
+                "\"EventsEndpoints\":{" +
+                "\"CreateSucceeded\":\"https://www.async-success.com/\"" +
+                "}," +
+                "\"RequestHeader\":{" +
+                "\"SessionId\":\"" + sessionId + "\"," +
+                "\"ApiKey\":\"" + apiKey + "\"" +
+                "}" +
                 "}";
     }
 
     public static final String callRefund() {
         return
                 "{" +
-                        "\"RequestHeader\":{" +
-                            "\"SessionId\":\"" + sessionId + "\"," +
-                            "\"ApiKey\":\"" + apiKey + "\"" +
-                        "}," +
                         "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"," +
-                            "\"Amount\":{" +
-                                "\"Value\":\"" + amountValue + "\"," +
-                                "\"CurrencyCode\":\"" + currency + "\"" +
-                            "}," +
-                        "\"RefundStrategy\":\"FutureInstallmentsFirst\"" +
-                "}";
+                        "\"Amount\":{" +
+                        "\"Value\":\"" + amountValue + "\"," +
+                        "\"CurrencyCode\":\"" + currency + "\"" +
+                        "}," +
+                        "\"RefundStrategy\":\"FutureInstallmentsFirst\"," +
+                        "\"RequestHeader\":{" +
+                        "\"SessionId\":\"" + sessionId + "\"," +
+                        "\"ApiKey\":\"" + apiKey + "\"" +
+                        "}" +
+                        "}";
     }
 
     public static final String responseRefundSuccess() {
@@ -975,34 +977,34 @@ public class MockUtils {
         return
                 "{" +
                         "\"ResponseHeader\": {" +
-                            "\"Succeeded\": false," +
-                            "\"Errors\": [" +
-                                "{" +
-                                    "\"ErrorCode\": \"562\"," +
-                                    "\"Message\": \"Refund requested amount exceeded the plan refundable amount\"," +
-                                    "\"AdditionalInfo\": \"\"" +
-                                "}" +
-                                "]" +
+                        "\"Succeeded\": false," +
+                        "\"Errors\": [" +
+                        "{" +
+                        "\"ErrorCode\": \"562\"," +
+                        "\"Message\": \"Refund requested amount exceeded the plan refundable amount\"," +
+                        "\"AdditionalInfo\": \"\"" +
+                        "}" +
+                        "]" +
                         "}," +
                         "\"InstallmentPlan\": {" +
-                            "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
-                            "\"InstallmentPlanStatus\": {" +
-                                "\"Code\": \"Cleared\"," +
-                                "\"Id\": 6," +
-                                "\"Description\": \"Cleared\"" +
-                            "}" +
+                        "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
+                        "\"InstallmentPlanStatus\": {" +
+                        "\"Code\": \"Cleared\"," +
+                        "\"Id\": 6," +
+                        "\"Description\": \"Cleared\"" +
                         "}" +
-                "}";
+                        "}" +
+                        "}";
     }
 
     public static  final String callCancel() {
         return "{" +
-                    "\"RequestHeader\":{" +
-                        "\"SessionId\":\"" + sessionId + "\"," +
-                        "\"ApiKey\":\"" + apiKey + "\"" +
-                    "}," +
-                    "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"," +
-                    "\"RefundUnderCancelation\":\"OnlyIfAFullRefundIsPossible\"" +
+                "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"," +
+                "\"RefundUnderCancelation\":\"OnlyIfAFullRefundIsPossible\"," +
+                "\"RequestHeader\":{" +
+                "\"SessionId\":\"" + sessionId + "\"," +
+                "\"ApiKey\":\"" + apiKey + "\"" +
+                "}" +
                 "}";
     }
 
@@ -1011,18 +1013,18 @@ public class MockUtils {
         return
                 "{" +
                         "\"ResponseHeader\": {" +
-                            "\"Succeeded\": true," +
-                            "\"Errors\": []" +
+                        "\"Succeeded\": true," +
+                        "\"Errors\": []" +
                         "}," +
                         "\"InstallmentPlan\": {" +
-                            "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
-                            "\"InstallmentPlanStatus\": {" +
-                                "\"Code\": \"Canceled\"," +
-                                "\"Id\": 9," +
-                                "\"Description\": \"Canceled\"" +
-                            "}" +
+                        "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
+                        "\"InstallmentPlanStatus\": {" +
+                        "\"Code\": \"Canceled\"," +
+                        "\"Id\": 9," +
+                        "\"Description\": \"Canceled\"" +
                         "}" +
-                "}";
+                        "}" +
+                        "}";
     }
 
 
@@ -1030,8 +1032,8 @@ public class MockUtils {
         return
                 "{" +
                         "\"ResponseHeader\": {" +
-                            "\"Succeeded\": false," +
-                            "\"Errors\":  [" +
+                        "\"Succeeded\": false," +
+                        "\"Errors\":  [" +
                         "      {" +
                         "        \"ErrorCode\": \"503\"," +
                         "        \"Message\": \"Invalid Installment Plan Status\"," +
@@ -1040,14 +1042,14 @@ public class MockUtils {
                         "    ]" +
                         "}," +
                         "\"InstallmentPlan\": {" +
-                            "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
-                            "\"InstallmentPlanStatus\": {" +
-                                "\"Code\": \"Canceled\"," +
-                                "\"Id\": 9," +
-                                "\"Description\": \"Canceled\"" +
-                            "}" +
+                        "\"InstallmentPlanNumber\": \"" + installmentPlanNumber + "\"," +
+                        "\"InstallmentPlanStatus\": {" +
+                        "\"Code\": \"Canceled\"," +
+                        "\"Id\": 9," +
+                        "\"Description\": \"Canceled\"" +
                         "}" +
-                "}";
+                        "}" +
+                        "}";
     }
 
 

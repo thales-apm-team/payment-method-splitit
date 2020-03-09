@@ -1,9 +1,9 @@
 package com.payline.payment.splitit.service.impl;
 
+import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.request.Cancel;
 import com.payline.payment.splitit.bean.request.Login;
 import com.payline.payment.splitit.bean.request.Refund;
-import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.response.LoginResponse;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
@@ -52,7 +52,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         AbstractParameter numberOfInstallments = new ListBoxParameter();
         numberOfInstallments.setKey(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS);
         numberOfInstallments.setLabel(i18n.getMessage("numberOfInstallments.label", locale));
-        numberOfInstallments.setDescription(i18n.getMessage("numberOfInstallments.decription", locale));
+        numberOfInstallments.setDescription(i18n.getMessage("numberOfInstallments.description", locale));
         parameters.add(numberOfInstallments);
 
 
@@ -60,7 +60,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         requestedNumberOfInstallments.setKey(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS);
         requestedNumberOfInstallments.setLabel(i18n.getMessage("requestedNumberOfInstallments.label", locale));
         requestedNumberOfInstallments.setDescription(i18n.getMessage("requestedNumberOfInstallments.description", locale));
-        requestedNumberOfInstallments.setRequired(true);
+        requestedNumberOfInstallments.setRequired(false);
         parameters.add(requestedNumberOfInstallments);
 
         Map<String, String> refundStrategyMap = new HashMap<>();
@@ -77,17 +77,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundStrategy.setRequired(false);
         parameters.add(refundStrategy);
 
-        Map<String, String> refundUnderCancelationMap = new HashMap<>();
-        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
-        refundUnderCancelationMap.put(Cancel.RefundUnderCancelation.OnlyIfAFullRefundIsPossible.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
+        Map<String, String> refundUnderCancellationMap = new HashMap<>();
+        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.NO_REFUNDS.toString(), i18n.getMessage("noRefund.value", locale));
+        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.ONLY_IF_A_FULL_REFUND_IS_POSSIBLE.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
 
-        ListBoxParameter refundUnderCancelation = new ListBoxParameter();
-        refundUnderCancelation.setKey(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELATION);
-        refundUnderCancelation.setList(refundUnderCancelationMap);
-        refundUnderCancelation.setLabel(i18n.getMessage("refundUnderCancelation.label", locale));
-        refundUnderCancelation.setDescription(i18n.getMessage("refundUnderCancelation.description", locale));
-        refundUnderCancelation.setRequired(false);
-        parameters.add(refundUnderCancelation);
+        ListBoxParameter refundUnderCancellation = new ListBoxParameter();
+        refundUnderCancellation.setKey(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION);
+        refundUnderCancellation.setList(refundUnderCancellationMap);
+        refundUnderCancellation.setLabel(i18n.getMessage("refundUnderCancellation.label", locale));
+        refundUnderCancellation.setDescription(i18n.getMessage("refundUnderCancellation.description", locale));
+        refundUnderCancellation.setRequired(false);
+        parameters.add(refundUnderCancellation);
 
         return parameters;
     }
@@ -118,6 +118,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             }
         } catch (PluginException e) {
             errors.put(ContractParametersCheckRequest.GENERIC_ERROR, e.getErrorCode());
+        } catch (RuntimeException e) {
+            LOGGER.error("unexpected plugin error", e);
         }
         return errors;
     }

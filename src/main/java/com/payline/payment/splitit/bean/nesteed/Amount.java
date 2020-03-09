@@ -4,13 +4,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Amount {
     @SerializedName("Value")
-    String value;
+    private String value;
     @SerializedName("CurrencyCode")
-    String currencyCode;
+    private String currencyCode;
+
+    private  Amount() {
+    }
 
     public static class AmountBuilder {
-        String value;
-        String currencyCode;
+        private String value;
+        private String currencyCode;
 
         public AmountBuilder withValue(String value) {
             this.value = value;

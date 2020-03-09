@@ -1,34 +1,31 @@
 package com.payline.payment.splitit.bean.request;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.payline.payment.splitit.bean.nesteed.Amount;
-import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 
-public class Refund {
+public class Refund extends Request {
     public enum refundStrategyEnum {
         NoRefunds, FutureInstallmentsFirst, FutureInstallmentsLast, FutureInstallmentsNotAllowed
     }
 
-    @SerializedName("RequestHeader")
-    RequestHeader requestHeader;
     @SerializedName("InstallmentPlanNumber")
-    String installmentPlanNumber;
+    private String installmentPlanNumber;
     @SerializedName("Amount")
-    Amount amount;
+    private Amount amount;
     @SerializedName("RefundStrategy")
-    public refundStrategyEnum refundStrategy;
+    private refundStrategyEnum refundStrategy;
 
-    public static class RefundBuilder {
-        RequestHeader requestHeader;
-        String installmentPlanNumber;
-        Amount amount;
-        refundStrategyEnum refundStrategy = refundStrategyEnum.NoRefunds;
+    private Refund(RefundBuilder builder) {
+        super(builder);
+        installmentPlanNumber = builder.installmentPlanNumber;
+        amount = builder.amount;
+        refundStrategy = builder.refundStrategy;
+    }
 
-        public RefundBuilder withRequestHeader(RequestHeader requestHeader) {
-            this.requestHeader = requestHeader;
-            return this;
-        }
+    public static class RefundBuilder extends RequestBuilder<RefundBuilder> {
+        private String installmentPlanNumber;
+        private Amount amount;
+        private refundStrategyEnum refundStrategy = refundStrategyEnum.NoRefunds;
 
         public RefundBuilder withInstallmentPlanNumber(String installmentPlanNumber) {
             this.installmentPlanNumber = installmentPlanNumber;
@@ -46,22 +43,10 @@ public class Refund {
         }
 
         public Refund build() {
-            Refund refund = new Refund();
-            refund.requestHeader = requestHeader;
-            refund.installmentPlanNumber = installmentPlanNumber;
-            refund.amount = amount;
-            refund.refundStrategy = refundStrategy;
-            return refund;
+            return new Refund(this);
         }
     }
 
-    public void setSessionId(String sessionId) {
-        this.requestHeader.setSessionId(sessionId);
-    }
-
-    public RequestHeader getRequestHeader() {
-        return requestHeader;
-    }
 
     public String getInstallmentPlanNumber() {
         return installmentPlanNumber;
@@ -76,7 +61,6 @@ public class Refund {
     }
 
     public String toString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return super.toString();
     }
 }

@@ -5,15 +5,9 @@ import com.payline.payment.splitit.bean.nesteed.InstallmentPlan;
 
 import java.util.List;
 
-public class GetResponse {
-    @SerializedName("ResponseHeader")
-    ResponseHeader responseHeader;
+public class GetResponse extends Response {
     @SerializedName("PlansList")
-    List<InstallmentPlan> plansList;
-
-    public ResponseHeader getResponseHeader() {
-        return responseHeader;
-    }
+    private List<InstallmentPlan> plansList;
 
     public List<InstallmentPlan> getPlansList() {
         return plansList;

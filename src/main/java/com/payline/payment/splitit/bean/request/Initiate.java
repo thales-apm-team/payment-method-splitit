@@ -1,54 +1,52 @@
 package com.payline.payment.splitit.bean.request;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.payline.payment.splitit.bean.nesteed.*;
 
-public class Initiate {
-    @SerializedName("RequestHeader")
-    RequestHeader requestHeader;
-    @SerializedName("PlanData")
-    PlanData planData;
-    @SerializedName("BillingAddress")
-    BillingAddress billingAddress;
-    @SerializedName("ConsumerData")
-    ConsumerData consumerData;
-    @SerializedName("PaymentWizardData")
-    PaymentWizardData paymentWizardData;
-    @SerializedName("RedirectUrls")
-    RedirectUrl redirectUrl;
-    @SerializedName("EventsEndpoints")
-    EventsEndpoints eventsEndpoints;
+public class Initiate extends Request {
 
-    public void setSessionId(String sessionId){
-        this.requestHeader.setSessionId(sessionId);
+    @SerializedName("PlanData")
+    private PlanData planData;
+    @SerializedName("BillingAddress")
+    private BillingAddress billingAddress;
+    @SerializedName("ConsumerData")
+    private ConsumerData consumerData;
+    @SerializedName("PaymentWizardData")
+    private PaymentWizardData paymentWizardData;
+    @SerializedName("RedirectUrls")
+    private RedirectUrl redirectUrl;
+    @SerializedName("EventsEndpoints")
+    private EventsEndpoints eventsEndpoints;
+
+    private Initiate(InitiateBuilder builder) {
+        super(builder);
+        planData = builder.planData;
+        billingAddress = builder.billingAddress;
+        consumerData = builder.consumerData;
+        paymentWizardData = builder.paymentWizardData;
+        redirectUrl = builder.redirectUrl;
+        eventsEndpoints = builder.eventsEndpoints;
     }
 
-    public static class InitiateBuilder {
-        RequestHeader requestHeader;
-        PlanData planData;
-        BillingAddress billingAddress;
-        ConsumerData consumerData;
-        PaymentWizardData paymentWizardData;
-        RedirectUrl redirectUrl;
-        EventsEndpoints eventsEndpoints;
-
-        public InitiateBuilder withRequestHeader(RequestHeader requestHeader) {
-            this.requestHeader = requestHeader;
-            return this;
-        }
+    public static class InitiateBuilder extends RequestBuilder<InitiateBuilder> {
+        private PlanData planData;
+        private BillingAddress billingAddress;
+        private ConsumerData consumerData;
+        private PaymentWizardData paymentWizardData;
+        private RedirectUrl redirectUrl;
+        private EventsEndpoints eventsEndpoints;
 
         public InitiateBuilder withPlanData(PlanData planData) {
             this.planData = planData;
             return this;
         }
 
-        public InitiateBuilder withBillingAddress( BillingAddress billingAddress) {
+        public InitiateBuilder withBillingAddress(BillingAddress billingAddress) {
             this.billingAddress = billingAddress;
             return this;
         }
 
-        public InitiateBuilder withConsumerData (ConsumerData consumerData) {
+        public InitiateBuilder withConsumerData(ConsumerData consumerData) {
             this.consumerData = consumerData;
             return this;
         }
@@ -69,20 +67,8 @@ public class Initiate {
         }
 
         public Initiate build() {
-            Initiate initiate = new Initiate();
-            initiate.requestHeader = requestHeader;
-            initiate.planData = planData;
-            initiate.billingAddress = billingAddress;
-            initiate.consumerData = consumerData;
-            initiate.paymentWizardData = paymentWizardData;
-            initiate.redirectUrl = redirectUrl;
-            initiate.eventsEndpoints = eventsEndpoints;
-            return initiate;
+            return new Initiate(this);
         }
-    }
-
-    public RequestHeader getRequestHeader() {
-        return requestHeader;
     }
 
     public PlanData getPlanData() {
@@ -110,7 +96,7 @@ public class Initiate {
     }
 
     public String toString() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return super.toString();
     }
+
 }

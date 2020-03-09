@@ -3,8 +3,8 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
+import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.response.*;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
@@ -15,7 +15,6 @@ import com.payline.pmapi.logger.LogManager;
 import org.apache.http.Header;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -34,12 +33,11 @@ import java.nio.charset.StandardCharsets;
 public class HttpClient {
     private static final Logger LOGGER = LogManager.getLogger(HttpClient.class);
     private Gson parser;
-    private String urlLogin = "/api/Login";
-    private String urlInitiate = "/api/InstallmentPlan/Initiate";
-    private String urlGet = "/api/InstallmentPlan/Get";
-    private String urlRefund = "/api/InstallmentPlan/Refund";
-    private String urlCancel = "/api/InstallmentPlan/Cancel";
-
+    private final String urlLogin = "/api/Login";
+    private final String urlInitiate = "/api/InstallmentPlan/Initiate";
+    private final String urlGet = "/api/InstallmentPlan/Get";
+    private final String urlRefund = "/api/InstallmentPlan/Refund";
+    private final String urlCancel = "/api/InstallmentPlan/Cancel";
 
     // Exceptions messages
     private static final String SERVICE_URL_ERROR = "Service URL is invalid";
@@ -134,31 +132,6 @@ public class HttpClient {
         return strResponse;
     }
 
-
-    /**
-     * Manage Get API call
-     *
-     * @param url     the url to call
-     * @param headers header(s) of the request
-     * @return
-     */
-    StringResponse get(String url, Header[] headers) {
-        URI uri;
-        try {
-            // Add the createOrderId to the url
-            uri = new URI(url);
-        } catch (URISyntaxException e) {
-            throw new InvalidDataException(SERVICE_URL_ERROR, e);
-        }
-
-        final HttpGet httpGet = new HttpGet(uri);
-        httpGet.setHeaders(headers);
-
-        // Execute request
-        return this.execute(httpGet);
-    }
-
-
     /**
      * Manage Post API call
      *
@@ -195,7 +168,8 @@ public class HttpClient {
         LoginResponse loginResponse = parser.fromJson(response.getContent(), LoginResponse.class);
 
         if (!response.isSuccess()) {
-            throw new InvalidDataException("wrong URL");
+            LOGGER.error("checkConnection can't reach url: " + url);
+            throw new InvalidDataException("checkConnection can't reach url: " + url);
         } else {
             return loginResponse;
         }
@@ -210,9 +184,14 @@ public class HttpClient {
         StringResponse response = post(url, headers, new StringEntity(body, StandardCharsets.UTF_8));
         InitiateResponse initiateResponse = parser.fromJson(response.getContent(), InitiateResponse.class);
 
-        if (response.isSuccess() && initiateResponse.getResponseHeader().isSucceeded()) {
+        if (response.isSuccess() && initiateResponse.getResponseHeader().isSucceeded() && initiate.getRequestHeader().getSessionId() != null) {
+            initiateResponse.setSessionId(initiate.getRequestHeader().getSessionId());
             return initiateResponse;
-        } else if (response.isSuccess() && initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")) { // code d'erreur session ID (703)
+            // 703: sessionId invalid
+            // 704: session expired
+        } else if (response.isSuccess() && (
+                initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
+                        || initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
             // create login request object
             Login login = new Login.LoginBuilder()
                     .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
@@ -221,18 +200,20 @@ public class HttpClient {
             // call checkout connection
             LoginResponse loginResponse = this.checkConnection(configuration, login);
 
-            if (loginResponse.getResponseHeader().isSucceeded()){
+            if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the initiate request object
                 initiate.setSessionId(loginResponse.getSessionId());
 
                 // recall initiate with new initiate request object
                 return this.initiate(configuration, initiate);
-            }else{
-                throw new InvalidDataException("bad ContractParams");
+            } else {
+                LOGGER.error("Initiate bad ContractParams");
+                throw new InvalidDataException("Initiate bad ContractParam");
             }
 
         } else {
-            throw new InvalidDataException("something went wrong");
+            LOGGER.error("Initiate wrong URL");
+            throw new InvalidDataException("Initiate wrong URL");
         }
     }
 
@@ -256,17 +237,19 @@ public class HttpClient {
             // call checkout connection
             LoginResponse loginResponse = this.checkConnection(configuration, login);
 
-            if (loginResponse.getResponseHeader().isSucceeded()){
+            if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object
                 get.setSessionId(loginResponse.getSessionId());
 
                 // recall get with new get request object
                 return this.get(configuration, get);
-            }else{
-                throw new InvalidDataException("bad ContractParams");
+            } else {
+                LOGGER.error("Get bad ContractParams");
+                throw new InvalidDataException("Get bad ContractParam");
             }
-        }else {
-            throw new InvalidDataException("ERROR");
+        } else {
+            LOGGER.error("Get wrong URL");
+            throw new InvalidDataException("Get wrong URL");
         }
     }
 
@@ -289,17 +272,19 @@ public class HttpClient {
             // call checkout connection
             LoginResponse loginResponse = this.checkConnection(configuration, login);
 
-            if (loginResponse.getResponseHeader().isSucceeded()){
+            if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object
                 refund.setSessionId(loginResponse.getSessionId());
 
                 // recall get with new get request object
                 return this.refund(configuration, refund);
-            }else{
-                throw new InvalidDataException("bad ContractParams");
+            } else {
+                LOGGER.error("Refund bad ContractParams");
+                throw new InvalidDataException("Refund bad ContractParam");
             }
-        }else {
-            throw new InvalidDataException("ERROR");
+        } else {
+            LOGGER.error("Refund wrong URL");
+            throw new InvalidDataException("Refund wrong URL");
         }
     }
 
@@ -322,17 +307,19 @@ public class HttpClient {
             // call checkout connection
             LoginResponse loginResponse = this.checkConnection(configuration, login);
 
-            if (loginResponse.getResponseHeader().isSucceeded()){
+            if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object
                 cancel.setSessionId(loginResponse.getSessionId());
 
                 // recall get with new get request object
                 return this.cancel(configuration, cancel);
-            }else{
-                throw new InvalidDataException("bad ContractParams");
+            } else {
+                LOGGER.error("Cancel bad ContractParams");
+                throw new InvalidDataException("Cancel bad ContractParam");
             }
-        }else {
-            throw new InvalidDataException("ERROR");
+        } else {
+            LOGGER.error("Cancel wrong URL");
+            throw new InvalidDataException("Cancel wrong URL");
         }
     }
 }

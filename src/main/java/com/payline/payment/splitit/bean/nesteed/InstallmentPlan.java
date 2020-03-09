@@ -4,13 +4,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class InstallmentPlan {
     @SerializedName("InstallmentPlanNumber")
-    String installmentPlanNumber;
+    private String installmentPlanNumber;
     @SerializedName("InstallmentPlanStatus")
-    InstallmentPlanStatus installmentPlanStatus;
+    private InstallmentPlanStatus installmentPlanStatus;
     @SerializedName("ActiveCard")
-    ActiveCard activeCard;
+    private ActiveCard activeCard;
     @SerializedName("Amount")
-    AmountResponse amount;
+    private AmountResponse amount;
+
+    private InstallmentPlan() {
+    }
+
 
     public ActiveCard getActiveCard() {
         return activeCard;
@@ -30,15 +34,15 @@ public class InstallmentPlan {
 
     public static class ActiveCard {
         @SerializedName("CardNumber")
-        String cardNumber;
+        private String cardNumber;
         @SerializedName("CardBrand")
-        CardBrand cardBrand;
+        private CardBrand cardBrand;
         @SerializedName("CardHolderFullName")
-        String fullName;
+        private String fullName;
         @SerializedName("CardExpMonth")
-        String cardExpMonth;
+        private String cardExpMonth;
         @SerializedName("CardExpYear")
-        String cardExpYear;
+        private String cardExpYear;
 
 
         public String getCardNumber() {
@@ -65,9 +69,9 @@ public class InstallmentPlan {
 
     public static class AmountResponse {
         @SerializedName("Value")
-        String value;
+        private String value;
         @SerializedName("Currency")
-        Currency currency;
+        private Currency currency;
 
         public String getValue() {
             return value;
@@ -80,18 +84,14 @@ public class InstallmentPlan {
 
     public static class CardBrand {
         @SerializedName("Code")
-        String code;
+        private String code;
         @SerializedName("Id")
         int id;
         @SerializedName("Description")
-        String description;
+        private String description;
 
         public String getCode() {
             return code;
-        }
-
-        public int getId() {
-            return id;
         }
 
         public String getDescription() {
@@ -102,13 +102,13 @@ public class InstallmentPlan {
 
     public static class Currency {
         @SerializedName("Symbol")
-        String symbol;
+        private String symbol;
         @SerializedName("Id")
-        String id;
+        private String id;
         @SerializedName("Code")
-        String code;
+        private String code;
         @SerializedName("Description")
-        String description;
+        private String description;
 
         public String getSymbol() {
             return symbol;
