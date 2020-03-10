@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 public class MockUtils {
     private static String sessionId = "9b358c4a-1237-46a7-8167-b62f66dd4a8d";
     private static String apiKey = "f661600c-5f1a-4d4c-829d-768fbc40be6c";
-    private static String installmentPlanNumber = "87064835030438485643";
+    private static String installmentPlanNumber = "14375278543076008324";
 
     private static String TRANSACTIONID = "123456789012345678901";
     private static String PARTNER_TRANSACTIONID = installmentPlanNumber;
@@ -56,6 +56,9 @@ public class MockUtils {
     private static String cultureName = "en-us";
 
     private static int refundAmount = 1;
+
+    private static String splitItCurrencyCode = "EUR";
+    private static String CurrencyCodeYen = "JPY";
 
 
     /**------------------------------------------------------------------------------------------------------------------*/
@@ -142,11 +145,23 @@ public class MockUtils {
      * Generate a valid Payline Amount.
      */
     public static com.payline.pmapi.bean.common.Amount aPaylineAmount() {
+        return aPaylineAmount(Integer.parseInt(amountValue));
+    }
+
+    public static com.payline.pmapi.bean.common.Amount aPaylineAmountYen(int amount) {
+        return new com.payline.pmapi.bean.common.Amount(BigInteger.valueOf(amount), Currency.getInstance("CurrencyCodeYen"));
+    }
+
+    public static com.payline.pmapi.bean.common.Amount aPaylineRefundAmount() {
         return aPaylineAmount(refundAmount);
     }
 
     public static com.payline.pmapi.bean.common.Amount aPaylineAmount(int amount) {
         return new com.payline.pmapi.bean.common.Amount(BigInteger.valueOf(amount), Currency.getInstance("EUR"));
+    }
+
+    public static Amount aSplitItAmount(String amount) {
+        return new Amount.AmountBuilder().withValue(amount).withCurrency(splitItCurrencyCode).build();
     }
 
     /**
@@ -277,7 +292,7 @@ public class MockUtils {
 
     public static RefundRequest.RefundRequestBuilder aPaylineRefundRequestBuilder() {
         return RefundRequest.RefundRequestBuilder.aRefundRequest()
-                .withAmount(aPaylineAmount())
+                .withAmount(aPaylineRefundAmount())
                 .withOrder(aPaylineOrder())
                 .withBuyer(aBuyer())
                 .withContractConfiguration(aContractConfiguration())
@@ -300,9 +315,9 @@ public class MockUtils {
                 .withBuyer(aBuyer())
                 .withContractConfiguration(aContractConfiguration())
                 .withEnvironment(anEnvironment())
-                .withRequestContext(aRequestContext(sessionId, apiKey, installmentPlanNumber))
                 .withTransactionId(TRANSACTIONID)
                 .withPartnerTransactionId(PARTNER_TRANSACTIONID)
+                .withRequestContext(aRequestContext(sessionId, apiKey, installmentPlanNumber))
                 .withPartnerConfiguration(aPartnerConfiguration());
     }
 

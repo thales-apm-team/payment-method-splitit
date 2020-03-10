@@ -41,4 +41,11 @@ public class Amount {
         return currencyCode;
     }
 
+    @Override
+    public String toString() {
+        return "Amount{" +
+                "value='" + value + '\'' +
+                ", currencyCode='" + currencyCode + '\'' +
+                '}';
+    }
 }

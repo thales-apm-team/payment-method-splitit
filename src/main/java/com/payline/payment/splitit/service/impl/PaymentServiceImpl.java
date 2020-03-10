@@ -1,5 +1,6 @@
 package com.payline.payment.splitit.service.impl;
 
+import com.payline.payment.splitit.bean.AmountParse;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.nesteed.*;
 import com.payline.payment.splitit.bean.request.Initiate;
@@ -148,7 +149,8 @@ public class PaymentServiceImpl implements PaymentService {
 
 
         PlanData planData = new PlanData.PlanDataBuilder()
-                .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(String.valueOf(request.getAmount().getAmountInSmallestUnit())).build())
+//                .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(String.valueOf(request.getAmount().getAmountInSmallestUnit())).build())
+                .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
                 .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBER_OF_INSTALLMENTS).getValue())
                 .withRefOrderNumber(request.getTransactionId())
                 .withAutoCapture(request.isCaptureNow())

@@ -1,5 +1,6 @@
 package com.payline.payment.splitit.service.impl;
 
+import com.payline.payment.splitit.bean.AmountParse;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.nesteed.Amount;
 import com.payline.payment.splitit.bean.request.Refund;
@@ -43,7 +44,8 @@ public class RefundServiceImpl implements RefundService {
                     .build();
 
             Amount amount = new Amount.AmountBuilder()
-                    .withValue(refundRequest.getAmount().getAmountInSmallestUnit().toString())
+//                    .withValue(refundRequest.getAmount().getAmountInSmallestUnit().toString())
+                    .withValue(AmountParse.split(refundRequest.getAmount()))
                     .withCurrency(refundRequest.getAmount().getCurrency().toString())
                     .build();
 
