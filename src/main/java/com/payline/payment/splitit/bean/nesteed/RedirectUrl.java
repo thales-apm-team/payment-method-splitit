@@ -10,7 +10,7 @@ public class RedirectUrl {
     @SerializedName("Canceled")
     private String canceled;
 
-    private RedirectUrl(){
+    private RedirectUrl() {
     }
 
     public static class RedirectUrlBuilder {

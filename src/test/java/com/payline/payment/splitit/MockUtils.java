@@ -26,7 +26,6 @@ import org.mockito.internal.util.reflection.FieldSetter;
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.util.Currency;
 import java.util.*;
 
 import static org.mockito.Mockito.doReturn;
@@ -35,7 +34,7 @@ import static org.mockito.Mockito.mock;
 public class MockUtils {
     private static String sessionId = "9b358c4a-1237-46a7-8167-b62f66dd4a8d";
     private static String apiKey = "f661600c-5f1a-4d4c-829d-768fbc40be6c";
-    private static String installmentPlanNumber = "14375278543076008324";
+    private static String installmentPlanNumber = "70624254133164524312";
 
     private static String TRANSACTIONID = "123456789012345678901";
     private static String PARTNER_TRANSACTIONID = installmentPlanNumber;
@@ -367,10 +366,10 @@ public class MockUtils {
         Map<String, ContractProperty> contractProperties = new HashMap<>();
         contractProperties.put(Constants.ContractConfigurationKeys.USERNAME, new ContractProperty("monextTest"));
         contractProperties.put(Constants.ContractConfigurationKeys.PASSWORD, new ContractProperty("eZ7HJddV"));
-        contractProperties.put(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS, new ContractProperty("2"));
-        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS, new ContractProperty("2"));
-        contractProperties.put(Constants.ContractConfigurationKeys.REFUND_STRATEGY, new ContractProperty("FutureInstallmentsFirst"));
-        contractProperties.put(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
+        contractProperties.put(Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS, new ContractProperty("2"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS, new ContractProperty("2"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REFUNDSTRATEGY, new ContractProperty("FutureInstallmentsFirst"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
 
         return new ContractConfiguration("SplitIt", contractProperties);
     }
@@ -478,11 +477,28 @@ public class MockUtils {
         return response;
     }
 
+
+    /**
+     * build a valid request context for splitit
+     *
+     * @param sessionId
+     * @param apiKey
+     * @param installmentPlanNumber
+     * @return RequestContext
+     */
     public static RequestContext aRequestContext(String sessionId, String apiKey, String installmentPlanNumber) {
         return aRequestContextBuilder(sessionId, apiKey, installmentPlanNumber).build();
     }
 
 
+    /**
+     * RequestContextBuilder valid, can be completed for other issues
+     *
+     * @param sessionId
+     * @param apiKey
+     * @param installmentPlanNumber
+     * @return RequestContextBuilder
+     */
     public static RequestContext.RequestContextBuilder aRequestContextBuilder(String sessionId, String apiKey, String installmentPlanNumber) {
         Map<String, String> requestSensitiveData = new HashMap<>();
         requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID, sessionId);
@@ -494,6 +510,11 @@ public class MockUtils {
                 .withSensitiveRequestData(requestSensitiveData);
     }
 
+    /**
+     * Build a requestHeader for splitit
+     *
+     * @return RequestHeader
+     */
     public static RequestHeader requestHeaderTest() {
         return new RequestHeader.RequestHeaderBuilder()
                 .withSessionId(sessionId)
@@ -501,6 +522,11 @@ public class MockUtils {
                 .build();
     }
 
+    /**
+     * Build an amount for splitit
+     *
+     * @return Amount
+     */
     public static Amount amountTest() {
         return new Amount.AmountBuilder()
                 .withValue(amountValue)
@@ -508,6 +534,11 @@ public class MockUtils {
                 .build();
     }
 
+    /**
+     * Build a PlanData for splitit
+     *
+     * @return PlanData
+     */
     public static PlanData planDatatest() {
         return new PlanData.PlanDataBuilder()
                 .withAmount(amountTest())
@@ -520,6 +551,12 @@ public class MockUtils {
                 .build();
     }
 
+
+    /**
+     * Build an address for splitit
+     *
+     * @return BillingAddress
+     */
     public static BillingAddress addressTest() {
         return new BillingAddress.BillingAddressBuilder()
                 .withAddressLine("street1")
@@ -531,6 +568,11 @@ public class MockUtils {
                 .build();
     }
 
+    /**
+     * Create a ConsummerData for splitit
+     *
+     * @return ConsumerData
+     */
     public static ConsumerData consumerDataTest() {
         return new ConsumerData.ConsumerDataBuilder()
                 .withFullName(fullName)
@@ -540,6 +582,11 @@ public class MockUtils {
                 .build();
     }
 
+    /**
+     * Build a PaymentWizardData for splitit
+     *
+     * @return PaymentWizardData
+     */
     public static PaymentWizardData paymentWizardDataTest() {
         return new PaymentWizardData.PaymentWizardDataBuilder()
                 .withIsOpenedInIframe(false)
@@ -547,7 +594,12 @@ public class MockUtils {
                 .build();
     }
 
-    public static RedirectUrl redirectUrlTest(){
+    /**
+     * Build a RedirectUrl for splitit
+     *
+     * @return RedirectUrl
+     */
+    public static RedirectUrl redirectUrlTest() {
         return new RedirectUrl.RedirectUrlBuilder()
                 .withSucceeded("https://www.success.com/")
                 .withCanceled("https://www.canceled.com/")
@@ -556,6 +608,11 @@ public class MockUtils {
     }
 
 
+    /**
+     * Mock the responseLogin ok
+     *
+     * @return String
+     */
     public static final String responseLogin() {
         return "{" +
                 "   \"ResponseHeader\": {" +
@@ -566,6 +623,11 @@ public class MockUtils {
                 "}";
     }
 
+    /**
+     * Mock the responseLogin KO
+     *
+     * @return String
+     */
     public static final String responseLoginKO() {
         return
                 "{" +
@@ -583,6 +645,11 @@ public class MockUtils {
                         "}";
     }
 
+    /**
+     * Mock the responseInitiate ok
+     *
+     * @return String
+     */
     public static final String responseInitiate() {
         return
                 "{" +
@@ -792,6 +859,12 @@ public class MockUtils {
                         "}";
     }
 
+    /**
+     * Mock the response error 703 for any POST
+     * work for the 704 too (session expired)
+     *
+     * @return String
+     */
     public static final String responseError703() {
         return
                 "{" +
@@ -808,6 +881,12 @@ public class MockUtils {
                         "}";
     }
 
+
+    /**
+     * Mock the POST /Get
+     *
+     * @return String
+     */
     public static final String callGet() {
         return "{" +
                 "\"QueryCriteria\":{" +
@@ -820,6 +899,12 @@ public class MockUtils {
                 "}";
     }
 
+    /**
+     * Mock th responseGet ok
+     *
+     * @param code
+     * @return String
+     */
     public static final String responseGetOK(String code) {
         return
                 "{" +
@@ -872,13 +957,18 @@ public class MockUtils {
                         "\"FullAddressLine\": \"260 Madison Avenue.,Appartment 1,New York,NY,US\"" +
                         "}," +
                         "\"Token\": \"b8f60b30-ebd9-40aa-820d-584c93d34075\"" +
-                        "}"+
+                        "}" +
                         "}" +
                         "]" +
                         "}";
     }
 
-    public static final String responseGetNoInstallmentPlanNumber(){
+    /**
+     * Mock the responseGet with when the POST /Get was called without installmentPlanNumber
+     *
+     * @return String
+     */
+    public static final String responseGetNoInstallmentPlanNumber() {
         return "{" +
                 "\"PlansList\": []," +
                 "\"ResponseHeader\": {" +
@@ -891,6 +981,11 @@ public class MockUtils {
                 "}";
     }
 
+    /**
+     * Mock the responseGet KO
+     *
+     * @return String
+     */
     public static final String responseGetNotSuccess() {
         return
                 "{" +
@@ -907,19 +1002,24 @@ public class MockUtils {
                         "}";
     }
 
+    /**
+     * Mock the POST /Initiate
+     *
+     * @return Stirng
+     */
     public static final String callInitiate() {
         return "{" +
                 "\"PlanData\":{" +
                 "\"Amount\":{" +
                 "\"Value\":\"" + amountValue + "\"," +
-                "\"CurrencyCode\":\"" + currency  + "\"" +
+                "\"CurrencyCode\":\"" + currency + "\"" +
                 "}," +
                 "\"NumberOfInstallments\":\"" + numberOfInstallments + "\"," +
                 "\"RefOrderNumber\":\"" + refOrderNumber + "\"," +
                 "\"AutoCapture\":true," +
                 "\"FirstInstallmentAmount\":{" +
                 "\"Value\":\"" + amountValue + "\"," +
-                "\"CurrencyCode\":\"" + currency  + "\"" +
+                "\"CurrencyCode\":\"" + currency + "\"" +
                 "}," +
                 "\"PurchaseMethod\":\"ECommerce\"," +
                 "\"Attempt3DSecure\":true," +
@@ -958,6 +1058,11 @@ public class MockUtils {
                 "}";
     }
 
+    /**
+     * Mock the POST /Refund
+     *
+     * @return String
+     */
     public static final String callRefund() {
         return
                 "{" +
@@ -974,6 +1079,11 @@ public class MockUtils {
                         "}";
     }
 
+    /**
+     * Mock the refundResponseSuccess
+     *
+     * @return String
+     */
     public static final String responseRefundSuccess() {
         return
                 "{" +
@@ -992,6 +1102,11 @@ public class MockUtils {
                         "}";
     }
 
+    /**
+     * Mock the responseRefundError
+     *
+     * @return String
+     */
     public static final String responseRefundError() {
         return
                 "{" +
@@ -1016,7 +1131,13 @@ public class MockUtils {
                         "}";
     }
 
-    public static  final String callCancel() {
+
+    /**
+     * Mock the POST /Cancel
+     *
+     * @return String
+     */
+    public static final String callCancel() {
         return "{" +
                 "\"InstallmentPlanNumber\":\"" + installmentPlanNumber + "\"," +
                 "\"RefundUnderCancelation\":\"OnlyIfAFullRefundIsPossible\"," +
@@ -1027,7 +1148,11 @@ public class MockUtils {
                 "}";
     }
 
-
+    /**
+     * Mock the responseCancelSuccess
+     *
+     * @return String
+     */
     public static final String responseCancelSuccess() {
         return
                 "{" +
@@ -1046,7 +1171,11 @@ public class MockUtils {
                         "}";
     }
 
-
+    /**
+     * Mock the responseCancelFailure
+     *
+     * @return String
+     */
     public static final String responseCancelFailure() {
         return
                 "{" +
@@ -1070,8 +1199,6 @@ public class MockUtils {
                         "}" +
                         "}";
     }
-
-
 
 
     public static String getSessionId() {

@@ -39,10 +39,6 @@ class RefundTest {
     @Test
     void testToString() {
         String expected = MockUtils.callRefund();
-        Refund refund = creation();
-
-        System.out.println(expected);
-        System.out.println(refund);
 
         Assertions.assertEquals(expected, creation().toString());
     }

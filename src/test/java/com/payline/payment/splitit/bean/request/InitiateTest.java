@@ -33,7 +33,7 @@ class InitiateTest {
         Assertions.assertNotNull(initiate.getPlanData().getFirstInstallmentAmount().getCurrencyCode());
         Assertions.assertNotNull(initiate.getPlanData().getFirstInstallmentAmount().getValue());
         Assertions.assertNotNull(initiate.getPlanData().getNumberOfInstallments());
-        Assertions.assertNotNull(initiate.getPlanData().getPurchaseMethode());
+        Assertions.assertNotNull(initiate.getPlanData().getPurchaseMethod());
         Assertions.assertNotNull(initiate.getPlanData().getRefOrderNumber());
         Assertions.assertTrue(initiate.getPlanData().isAttempt3DSecure());
         Assertions.assertTrue(initiate.getPlanData().isAutoCapture());

@@ -45,15 +45,15 @@ public class RequestConfiguration {
     }
 
     public static RequestConfiguration build(PaymentRequest request) {
-        return new RequestConfiguration( request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration() );
+        return new RequestConfiguration(request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration());
     }
 
     public static RequestConfiguration build(RefundRequest request) {
-        return new RequestConfiguration( request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration() );
+        return new RequestConfiguration(request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration());
     }
 
     public static RequestConfiguration build(ResetRequest request) {
-        return new RequestConfiguration( request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration() );
+        return new RequestConfiguration(request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration());
     }
 
 }

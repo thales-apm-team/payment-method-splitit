@@ -57,4 +57,18 @@ class AmountParseTest {
         BigInteger parse = AmountParse.transfoBigInt(amount.getValue());
         Assertions.assertEquals(BigInteger.valueOf(1234), parse);
     }
+
+    @Test
+    void transfoBigIntdotLastPlace() {
+        com.payline.payment.splitit.bean.nesteed.Amount amount = MockUtils.aSplitItAmount("1234.");
+        BigInteger parse = AmountParse.transfoBigInt(amount.getValue());
+        Assertions.assertEquals(BigInteger.valueOf(1234), parse);
+    }
+
+    @Test
+    void transfoBigIntDotFirstPlace() {
+        com.payline.payment.splitit.bean.nesteed.Amount amount = MockUtils.aSplitItAmount(".1234");
+        BigInteger parse = AmountParse.transfoBigInt(amount.getValue());
+        Assertions.assertEquals(BigInteger.valueOf(1234), parse);
+    }
 }

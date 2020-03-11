@@ -3,7 +3,6 @@ package com.payline.payment.splitit.bean;
 import com.payline.pmapi.bean.common.Amount;
 
 import java.math.BigInteger;
-import java.util.Currency;
 import java.util.Locale;
 
 public class AmountParse {
@@ -11,7 +10,6 @@ public class AmountParse {
 
     // can't create an amountParse object
     private AmountParse() {
-
     }
 
     // put the coma on the right place depending of the currency of Monext

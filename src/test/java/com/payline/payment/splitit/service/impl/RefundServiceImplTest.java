@@ -26,7 +26,6 @@ class RefundServiceImplTest {
     private HttpClient client;
 
 
-
     private static String sessionId = "9b358c4a-1237-46a7-8167-b62f66dd4a8d";
     private static String apiKey = "f661600c-5f1a-4d4c-829d-768fbc40be6c";
     private static String installmentPlanNumber = "81061838427155704842";

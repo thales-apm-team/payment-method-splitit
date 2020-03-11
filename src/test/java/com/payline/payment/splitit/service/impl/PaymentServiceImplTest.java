@@ -2,12 +2,10 @@ package com.payline.payment.splitit.service.impl;
 
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.response.GetResponse;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.utils.http.HttpClient;
 import com.payline.pmapi.bean.payment.response.PaymentResponse;
 import com.payline.pmapi.bean.payment.response.impl.PaymentResponseRedirect;
-import com.payline.pmapi.bean.payment.response.impl.PaymentResponseSuccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,17 +37,4 @@ class PaymentServiceImplTest {
         );
         Assertions.assertEquals(PaymentResponseRedirect.class, response.getClass());
     }
-
-    @Test
-    void initiateCall() {
-    }
-
-    @Test
-    void initiateCreate() {
-    }
-
-    @Test
-    void configurationCreate() {
-    }
-
 }

@@ -24,17 +24,6 @@ public class StringResponse {
         return content;
     }
 
-    public String getHeader(String name) {
-        if (headers != null && name != null) {
-            return headers.get(name.toLowerCase());
-        }
-        return null;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
     public int getStatusCode() {
         return statusCode;
     }

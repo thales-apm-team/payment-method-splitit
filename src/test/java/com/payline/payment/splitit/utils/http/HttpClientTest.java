@@ -2,8 +2,8 @@ package com.payline.payment.splitit.utils.http;
 
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
+import com.payline.payment.splitit.bean.request.*;
 import com.payline.payment.splitit.bean.response.*;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
@@ -70,7 +70,7 @@ class HttpClientTest {
 
         Login login = new Login.LoginBuilder().withUsername(contractConfiguration.getProperty(USERNAME).getValue())
                 .withPassword(contractConfiguration.getProperty(PASSWORD).getValue()).build();
-        Assertions.assertThrows(InvalidDataException.class, ()-> client.checkConnection(configuration, login));
+        Assertions.assertThrows(InvalidDataException.class, () -> client.checkConnection(configuration, login));
     }
 
 
@@ -90,7 +90,7 @@ class HttpClientTest {
 
         Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(), Initiate.class);
         InitiateResponse response = client.initiate(configuration, initiate);
-        Assertions.assertEquals("36718353567647855177",response.getInstallmentPlan().getInstallmentPlanNumber());
+        Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
     }
 
     @Test
@@ -108,7 +108,7 @@ class HttpClientTest {
         );
 
         Initiate initiate = new Initiate.InitiateBuilder().build();
-        Assertions.assertThrows(InvalidDataException.class, ()-> client.initiate(configuration, initiate));
+        Assertions.assertThrows(InvalidDataException.class, () -> client.initiate(configuration, initiate));
     }
 
     @Test
@@ -142,7 +142,7 @@ class HttpClientTest {
         client.initiate(configuration, initiate);
 
         InitiateResponse response = client.initiate(configuration, initiate);
-        Assertions.assertEquals("36718353567647855177",response.getInstallmentPlan().getInstallmentPlanNumber());
+        Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
     }
 
     @Test
@@ -162,7 +162,7 @@ class HttpClientTest {
 
         Get get = new Get.GetBuilder().build();
         GetResponse response = client.get(configuration, get);
-        Assertions.assertEquals("81061838427155704844",response.getPlansList().get(0).getInstallmentPlanNumber());
+        Assertions.assertEquals("81061838427155704844", response.getPlansList().get(0).getInstallmentPlanNumber());
     }
 
     @Test
@@ -181,7 +181,7 @@ class HttpClientTest {
         );
 
         Get get = new Get.GetBuilder().build();
-        Assertions.assertThrows(InvalidDataException.class, ()-> client.get(configuration, get));
+        Assertions.assertThrows(InvalidDataException.class, () -> client.get(configuration, get));
     }
 
     @Test
@@ -213,7 +213,7 @@ class HttpClientTest {
 
         Get get = new Get.GetBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
         GetResponse response = client.get(configuration, get);
-        Assertions.assertEquals("81061838427155704844",response.getPlansList().get(0).getInstallmentPlanNumber());
+        Assertions.assertEquals("81061838427155704844", response.getPlansList().get(0).getInstallmentPlanNumber());
     }
 
     @Test
@@ -262,7 +262,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Refund refund= new Refund.RefundBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
+        Refund refund = new Refund.RefundBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
         MyRefundResponse response = client.refund(configuration, refund);
         Assertions.assertEquals(response.getClass(), MyRefundResponse.class);
     }
@@ -282,8 +282,8 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Refund refund= new Refund.RefundBuilder().build();
-        Assertions.assertThrows(InvalidDataException.class, ()-> client.refund(configuration, refund));
+        Refund refund = new Refund.RefundBuilder().build();
+        Assertions.assertThrows(InvalidDataException.class, () -> client.refund(configuration, refund));
     }
 
     @Test
@@ -332,7 +332,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Cancel cancel= new Cancel.CancelBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
+        Cancel cancel = new Cancel.CancelBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
         CancelResponse response = client.cancel(configuration, cancel);
         Assertions.assertEquals(response.getClass(), CancelResponse.class);
     }
@@ -352,8 +352,8 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Cancel cancel= new Cancel.CancelBuilder().build();
-        Assertions.assertThrows(InvalidDataException.class, ()-> client.cancel(configuration, cancel));
+        Cancel cancel = new Cancel.CancelBuilder().build();
+        Assertions.assertThrows(InvalidDataException.class, () -> client.cancel(configuration, cancel));
     }
 
 }

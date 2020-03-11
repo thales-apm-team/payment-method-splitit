@@ -8,7 +8,7 @@ public class Amount {
     @SerializedName("CurrencyCode")
     private String currencyCode;
 
-    private  Amount() {
+    private Amount() {
     }
 
     public static class AmountBuilder {

@@ -1,4 +1,5 @@
 package com.payline.payment.splitit.bean.nesteed;
+
 import com.google.gson.annotations.SerializedName;
 
 public class QueryCriteria {

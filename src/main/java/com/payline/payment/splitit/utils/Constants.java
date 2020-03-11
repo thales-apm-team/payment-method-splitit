@@ -11,13 +11,13 @@ public class Constants {
     public static class ContractConfigurationKeys {
         public static String USERNAME = "userName";
         public static String PASSWORD = "password";
-        public static String NUMBER_OF_INSTALLMENTS = "numberOfInstallments";
+        public static String NUMBEROFINSTALLMENTS = "numberOfInstallments";
         public static String FIRST_INSTALLMENT_AMOUNT = "firstInstallmentAmount";
         public static String ATTEMPS_3D_SECURE = "attempt3DSecure";
         public static String FIRST_CHARGE_DATE = "firstChargeDate";
-        public  static String REQUESTED_NUMBER_OF_INSTALLMENTS = "requestedNumberOfInstallments";
-        public  static String REFUND_STRATEGY = "refundStrategy";
-        public static String REFUND_UNDER_CANCELLATION = "refundUndercanCellation";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS = "requestedNumberOfInstallments";
+        public static String REFUNDSTRATEGY = "refundStrategy";
+        public static String REFUNDUNDERCANCELLATION = "refundUndercanCellation";
 
         /* Static utility class : no need to instantiate it (Sonar bug fix) */
         private ContractConfigurationKeys() {

@@ -54,7 +54,7 @@ public class RefundServiceImpl implements RefundService {
                     .withRequestHeader(requestHeader)
                     .withInstallmentPlanNumber(refundRequest.getPartnerTransactionId())
                     .withAmount(amount)
-                    .withrefundStrategy(Refund.refundStrategyEnum.valueOf(refundRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_STRATEGY).getValue()))
+                    .withrefundStrategy(Refund.refundStrategyEnum.valueOf(refundRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDSTRATEGY).getValue()))
                     .build();
 
             // call http method refund

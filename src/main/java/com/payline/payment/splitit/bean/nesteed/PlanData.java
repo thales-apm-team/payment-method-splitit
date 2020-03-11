@@ -16,7 +16,7 @@ public class PlanData {
     @SerializedName("FirstInstallmentAmount")
     private Amount firstInstallmentAmount;
     @SerializedName("PurchaseMethod")
-    private String purchaseMethode = "ECommerce";
+    private String purchaseMethod = "ECommerce";
     @SerializedName("Attempt3DSecure")
     private boolean attempt3DSecure = false;
     @SerializedName("FirstChargeDate")
@@ -102,8 +102,8 @@ public class PlanData {
         return firstInstallmentAmount;
     }
 
-    public String getPurchaseMethode() {
-        return purchaseMethode;
+    public String getPurchaseMethod() {
+        return purchaseMethod;
     }
 
     public boolean isAttempt3DSecure() {

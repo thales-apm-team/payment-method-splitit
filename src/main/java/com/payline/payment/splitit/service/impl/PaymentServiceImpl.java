@@ -25,8 +25,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS;
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS;
 
 public class PaymentServiceImpl implements PaymentService {
     private static final Logger LOGGER = LogManager.getLogger(PaymentServiceImpl.class);
@@ -105,11 +105,11 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidDataException("Missing or invalid PaymentRequest.Amount");
         }
 
-        if (request.getContractConfiguration().getProperty(NUMBER_OF_INSTALLMENTS).getValue() == null) {
+        if (request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue() == null) {
             throw new InvalidDataException("Missing or invalid PaymentRequest.ContractConfiguration");
         }
 
-        if (request.getContractConfiguration().getProperty(REQUESTED_NUMBER_OF_INSTALLMENTS).getValue() == null) {
+        if (request.getContractConfiguration().getProperty(REQUESTEDNUMBEROFINSTALLMENTS).getValue() == null) {
             throw new InvalidDataException("Missing or invalid Requested Number of installment");
         }
 
@@ -151,7 +151,7 @@ public class PaymentServiceImpl implements PaymentService {
         PlanData planData = new PlanData.PlanDataBuilder()
 //                .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(String.valueOf(request.getAmount().getAmountInSmallestUnit())).build())
                 .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
-                .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBER_OF_INSTALLMENTS).getValue())
+                .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue())
                 .withRefOrderNumber(request.getTransactionId())
                 .withAutoCapture(request.isCaptureNow())
                 .build();
@@ -173,7 +173,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         PaymentWizardData paymentWizardData = new PaymentWizardData.PaymentWizardDataBuilder()
-                .withRequestednumberOfInstallments(String.valueOf(request.getContractConfiguration().getProperty(REQUESTED_NUMBER_OF_INSTALLMENTS).getValue()))
+                .withRequestednumberOfInstallments(String.valueOf(request.getContractConfiguration().getProperty(REQUESTEDNUMBEROFINSTALLMENTS).getValue()))
                 .withIsOpenedInIframe(false)
                 .build();
 

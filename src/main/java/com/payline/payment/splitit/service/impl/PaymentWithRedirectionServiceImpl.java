@@ -44,10 +44,11 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                 throw new InvalidDataException("Missing or Invalid RedirectionPaymentRequest.requestContext");
             }
 
-            if (redirectionPaymentRequest.getPartnerConfiguration() == null
-                    || redirectionPaymentRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
-                throw new InvalidDataException("Missing or Invalid redirectionPaymentRequest.PartnerConfiguration");
-            }
+            // no API-KEY required for the get request
+//            if (redirectionPaymentRequest.getPartnerConfiguration() == null
+//                    || redirectionPaymentRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
+//                throw new InvalidDataException("Missing or Invalid redirectionPaymentRequest.PartnerConfiguration");
+//            }
 
             RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
                     .withSessionId(redirectionPaymentRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID))

@@ -38,8 +38,8 @@ public class ResetServiceImpl implements ResetService {
             }
 
             if (resetRequest.getContractConfiguration() == null
-                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION).getValue()) != Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible
-                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION).getValue()) != Cancel.RefundUnderCancellation.NoRefunds) {
+                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible
+                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.NoRefunds) {
 
             }
 
@@ -51,7 +51,7 @@ public class ResetServiceImpl implements ResetService {
             Cancel cancel = new Cancel.CancelBuilder()
                     .withRequestHeader(requestHeader)
                     .withInstallmentPlanNumber(resetRequest.getPartnerTransactionId())
-                    .withRefundUnderCancellation(Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION).getValue()))
+                    .withRefundUnderCancellation(Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()))
                     .build();
 
             // call http method reset

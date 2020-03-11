@@ -2,11 +2,8 @@ package com.payline.payment.splitit.service.impl;
 
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
-import com.payline.payment.splitit.bean.request.Cancel;
 import com.payline.payment.splitit.bean.response.CancelResponse;
 import com.payline.payment.splitit.utils.http.HttpClient;
-import com.payline.pmapi.bean.refund.response.RefundResponse;
-import com.payline.pmapi.bean.refund.response.impl.RefundResponseSuccess;
 import com.payline.pmapi.bean.reset.response.ResetResponse;
 import com.payline.pmapi.bean.reset.response.impl.ResetResponseFailure;
 import com.payline.pmapi.bean.reset.response.impl.ResetResponseSuccess;
@@ -18,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 class ResetServiceImplTest {
@@ -28,7 +24,6 @@ class ResetServiceImplTest {
 
     @Mock
     private HttpClient client;
-
 
 
     private static String sessionId = "9b358c4a-1237-46a7-8167-b62f66dd4a8d";

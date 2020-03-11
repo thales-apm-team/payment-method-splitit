@@ -5,8 +5,6 @@ import com.payline.payment.splitit.MockUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class LoginResponseTest {
 
     @Test

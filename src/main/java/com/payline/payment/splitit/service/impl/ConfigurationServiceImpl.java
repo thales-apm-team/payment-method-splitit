@@ -50,7 +50,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         parameters.add(password);
 
         AbstractParameter numberOfInstallments = new ListBoxParameter();
-        numberOfInstallments.setKey(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS);
+        numberOfInstallments.setKey(Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS);
         numberOfInstallments.setLabel(i18n.getMessage("numberOfInstallments.label", locale));
         numberOfInstallments.setDescription(i18n.getMessage("numberOfInstallments.description", locale));
         numberOfInstallments.setRequired(false);
@@ -58,7 +58,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 
         AbstractParameter requestedNumberOfInstallments = new InputParameter();
-        requestedNumberOfInstallments.setKey(Constants.ContractConfigurationKeys.REQUESTED_NUMBER_OF_INSTALLMENTS);
+        requestedNumberOfInstallments.setKey(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS);
         requestedNumberOfInstallments.setLabel(i18n.getMessage("requestedNumberOfInstallments.label", locale));
         requestedNumberOfInstallments.setDescription(i18n.getMessage("requestedNumberOfInstallments.description", locale));
         requestedNumberOfInstallments.setRequired(false);
@@ -71,7 +71,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsNotAllowed.toString(), i18n.getMessage("FutureInstallmentsNotAllowed.value", locale));
 
         ListBoxParameter refundStrategy = new ListBoxParameter();
-        refundStrategy.setKey(Constants.ContractConfigurationKeys.REFUND_STRATEGY);
+        refundStrategy.setKey(Constants.ContractConfigurationKeys.REFUNDSTRATEGY);
         refundStrategy.setList(refundStrategyMap);
         refundStrategy.setLabel(i18n.getMessage("refundStrategy.label", locale));
         refundStrategy.setDescription(i18n.getMessage("refundStrategy.description", locale));
@@ -83,7 +83,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
 
         ListBoxParameter refundUnderCancellation = new ListBoxParameter();
-        refundUnderCancellation.setKey(Constants.ContractConfigurationKeys.REFUND_UNDER_CANCELLATION);
+        refundUnderCancellation.setKey(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION);
         refundUnderCancellation.setList(refundUnderCancellationMap);
         refundUnderCancellation.setLabel(i18n.getMessage("refundUnderCancellation.label", locale));
         refundUnderCancellation.setDescription(i18n.getMessage("refundUnderCancellation.description", locale));

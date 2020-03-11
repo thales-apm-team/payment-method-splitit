@@ -16,6 +16,7 @@ public class EventsEndpoints {
             this.createSucceeded = createSucceeded;
             return this;
         }
+
         public EventsEndpoints build() {
             EventsEndpoints eventsEndpoints = new EventsEndpoints();
             eventsEndpoints.createSucceeded = createSucceeded;

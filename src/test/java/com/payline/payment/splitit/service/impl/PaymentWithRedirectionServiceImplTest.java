@@ -80,8 +80,4 @@ class PaymentWithRedirectionServiceImplTest {
     @Test
     void handleSessionExpired() {
     }
-
-    @Test
-    void configurationCreate() {
-    }
 }

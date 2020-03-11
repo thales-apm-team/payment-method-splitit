@@ -74,7 +74,7 @@ public class TestIT extends AbstractPaymentIntegration {
             // Le champs Checkbox contient le champs texte et le champs bouton
             // on le coche directement par le js sinon il essaye de cliquer pendant le scrolling de la page
             // et atteint un autre element
-            JavascriptExecutor jse = (JavascriptExecutor)driver;
+            JavascriptExecutor jse = (JavascriptExecutor) driver;
             jse.executeScript("arguments[0].click();", driver.findElement(By.cssSelector(".cb-view--Mt8WQ")));
 
             jse.executeScript("arguments[0].click();", driver.findElement(By.cssSelector(".button--2ctjk")));
@@ -116,12 +116,12 @@ public class TestIT extends AbstractPaymentIntegration {
         Assertions.assertEquals(PaymentResponseRedirect.class, paymentResponseFromPaymentRequest.getClass());
 
         // PaymentWithRedirectionService
-        PaymentResponseRedirect paymentResponseRedirect = (PaymentResponseRedirect)paymentResponseFromPaymentRequest;
+        PaymentResponseRedirect paymentResponseRedirect = (PaymentResponseRedirect) paymentResponseFromPaymentRequest;
         String partnerUrl = paymentResponseRedirect.getRedirectionRequest().getUrl().toString();
 
         this.payOnPartnerWebsite(partnerUrl);
 
-        RedirectionPaymentRequest redirectionPaymentRequest = (RedirectionPaymentRequest)RedirectionPaymentRequest.builder()
+        RedirectionPaymentRequest redirectionPaymentRequest = (RedirectionPaymentRequest) RedirectionPaymentRequest.builder()
                 .withContractConfiguration(request.getContractConfiguration())
                 .withPaymentFormContext(this.generatePaymentFormContext())
                 .withEnvironment(request.getEnvironment())

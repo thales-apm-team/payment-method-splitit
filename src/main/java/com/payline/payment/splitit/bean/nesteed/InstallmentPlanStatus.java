@@ -1,6 +1,7 @@
 package com.payline.payment.splitit.bean.nesteed;
 
 import com.google.gson.annotations.SerializedName;
+
 public class InstallmentPlanStatus {
     public enum Code {
         @SerializedName("Initializing")
@@ -24,6 +25,7 @@ public class InstallmentPlanStatus {
         @SerializedName("Delayed")
         DELAYED
     }
+
     @SerializedName("Code")
     private Code code;
 
