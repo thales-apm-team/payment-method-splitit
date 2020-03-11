@@ -86,13 +86,16 @@ public class RefundServiceImpl implements RefundService {
         }
     }
 
+    // you can make as much refund you want, unless you you don't pass the initial amount
     @Override
     public boolean canMultiple() {
         return false;
     }
 
+
+    // you can ask for a refund of 1 dollar if you have an initial amount of 5 dollars
     @Override
     public boolean canPartial() {
-        return false;
+        return true;
     }
 }

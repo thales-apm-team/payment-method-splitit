@@ -149,7 +149,7 @@ public class MockUtils {
     }
 
     public static com.payline.pmapi.bean.common.Amount aPaylineAmountYen(int amount) {
-        return new com.payline.pmapi.bean.common.Amount(BigInteger.valueOf(amount), Currency.getInstance("CurrencyCodeYen"));
+        return new com.payline.pmapi.bean.common.Amount(BigInteger.valueOf(amount), Currency.getInstance(CurrencyCodeYen));
     }
 
     public static com.payline.pmapi.bean.common.Amount aPaylineRefundAmount() {

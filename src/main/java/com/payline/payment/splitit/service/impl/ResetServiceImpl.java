@@ -81,6 +81,7 @@ public class ResetServiceImpl implements ResetService {
         }
     }
 
+
     @Override
     public boolean canMultiple() {
         return false;

@@ -80,6 +80,13 @@ public class PluginUtils {
         return value == null || value.isEmpty();
     }
 
+
+    /**
+     * Map some errors codes for create the paymentResponseFailure
+     *
+     * @param errorCode
+     * @return
+     */
     public static PaymentResponseFailure paymentResponseFailure(String errorCode) {
         FailureCause cause;
 
@@ -105,6 +112,13 @@ public class PluginUtils {
                 .build();
     }
 
+
+    /**
+     * Try to login with the userName and the Password of the merchant
+     *
+     * @param configuration
+     * @return client.checkConnection
+     */
     public static LoginResponse tryLogin(RequestConfiguration configuration) {
         // create login request object
         Login login = new Login.LoginBuilder()

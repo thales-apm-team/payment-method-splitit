@@ -41,16 +41,16 @@ class ResetServiceImplTest {
         MockitoAnnotations.initMocks(this);
     }
 
-//    @Test
-//    void resetRequest() {
-//        CancelResponse responseCancel = new GsonBuilder().create().fromJson(MockUtils.responseCancelSuccess(), CancelResponse.class);
-//        Mockito.doReturn(responseCancel).when(client).cancel(any(), any());
-//        ResetResponse response = resetService.resetRequest(
-//                MockUtils.aPaylineResetRequestBuilder()
-//                        .withRequestContext(MockUtils.aRequestContext(sessionId, apiKey, installmentPlanNumber))
-//                        .build());
-//        Assertions.assertEquals(ResetResponseSuccess.class, response.getClass());
-//    }
+    @Test
+    void resetRequest() {
+        CancelResponse responseCancel = new GsonBuilder().create().fromJson(MockUtils.responseCancelSuccess(), CancelResponse.class);
+        Mockito.doReturn(responseCancel).when(client).cancel(any(), any());
+        ResetResponse response = resetService.resetRequest(
+                MockUtils.aPaylineResetRequestBuilder()
+                        .withRequestContext(MockUtils.aRequestContext(sessionId, apiKey, installmentPlanNumber))
+                        .build());
+        Assertions.assertEquals(ResetResponseSuccess.class, response.getClass());
+    }
 
     @Test
     void resetRequestFailure() {

@@ -53,6 +53,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         numberOfInstallments.setKey(Constants.ContractConfigurationKeys.NUMBER_OF_INSTALLMENTS);
         numberOfInstallments.setLabel(i18n.getMessage("numberOfInstallments.label", locale));
         numberOfInstallments.setDescription(i18n.getMessage("numberOfInstallments.description", locale));
+        numberOfInstallments.setRequired(false);
         parameters.add(numberOfInstallments);
 
 

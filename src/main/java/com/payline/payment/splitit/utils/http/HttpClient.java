@@ -159,6 +159,13 @@ public class HttpClient {
     }
 
 
+    /**
+     * Login with SplitIt
+     *
+     * @param configuration
+     * @param login
+     * @return LoginResponse
+     */
     public LoginResponse checkConnection(RequestConfiguration configuration, Login login) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlLogin;
         Header[] headers = createHeaders();
@@ -177,6 +184,13 @@ public class HttpClient {
     }
 
 
+    /**
+     * Initiate a transaction
+     *
+     * @param configuration
+     * @param initiate
+     * @return InitiateResponse
+     */
     public InitiateResponse initiate(RequestConfiguration configuration, Initiate initiate) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlInitiate;
         Header[] headers = createHeaders();
@@ -215,6 +229,13 @@ public class HttpClient {
     }
 
 
+    /**
+     * Get the informations about an installmentPlan
+     *
+     * @param configuration
+     * @param get
+     * @return GetResponse
+     */
     public GetResponse get(RequestConfiguration configuration, Get get) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlGet;
         Header[] headers = createHeaders();
@@ -248,6 +269,14 @@ public class HttpClient {
         }
     }
 
+
+    /**
+     * connect with the refund service
+     *
+     * @param configuration
+     * @param refund
+     * @return RefundResponse
+     */
     public MyRefundResponse refund(RequestConfiguration configuration, Refund refund) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlRefund;
         Header[] headers = createHeaders();
@@ -281,6 +310,14 @@ public class HttpClient {
         }
     }
 
+
+    /**
+     * Cancel an installmentPlan
+     *
+     * @param configuration
+     * @param cancel
+     * @return CancelResponse
+     */
     public CancelResponse cancel(RequestConfiguration configuration, Cancel cancel) {
         String url = configuration.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.URL) + urlCancel;
         Header[] headers = createHeaders();
