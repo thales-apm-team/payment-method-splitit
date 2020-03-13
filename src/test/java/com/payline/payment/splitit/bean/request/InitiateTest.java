@@ -9,13 +9,13 @@ class InitiateTest {
     private String createSucceeded = "https://www.async-success.com/";
 
 
-    public Initiate creation() {
+    public Initiate creation(String requestNumberOfInstallments) {
         return new Initiate.InitiateBuilder()
                 .withRequestHeader(MockUtils.requestHeaderTest())
                 .withPlanData(MockUtils.planDatatest())
                 .withBillingAddress(MockUtils.addressTest())
                 .withConsumerData(MockUtils.consumerDataTest())
-                .withPaymentWizardData(MockUtils.paymentWizardDataTest())
+                .withPaymentWizardData(MockUtils.paymentWizardDataTest(requestNumberOfInstallments))
                 .withRedirectUrl(MockUtils.redirectUrlTest())
                 .withEventsEndpoints(new EventsEndpoints.EventEndpointsBuilder().withCreateSucceeded(createSucceeded).build())
                 .build();
@@ -23,7 +23,7 @@ class InitiateTest {
 
     @Test
     void creationTest() {
-        Initiate initiate = creation();
+        Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallments());
 
         Assertions.assertNotNull(initiate.getRequestHeader().getSessionId());
         Assertions.assertNotNull(initiate.getRequestHeader().getApiKey());
@@ -32,6 +32,7 @@ class InitiateTest {
         Assertions.assertNotNull(initiate.getPlanData().getFirstChargeDate());
         Assertions.assertNotNull(initiate.getPlanData().getFirstInstallmentAmount().getCurrencyCode());
         Assertions.assertNotNull(initiate.getPlanData().getFirstInstallmentAmount().getValue());
+        Assertions.assertNotNull(initiate.getPlanData().getNumberOfInstallments());
         Assertions.assertNotNull(initiate.getPlanData().getNumberOfInstallments());
         Assertions.assertNotNull(initiate.getPlanData().getPurchaseMethod());
         Assertions.assertNotNull(initiate.getPlanData().getRefOrderNumber());
@@ -49,6 +50,7 @@ class InitiateTest {
         Assertions.assertNotNull(initiate.getConsumerData().getPhoneNumber());
         Assertions.assertNotNull(initiate.getConsumerData().getCultureName());
         Assertions.assertNotNull(initiate.getPaymentWizardData().getRequestednumberOfInstallments());
+        Assertions.assertEquals(initiate.getPaymentWizardData().getRequestednumberOfInstallments(), MockUtils.getRequestedNumberOfInstallments());
         Assertions.assertFalse(initiate.getPaymentWizardData().isOpenedInIframe());
         Assertions.assertNotNull(initiate.getRedirectUrl().getSucceeded());
         Assertions.assertNotNull(initiate.getRedirectUrl().getCanceled());
@@ -60,7 +62,7 @@ class InitiateTest {
 
     @Test
     void setSessionId() {
-        Initiate initiate = creation();
+        Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallments());
         String newSessionId = "42";
 
         initiate.setSessionId(newSessionId);
@@ -69,12 +71,19 @@ class InitiateTest {
 
     @Test
     void testToString() {
-        Initiate initiate = creation();
-        String expected = MockUtils.callInitiate();
-
-        System.out.println(initiate);
-        System.out.println(expected);
+        Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallments());
+        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments());
 
         Assertions.assertEquals(expected, initiate.toString());
+        Assertions.assertEquals(MockUtils.getRequestedNumberOfInstallments(), initiate.getPaymentWizardData().getRequestednumberOfInstallments());
+    }
+
+    @Test
+    void testToStringRequestedNumberOfInstallmentDefault() {
+        Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallmentsDefault());
+        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallmentsDefault());
+
+        Assertions.assertEquals(expected, initiate.toString());
+        Assertions.assertEquals(MockUtils.getRequestedNumberOfInstallmentsDefault(), initiate.getPaymentWizardData().getRequestednumberOfInstallments());
     }
 }

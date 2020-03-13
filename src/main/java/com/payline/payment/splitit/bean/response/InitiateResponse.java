@@ -8,8 +8,6 @@ import java.net.URL;
 public class InitiateResponse extends Response {
     @SerializedName("CheckoutUrl")
     private URL checkoutUrl;
-    @SerializedName("SessionId")
-    private String sessionId;
     @SerializedName("InstallmentPlan")
     private InstallmentPlan installmentPlan;
 
@@ -17,15 +15,8 @@ public class InitiateResponse extends Response {
         return checkoutUrl;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
     public InstallmentPlan getInstallmentPlan() {
         return installmentPlan;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
 }

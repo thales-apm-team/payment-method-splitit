@@ -64,59 +64,11 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                             .build())
                     .build();
 
-            // POST /Get and look at the field Code
-            GetResponse getResponse = httpClient.get(configuration, get);
+            String sessionId = redirectionPaymentRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID);
 
-            if (getResponse.getResponseHeader().isSucceeded()) {
-                // wrong installmentPlanNumber will return a PlanData list empty in the response
-                if (getResponse.getPlansList().isEmpty()) {
-                    return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-                            .withFailureCause(FailureCause.INVALID_DATA)
-                            .build();
-                } else if (getResponse.getPlansList().get(0).getInstallmentPlanStatus().getCode().equals(InstallmentPlanStatus.Code.IN_PROGRESS)) {
-                    YearMonth date = YearMonth.of(Integer.parseInt(getResponse.getPlansList().get(0).getActiveCard().getCardExpYear()),
-                            Integer.parseInt(getResponse.getPlansList().get(0).getActiveCard().getCardExpMonth()));
+            return genericTransaction(configuration, get);
 
-                    Card card = Card.CardBuilder
-                            .aCard()
-                            .withBrand(getResponse.getPlansList().get(0).getActiveCard().getCardBrand().getCode())
-                            .withExpirationDate(date)
-                            .withHolder(getResponse.getPlansList().get(0).getActiveCard().getFullName())
-                            .withPan(getResponse.getPlansList().get(0).getActiveCard().getCardNumber())
-                            .withPanType(Card.PanType.CARD_PAN)
-                            .build();
 
-                    CardPayment cardPayment = CardPayment.CardPaymentBuilder
-                            .aCardPayment()
-                            .withCard(card)
-                            .build();
-
-                    // adding the SessionId for the next call, like that we don't have to ask it again
-                    Map<String, String> requestSensitiveData = new HashMap<>();
-                    requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID,
-                            redirectionPaymentRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID));
-                    RequestContext context = RequestContext.RequestContextBuilder.aRequestContext()
-                            .withSensitiveRequestData(requestSensitiveData)
-                            .build();
-
-                    return PaymentResponseSuccess.PaymentResponseSuccessBuilder.aPaymentResponseSuccess()
-                            .withRequestContext(context)
-                            .withPartnerTransactionId(partnerTransactionId)
-                            .withStatusCode(String.valueOf(getResponse.getPlansList().get(0).getInstallmentPlanStatus().getCode()))
-                            .withTransactionDetails(cardPayment)
-                            .build();
-                } else {
-                    return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-                            .withErrorCode(String.valueOf(getResponse.getPlansList().get(0).getInstallmentPlanStatus().getCode()))
-                            .withFailureCause(FailureCause.INVALID_DATA)
-                            .build();
-                }
-            } else {
-                return PluginUtils.paymentResponseFailure(getResponse.getResponseHeader().getErrors().get(0).getErrorCode());
-            }
-            // get Failure
-        } catch (PluginException e) {
-            return e.toPaymentResponseFailureBuilder().build();
         } catch (RuntimeException e) {
             LOGGER.error("unexpected plugin error", e);
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
@@ -128,7 +80,103 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
 
     @Override
     public PaymentResponse handleSessionExpired(TransactionStatusRequest transactionStatusRequest) {
+//        try {
+//            final RequestConfiguration configuration = RequestConfiguration.build(transactionStatusRequest);
+//
+//            if (transactionStatusRequest.getRequestContext() == null || transactionStatusRequest.getRequestContext().getSensitiveRequestData() == null
+//                    || transactionStatusRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID) == null
+//                    || transactionStatusRequest.getRequestContext().getRequestData() == null
+//                    || transactionStatusRequest.getRequestContext().getRequestData().get(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER) == null) {
+//                throw new InvalidDataException("Missing or Invalid RedirectionPaymentRequest.requestContext");
+//            }
+//
+//            // no API-KEY required for the get request
+////            if (redirectionPaymentRequest.getPartnerConfiguration() == null
+////                    || redirectionPaymentRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
+////                throw new InvalidDataException("Missing or Invalid redirectionPaymentRequest.PartnerConfiguration");
+////            }
+//
+//            RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
+//                    .withApiKey(transactionStatusRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY))
+//                    .build();
+//
+//            // TransactionId here is the PartnerTransactionId
+//            Get get = new Get.GetBuilder()
+//                    .withRequestHeader(requestHeader)
+//                    .withQueryCriteria(new QueryCriteria.QueryCriteriaBuilder()
+//                            .withInstallmentPlanNumber(transactionStatusRequest.getTransactionId())
+//                            .build())
+//                    .build();
+//
+//
+//            return genericTransaction(configuration, get);
+//        } catch (RuntimeException e) {
+//            LOGGER.error("unexpected plugin error", e);
+//            return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+//                    .withErrorCode(PluginException.runtimeErrorCode(e))
+//                    .withFailureCause(FailureCause.INTERNAL_ERROR)
+//                    .build();
+//        }
         return null;
     }
 
+
+    /**
+     * The same code between PaymentWithRedirectionService and handleSessionExpired refactored
+     *
+     * @param configuration
+     * @param get
+     * @return PaymentResponse
+     */
+    public PaymentResponse genericTransaction(RequestConfiguration configuration, Get get) {
+        // POST /Get and look at the field Code
+        GetResponse getResponse = httpClient.get(configuration, get);
+
+        if (getResponse.getResponseHeader().isSucceeded()) {
+            // wrong installmentPlanNumber will return a PlanData list empty in the response
+            if (getResponse.getPlansList().isEmpty()) {
+                return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+                        .withFailureCause(FailureCause.INVALID_DATA)
+                        .build();
+            } else if (getResponse.getPlansList().get(0).getInstallmentPlanStatus().getCode().equals(InstallmentPlanStatus.Code.IN_PROGRESS)) {
+                YearMonth date = YearMonth.of(Integer.parseInt(getResponse.getPlansList().get(0).getActiveCard().getCardExpYear()),
+                        Integer.parseInt(getResponse.getPlansList().get(0).getActiveCard().getCardExpMonth()));
+
+                Card card = Card.CardBuilder
+                        .aCard()
+                        .withBrand(getResponse.getPlansList().get(0).getActiveCard().getCardBrand().getCode())
+                        .withExpirationDate(date)
+                        .withHolder(getResponse.getPlansList().get(0).getActiveCard().getFullName())
+                        .withPan(getResponse.getPlansList().get(0).getActiveCard().getCardNumber())
+                        .withPanType(Card.PanType.CARD_PAN)
+                        .build();
+
+                CardPayment cardPayment = CardPayment.CardPaymentBuilder
+                        .aCardPayment()
+                        .withCard(card)
+                        .build();
+
+                // adding the SessionId for the next call, like that we don't have to ask it again
+                Map<String, String> requestSensitiveData = new HashMap<>();
+                requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID, get.getRequestHeader().getSessionId());
+                RequestContext context = RequestContext.RequestContextBuilder.aRequestContext()
+                        .withSensitiveRequestData(requestSensitiveData)
+                        .build();
+
+                return PaymentResponseSuccess.PaymentResponseSuccessBuilder.aPaymentResponseSuccess()
+                        .withRequestContext(context)
+                        .withPartnerTransactionId(get.getQueryCriteria().getInstallmentPlanNumber())
+                        .withStatusCode(String.valueOf(getResponse.getPlansList().get(0).getInstallmentPlanStatus().getCode()))
+                        .withTransactionDetails(cardPayment)
+                        .build();
+            } else {
+                return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+                        .withErrorCode(String.valueOf(getResponse.getPlansList().get(0).getInstallmentPlanStatus().getCode()))
+                        .withFailureCause(FailureCause.INVALID_DATA)
+                        .build();
+            }
+        } else {
+            return PluginUtils.paymentResponseFailure(getResponse.getResponseHeader().getErrors().get(0).getErrorCode());
+        }
+    }
 }

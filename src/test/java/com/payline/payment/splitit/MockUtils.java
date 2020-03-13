@@ -47,6 +47,7 @@ public class MockUtils {
     private static Date firstChargeDate = new Date(1582900000);
     private static String numberOfInstallments = "10";
     private static String requestedNumberOfInstallments = "10";
+    private static String requestedNumberOfInstallmentsDefault = "2,3,4,5,6,7,8,9,10,11,12";
     private static String refOrderNumber = "102AB";
 
     private static String fullName = "John Smith";
@@ -280,7 +281,6 @@ public class MockUtils {
                 .withOrder(aPaylineOrder())
                 .withPartnerConfiguration(aPartnerConfiguration())
                 .withPaymentFormContext(aPaymentFormContext())
-                .withRequestContext(aRequestContext(sessionId, apiKey, installmentPlanNumber))
                 .withSoftDescriptor("softDescriptor")
                 .withTransactionId(TRANSACTIONID);
     }
@@ -367,7 +367,22 @@ public class MockUtils {
         contractProperties.put(Constants.ContractConfigurationKeys.USERNAME, new ContractProperty("monextTest"));
         contractProperties.put(Constants.ContractConfigurationKeys.PASSWORD, new ContractProperty("eZ7HJddV"));
         contractProperties.put(Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS, new ContractProperty("2"));
-        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS, new ContractProperty("2"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS2, new ContractProperty("true"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REFUNDSTRATEGY, new ContractProperty("FutureInstallmentsFirst"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
+
+        return new ContractConfiguration("SplitIt", contractProperties);
+    }
+
+    /**
+     * Generate a valid {@link ContractConfiguration}.
+     */
+    public static ContractConfiguration aContractConfigurationDefaultrequestedNumberOfInstallments() {
+        Map<String, ContractProperty> contractProperties = new HashMap<>();
+        contractProperties.put(Constants.ContractConfigurationKeys.USERNAME, new ContractProperty("monextTest"));
+        contractProperties.put(Constants.ContractConfigurationKeys.PASSWORD, new ContractProperty("eZ7HJddV"));
+        contractProperties.put(Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS, new ContractProperty("2"));
+        contractProperties.put(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTSDEFAULT, new ContractProperty("true"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUNDSTRATEGY, new ContractProperty("FutureInstallmentsFirst"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
 
@@ -587,7 +602,7 @@ public class MockUtils {
      *
      * @return PaymentWizardData
      */
-    public static PaymentWizardData paymentWizardDataTest() {
+    public static PaymentWizardData paymentWizardDataTest(String requestedNumberOfInstallments) {
         return new PaymentWizardData.PaymentWizardDataBuilder()
                 .withIsOpenedInIframe(false)
                 .withRequestednumberOfInstallments(requestedNumberOfInstallments)
@@ -687,7 +702,7 @@ public class MockUtils {
                         "\"Description\": \"US Dollar\"" +
                         "}" +
                         "}," +
-                        "\"NumberOfInstallments\": 2," +
+//                        "\"NumberOfInstallments\": 2," +
                         "\"NumberOfProcessedInstallments\": 0," +
                         "\"OriginalAmount\": {" +
                         "\"Value\": 5.0," +
@@ -1003,11 +1018,11 @@ public class MockUtils {
     }
 
     /**
-     * Mock the POST /Initiate
+     * Mock the POST /Initiate with 2 requested number of installments
      *
      * @return Stirng
      */
-    public static final String callInitiate() {
+    public static final String callInitiate(String requestedNumberOfInstallments) {
         return "{" +
                 "\"PlanData\":{" +
                 "\"Amount\":{" +
@@ -1219,5 +1234,13 @@ public class MockUtils {
 
     public static String getCurrency() {
         return currency;
+    }
+
+    public static String getRequestedNumberOfInstallments() {
+        return requestedNumberOfInstallments;
+    }
+
+    public static String getRequestedNumberOfInstallmentsDefault() {
+        return requestedNumberOfInstallmentsDefault;
     }
 }

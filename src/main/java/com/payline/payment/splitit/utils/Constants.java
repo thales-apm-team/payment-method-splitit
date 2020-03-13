@@ -15,9 +15,21 @@ public class Constants {
         public static String FIRST_INSTALLMENT_AMOUNT = "firstInstallmentAmount";
         public static String ATTEMPS_3D_SECURE = "attempt3DSecure";
         public static String FIRST_CHARGE_DATE = "firstChargeDate";
-        public static String REQUESTEDNUMBEROFINSTALLMENTS = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTSDEFAULT = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS2 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS3 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS4 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS5 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS6 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS7 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS8 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS9 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS10 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS11 = "requestedNumberOfInstallments";
+        public static String REQUESTEDNUMBEROFINSTALLMENTS12 = "requestedNumberOfInstallments";
         public static String REFUNDSTRATEGY = "refundStrategy";
         public static String REFUNDUNDERCANCELLATION = "refundUndercanCellation";
+//        public static String FIRSTINSTALLMENTAMOUNT = "firstInstallmentAmount";
 
         /* Static utility class : no need to instantiate it (Sonar bug fix) */
         private ContractConfigurationKeys() {

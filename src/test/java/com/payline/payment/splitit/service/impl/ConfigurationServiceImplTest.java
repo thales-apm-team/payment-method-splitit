@@ -55,7 +55,6 @@ class ConfigurationServiceImplTest {
 
             // each parameter should have a label and a description
             assertNotNull(param.getLabel());
-            System.out.println(param.getLabel());
             assertFalse(param.getLabel().contains("???"));
             assertNotNull(param.getDescription());
             assertFalse(param.getDescription().contains("???"));
@@ -118,7 +117,6 @@ class ConfigurationServiceImplTest {
         Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
         Map errors = configurationServiceImpl.check(MockUtils.aContractParametersCheckRequest());
         // username and password
-        System.out.println(errors);
         Assertions.assertEquals(2, errors.size());
         Assertions.assertNotNull(errors.get(Constants.ContractConfigurationKeys.USERNAME));
         Assertions.assertNotNull(errors.get(Constants.ContractConfigurationKeys.PASSWORD));

@@ -3,6 +3,7 @@ package com.payline.payment.splitit.service.impl;
 import com.google.gson.GsonBuilder;
 import com.payline.payment.splitit.MockUtils;
 import com.payline.payment.splitit.bean.response.GetResponse;
+import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.utils.http.HttpClient;
 import com.payline.pmapi.bean.payment.response.PaymentResponse;
 import com.payline.pmapi.bean.payment.response.impl.PaymentResponseFailure;
@@ -64,6 +65,7 @@ class PaymentWithRedirectionServiceImplTest {
                         .withRequestContext(MockUtils.aRequestContext(sessionId, apiKey, installmentPlanNumber))
                         .build());
         Assertions.assertEquals(PaymentResponseFailure.class, response.getClass());
+
     }
 
     @Test

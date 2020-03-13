@@ -200,13 +200,13 @@ public class HttpClient {
         InitiateResponse initiateResponse = parser.fromJson(response.getContent(), InitiateResponse.class);
 
         if (response.isSuccess() && initiateResponse.getResponseHeader().isSucceeded() && initiate.getRequestHeader().getSessionId() != null) {
-            initiateResponse.setSessionId(initiate.getRequestHeader().getSessionId());
             return initiateResponse;
+
             // 703: sessionId invalid
             // 704: session expired
         } else if (response.isSuccess() &&
-                (initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
-                        || initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
+                ("703".equals(initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode())
+                        || "704".equals(initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
             LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
@@ -247,8 +247,8 @@ public class HttpClient {
         if (response.isSuccess() && getResponse.getResponseHeader().isSucceeded()) {
             return getResponse;
         } else if (response.isSuccess() &&
-                (getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
-                        || getResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
+                ("703".equals(getResponse.getResponseHeader().getErrors().get(0).getErrorCode())
+                        || "704".equals(getResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
             LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
@@ -288,8 +288,8 @@ public class HttpClient {
         if (response.isSuccess() && refundResponse.getResponseHeader().isSucceeded()) {
             return refundResponse;
         } else if (response.isSuccess() &&
-                (refundResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
-                        || refundResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
+                ("703".equals(refundResponse.getResponseHeader().getErrors().get(0).getErrorCode())
+                        || "704".equals(refundResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
             LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
@@ -329,8 +329,8 @@ public class HttpClient {
         if (response.isSuccess() && cancelResponse.getResponseHeader().isSucceeded()) {
             return cancelResponse;
         } else if (response.isSuccess() &&
-                (cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("703")
-                        || cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode().equals("704"))) {
+                ("703".equals(cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode())
+                        || "704".equals(cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
             LoginResponse loginResponse = PluginUtils.tryLogin(configuration);

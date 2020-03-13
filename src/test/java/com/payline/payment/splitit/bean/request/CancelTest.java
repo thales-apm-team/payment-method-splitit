@@ -34,9 +34,6 @@ class CancelTest {
         Cancel cancel = creation();
         String expected = MockUtils.callCancel();
 
-        System.out.println(cancel);
-        System.out.println(expected);
-
         Assertions.assertEquals(expected, cancel.toString());
     }
 }

@@ -88,7 +88,26 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(), Initiate.class);
+        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments()), Initiate.class);
+        InitiateResponse response = client.initiate(configuration, initiate);
+        Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
+    }
+
+    @Test
+    void initiateSuccessDefaultRequestedNumberOfInstallments() {
+        StringResponse stringResponse = MockUtils.mockStringResponse(200
+                , "OK"
+                , MockUtils.responseInitiate()
+                , null);
+        Mockito.doReturn(stringResponse).when(client).post(any(), any(), any());
+
+        RequestConfiguration configuration = new RequestConfiguration(
+                MockUtils.aContractConfiguration()
+                , MockUtils.anEnvironment()
+                , MockUtils.aPartnerConfiguration()
+        );
+
+        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallmentsDefault()), Initiate.class);
         InitiateResponse response = client.initiate(configuration, initiate);
         Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
     }

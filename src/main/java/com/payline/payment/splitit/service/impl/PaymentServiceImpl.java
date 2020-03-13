@@ -13,6 +13,7 @@ import com.payline.payment.splitit.utils.PluginUtils;
 import com.payline.payment.splitit.utils.http.HttpClient;
 import com.payline.pmapi.bean.common.Buyer;
 import com.payline.pmapi.bean.common.FailureCause;
+import com.payline.pmapi.bean.payment.ContractConfiguration;
 import com.payline.pmapi.bean.payment.RequestContext;
 import com.payline.pmapi.bean.payment.request.PaymentRequest;
 import com.payline.pmapi.bean.payment.response.PaymentResponse;
@@ -22,11 +23,12 @@ import com.payline.pmapi.logger.LogManager;
 import com.payline.pmapi.service.PaymentService;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS;
-import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS;
+import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.*;
 
 public class PaymentServiceImpl implements PaymentService {
     private static final Logger LOGGER = LogManager.getLogger(PaymentServiceImpl.class);
@@ -66,7 +68,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (responseInitiate.getResponseHeader().isSucceeded()
                     && responseInitiate.getInstallmentPlan().getInstallmentPlanStatus().getCode().equals(InstallmentPlanStatus.Code.INITIALIZING)) {
 
-                return initiateResponseSuccess(responseInitiate);
+                return initiateResponseSuccess(responseInitiate, initiate.getRequestHeader().getSessionId());
                 // else return the right responseError
             } else {
                 return PluginUtils.paymentResponseFailure(responseInitiate.getResponseHeader().getErrors().get(0).getErrorCode());
@@ -91,10 +93,6 @@ public class PaymentServiceImpl implements PaymentService {
      * @return Initiate
      */
     public Initiate initiateCreate(PaymentRequest request) {
-        if (request.getRequestContext() == null || request.getRequestContext().getSensitiveRequestData() == null
-                || request.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID) == null) {
-            throw new InvalidDataException("Missing or invalid PaymentRequest.RequestContext");
-        }
 
         if (request.getPartnerConfiguration() == null || request.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
             throw new InvalidDataException(("Missing or invalid PaymentRequest.PartnerConfiguration"));
@@ -109,9 +107,9 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidDataException("Missing or invalid PaymentRequest.ContractConfiguration");
         }
 
-        if (request.getContractConfiguration().getProperty(REQUESTEDNUMBEROFINSTALLMENTS).getValue() == null) {
-            throw new InvalidDataException("Missing or invalid Requested Number of installment");
-        }
+//        if (request.getContractConfiguration().getProperty(REQUESTEDNUMBEROFINSTALLMENTS).getValue() == null) {
+//            throw new InvalidDataException("Missing or invalid Requested Number of installment");
+//        }
 
         if (request.getTransactionId() == null) {
             throw new InvalidDataException("Missing or invalid refOrderNumber // PaymentRequest.TransactionId");
@@ -149,7 +147,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 
         PlanData planData = new PlanData.PlanDataBuilder()
-//                .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(String.valueOf(request.getAmount().getAmountInSmallestUnit())).build())
                 .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
                 .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue())
                 .withRefOrderNumber(request.getTransactionId())
@@ -172,8 +169,9 @@ public class PaymentServiceImpl implements PaymentService {
                 .withCultureName(request.getLocale().toString())
                 .build();
 
+
         PaymentWizardData paymentWizardData = new PaymentWizardData.PaymentWizardDataBuilder()
-                .withRequestednumberOfInstallments(String.valueOf(request.getContractConfiguration().getProperty(REQUESTEDNUMBEROFINSTALLMENTS).getValue()))
+                .withRequestednumberOfInstallments(createChainRequestedNumberOfInstallments(request.getContractConfiguration()))
                 .withIsOpenedInIframe(false)
                 .build();
 
@@ -202,9 +200,10 @@ public class PaymentServiceImpl implements PaymentService {
      * Build the PaymentResponseRedirect if everything is ok
      *
      * @param initiateResponse
+     * @param sessionId
      * @return PaymentResponseRedirect
      */
-    public PaymentResponseRedirect initiateResponseSuccess(InitiateResponse initiateResponse) {
+    public PaymentResponseRedirect initiateResponseSuccess(InitiateResponse initiateResponse, String sessionId) {
         PaymentResponseRedirect.RedirectionRequest redirectionRequest = PaymentResponseRedirect.RedirectionRequest
                 .RedirectionRequestBuilder.aRedirectionRequest()
                 .withRequestType(PaymentResponseRedirect.RedirectionRequest.RequestType.GET)
@@ -214,7 +213,7 @@ public class PaymentServiceImpl implements PaymentService {
         Map<String, String> requestData = new HashMap<>();
         requestData.put(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER, initiateResponse.getInstallmentPlan().getInstallmentPlanNumber());
         Map<String, String> requestSensitiveData = new HashMap<>();
-        requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID, initiateResponse.getSessionId());
+        requestSensitiveData.put(Constants.RequestContextKeys.SESSION_ID, sessionId);
         RequestContext context = RequestContext.RequestContextBuilder.aRequestContext()
                 .withRequestData(requestData)
                 .withSensitiveRequestData(requestSensitiveData)
@@ -226,5 +225,21 @@ public class PaymentServiceImpl implements PaymentService {
                 .withRequestContext(context)
                 .withStatusCode(String.valueOf(initiateResponse.getInstallmentPlan().getInstallmentPlanStatus().getCode()))
                 .build();
+    }
+
+    public String createChainRequestedNumberOfInstallments(ContractConfiguration configuration) {
+        if(configuration.getProperty(REQUESTEDNUMBEROFINSTALLMENTSDEFAULT).getValue().equals("true")) {
+            return "2,3,4,5,6,7,8,9,10,11,12";
+        }
+        StringBuilder chain = new StringBuilder();
+        List<String> requestedNumberOfInstallmentsList = new ArrayList<>();
+        for (int i = 2; i < 13; i++) {
+            requestedNumberOfInstallmentsList.add("REQUESTEDNUMBEROFINSTALLMENTS" + i);
+            if(configuration.getProperty(requestedNumberOfInstallmentsList.get(i - 2)).getValue().equals("true")) {
+                chain.append(i).append(",");
+            }
+        }
+        // delete the last ,
+        return chain.substring(0, chain.length() - 1);
     }
 }
