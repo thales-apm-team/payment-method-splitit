@@ -183,6 +183,22 @@ public class HttpClient {
         }
     }
 
+    /**
+     * Try to login with the userName and the Password of the merchant
+     *
+     * @param configuration
+     * @return this.checkConnection
+     */
+    public LoginResponse tryLogin(RequestConfiguration configuration) {
+        // create login request object
+        Login login = new Login.LoginBuilder()
+                .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
+                .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
+                .build();
+        // call checkout connection
+        return this.checkConnection(configuration, login);
+    }
+
 
     /**
      * Initiate a transaction
@@ -209,7 +225,7 @@ public class HttpClient {
                         || "704".equals(initiateResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
-            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
+            LoginResponse loginResponse = this.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the initiate request object
@@ -252,7 +268,7 @@ public class HttpClient {
                         || "704".equals(getResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
-            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
+            LoginResponse loginResponse = this.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object
@@ -294,7 +310,7 @@ public class HttpClient {
                         || "704".equals(refundResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
-            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
+            LoginResponse loginResponse = this.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object
@@ -336,7 +352,7 @@ public class HttpClient {
                         || "704".equals(cancelResponse.getResponseHeader().getErrors().get(0).getErrorCode()))) {
 
             // try login
-            LoginResponse loginResponse = PluginUtils.tryLogin(configuration);
+            LoginResponse loginResponse = this.tryLogin(configuration);
 
             if (loginResponse.getResponseHeader().isSucceeded()) {
                 // set new sessionId to the get request object

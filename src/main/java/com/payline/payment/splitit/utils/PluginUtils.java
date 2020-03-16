@@ -65,22 +65,4 @@ public class PluginUtils {
                 .withFailureCause(cause)
                 .build();
     }
-
-
-    /**
-     * Try to login with the userName and the Password of the merchant
-     *
-     * @param configuration
-     * @return client.checkConnection
-     */
-    public static LoginResponse tryLogin(RequestConfiguration configuration) {
-        // create login request object
-        Login login = new Login.LoginBuilder()
-                .withUsername(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.USERNAME).getValue())
-                .withPassword(configuration.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.PASSWORD).getValue())
-                .build();
-        // call checkout connection
-        return client.checkConnection(configuration, login);
-    }
-
 }
