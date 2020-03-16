@@ -12,9 +12,8 @@ public class Constants {
         public static String USERNAME = "userName";
         public static String PASSWORD = "password";
         public static String NUMBEROFINSTALLMENTS = "numberOfInstallments";
-        public static String FIRST_INSTALLMENT_AMOUNT = "firstInstallmentAmount";
-        public static String ATTEMPS_3D_SECURE = "attempt3DSecure";
-        public static String FIRST_CHARGE_DATE = "firstChargeDate";
+        public static String ATTEMPS3DSECURE = "attempt3DSecure";
+        public static String FIRSTCHARGEDATE = "firstChargeDate";
         public static String REQUESTEDNUMBEROFINSTALLMENTSDEFAULT = "requestedNumberOfInstallments";
         public static String REQUESTEDNUMBEROFINSTALLMENTS2 = "requestedNumberOfInstallments";
         public static String REQUESTEDNUMBEROFINSTALLMENTS3 = "requestedNumberOfInstallments";
@@ -29,7 +28,7 @@ public class Constants {
         public static String REQUESTEDNUMBEROFINSTALLMENTS12 = "requestedNumberOfInstallments";
         public static String REFUNDSTRATEGY = "refundStrategy";
         public static String REFUNDUNDERCANCELLATION = "refundUndercanCellation";
-//        public static String FIRSTINSTALLMENTAMOUNT = "firstInstallmentAmount";
+        public static String FIRSTINSTALLMENTAMOUNT = "firstInstallmentAmount";
 
         /* Static utility class : no need to instantiate it (Sonar bug fix) */
         private ContractConfigurationKeys() {

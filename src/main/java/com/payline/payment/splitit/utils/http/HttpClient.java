@@ -223,8 +223,9 @@ public class HttpClient {
             }
 
         } else {
-            LOGGER.error("Initiate wrong URL");
-            throw new InvalidDataException("Initiate wrong URL");
+            String responseError = "can't reach the partner API with Initiate request";
+            LOGGER.error(responseError);
+            throw new InvalidDataException(responseError);
         }
     }
 
@@ -264,8 +265,9 @@ public class HttpClient {
                 throw new InvalidDataException("Get bad ContractParam");
             }
         } else {
-            LOGGER.error("Get wrong URL");
-            throw new InvalidDataException("Get wrong URL");
+            String responseError = "can't reach the partner API with Get request";
+            LOGGER.error(responseError);
+            throw new InvalidDataException(responseError);
         }
     }
 
@@ -305,8 +307,9 @@ public class HttpClient {
                 throw new InvalidDataException("Refund bad ContractParam");
             }
         } else {
-            LOGGER.error("Refund wrong URL");
-            throw new InvalidDataException("Refund wrong URL");
+            String responseError = "can't reach the partner API with Refund request";
+            LOGGER.error(responseError);
+            throw new InvalidDataException(responseError);
         }
     }
 
@@ -346,8 +349,9 @@ public class HttpClient {
                 throw new InvalidDataException("Cancel bad ContractParam");
             }
         } else {
-            LOGGER.error("Cancel wrong URL");
-            throw new InvalidDataException("Cancel wrong URL");
+            String responseError = "can't reach the partner API with Cancel request";
+            LOGGER.error(responseError);
+            throw new InvalidDataException(responseError);
         }
     }
 }

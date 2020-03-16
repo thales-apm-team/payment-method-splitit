@@ -37,4 +37,14 @@ class PaymentServiceImplTest {
         );
         Assertions.assertEquals(PaymentResponseRedirect.class, response.getClass());
     }
+
+    @Test
+    void paymentRequestFirstInstallmentAmount() {
+        InitiateResponse initiateResponse = new GsonBuilder().create().fromJson(MockUtils.responseInitiate(), InitiateResponse.class);
+        Mockito.doReturn(initiateResponse).when(client).initiate(any(), any());
+        PaymentResponse response = paymentService.paymentRequest(
+                MockUtils.aPaylinePaymentRequest()
+        );
+        Assertions.assertEquals(PaymentResponseRedirect.class, response.getClass());
+    }
 }

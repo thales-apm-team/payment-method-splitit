@@ -6,8 +6,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
+import java.util.Currency;
 
 class AmountParseTest {
+
+    private double number = 123.4;
+    private Currency currency = Currency.getInstance("EUR");
 
     @Test
     void splitFullAmount() {
@@ -70,5 +74,10 @@ class AmountParseTest {
         com.payline.payment.splitit.bean.nesteed.Amount amount = MockUtils.aSplitItAmount(".1234");
         BigInteger parse = AmountParse.transfoBigInt(amount.getValue());
         Assertions.assertEquals(BigInteger.valueOf(1234), parse);
+    }
+
+    @Test
+    void splitDouble() {
+        AmountParse.split(number, currency);
     }
 }

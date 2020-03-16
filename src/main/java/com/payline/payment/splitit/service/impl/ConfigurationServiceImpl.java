@@ -57,14 +57,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         numberOfInstallments.setRequired(false);
         parameters.add(numberOfInstallments);
 
-
-//        AbstractParameter requestedNumberOfInstallments = new CheckboxParameter();
-//        requestedNumberOfInstallments.setKey(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS);
-//        requestedNumberOfInstallments.setLabel(i18n.getMessage("requestedNumberOfInstallments.label", locale));
-//        requestedNumberOfInstallments.setDescription(i18n.getMessage("requestedNumberOfInstallments.description", locale));
-//        requestedNumberOfInstallments.setRequired(false);
-//        parameters.add(requestedNumberOfInstallments);
-
         // checkbox for requestedNumberOfInstallment: list between 2 and 12
         List<String> requestedNumberOfInstallmentsList = new ArrayList<>();
         for (int i = 2; i < 13; i++) {
@@ -75,6 +67,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             parameters.add(this.newCheckboxParameter(i, "requestedNumberOfInstallments", requestedNumberOfInstallmentsList.get(i - 2), false, locale));
         }
 
+        // if nothing is check, you can pay choose any installment
         CheckboxParameter requestedNumberOfInstallmentsDefault = new CheckboxParameter();
         requestedNumberOfInstallmentsDefault.setKey(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTSDEFAULT);
         requestedNumberOfInstallmentsDefault.setLabel(i18n.getMessage("requestedNumberOfInstallments.label", locale));
@@ -95,6 +88,22 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundStrategy.setDescription(i18n.getMessage("refundStrategy.description", locale));
         refundStrategy.setRequired(false);
         parameters.add(refundStrategy);
+
+        Map<String, String> firstInstallmentAmountMap = new HashMap<>();
+        firstInstallmentAmountMap.put("30%", i18n.getMessage("firstInstallmentAmount30.value", locale));
+        firstInstallmentAmountMap.put("40%", i18n.getMessage("firstInstallmentAmount40.value", locale));
+        firstInstallmentAmountMap.put("50%", i18n.getMessage("firstInstallmentAmount50.value", locale));
+        firstInstallmentAmountMap.put("60%", i18n.getMessage("firstInstallmentAmount60.value", locale));
+
+
+        ListBoxParameter firstInstallmentAmount = new ListBoxParameter();
+        firstInstallmentAmount.setKey(Constants.ContractConfigurationKeys.FIRSTINSTALLMENTAMOUNT);
+        firstInstallmentAmount.setList(firstInstallmentAmountMap);
+        firstInstallmentAmount.setLabel(i18n.getMessage("firstInstallmentAmount.label", locale));
+        firstInstallmentAmount.setDescription(i18n.getMessage("firstInstallmentAmount.description", locale));
+        firstInstallmentAmount.setRequired(false);
+        parameters.add(firstInstallmentAmount);
+
 
         Map<String, String> refundUnderCancellationMap = new HashMap<>();
         refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));

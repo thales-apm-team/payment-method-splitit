@@ -3,6 +3,7 @@ package com.payline.payment.splitit.bean;
 import com.payline.pmapi.bean.common.Amount;
 
 import java.math.BigInteger;
+import java.util.Currency;
 import java.util.Locale;
 
 public class AmountParse {
@@ -17,11 +18,6 @@ public class AmountParse {
     public static String split(Amount amount) {
         String chain = amount.getAmountInSmallestUnit().toString();
         int currency = amount.getCurrency().getDefaultFractionDigits();
-//        if (amount.getCurrency().getDefaultFractionDigits() == 0) {
-//            currency = Currency.getInstance(locale).getDefaultFractionDigits();
-//        } else {
-//            currency = amount.getCurrency().getDefaultFractionDigits();
-//        }
 
         if (currency == 0) {
             return chain;
@@ -33,6 +29,19 @@ public class AmountParse {
             }
         }
         return chain.substring(0, chain.length() - currency) + "." + chain.substring(chain.length() - currency);
+    }
+
+    public static String split(Double amount, Currency currency) {
+        String chain = String.valueOf(amount);
+        if (currency.getDefaultFractionDigits() == 0) {
+            return chain;
+        }
+        String tmp = "";
+        int indexDot = chain.indexOf('.');
+
+        return tmp + chain.substring(0, chain.length() - currency.getDefaultFractionDigits() - indexDot + 1)
+        + "." + chain.substring(chain.length() - currency.getDefaultFractionDigits() - indexDot + 1, chain.length() - indexDot + 1)
+        + chain.substring(chain.length() - indexDot + 2);
     }
 
 

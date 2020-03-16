@@ -64,11 +64,11 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
                             .build())
                     .build();
 
-            String sessionId = redirectionPaymentRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID);
-
             return genericTransaction(configuration, get);
 
 
+        } catch (PluginException e) {
+            return e.toPaymentResponseFailureBuilder().build();
         } catch (RuntimeException e) {
             LOGGER.error("unexpected plugin error", e);
             return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()

@@ -23,6 +23,7 @@ import com.payline.pmapi.logger.LogManager;
 import com.payline.pmapi.service.PaymentService;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +94,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @return Initiate
      */
     public Initiate initiateCreate(PaymentRequest request) {
+        PlanData planData;
 
         if (request.getPartnerConfiguration() == null || request.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
             throw new InvalidDataException(("Missing or invalid PaymentRequest.PartnerConfiguration"));
@@ -106,10 +108,6 @@ public class PaymentServiceImpl implements PaymentService {
         if (request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue() == null) {
             throw new InvalidDataException("Missing or invalid PaymentRequest.ContractConfiguration");
         }
-
-//        if (request.getContractConfiguration().getProperty(REQUESTEDNUMBEROFINSTALLMENTS).getValue() == null) {
-//            throw new InvalidDataException("Missing or invalid Requested Number of installment");
-//        }
 
         if (request.getTransactionId() == null) {
             throw new InvalidDataException("Missing or invalid refOrderNumber // PaymentRequest.TransactionId");
@@ -145,13 +143,29 @@ public class PaymentServiceImpl implements PaymentService {
                 .withApiKey(request.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY))
                 .build();
 
+        // if the FIRSTINSTALLMENTAMOUNT is null
+        if (request.getContractConfiguration().getProperty(FIRSTINSTALLMENTAMOUNT) == null) {
+            planData = new PlanData.PlanDataBuilder()
+                    .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
+                    .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue())
+                    .withRefOrderNumber(request.getTransactionId())
+                    .withAutoCapture(request.isCaptureNow())
+                    .build();
+        } else {
+            Amount firstInstallmentAmount = new Amount.AmountBuilder()
+                    .withCurrency(request.getAmount().getCurrency().toString())
+                    .withValue(AmountParse.split(new com.payline.pmapi.bean.common.Amount(computeFirstInstallmentAmount(request.getAmount(), request.getContractConfiguration().getProperty(FIRSTINSTALLMENTAMOUNT).getValue()), request.getAmount().getCurrency())))
+                    .build();
 
-        PlanData planData = new PlanData.PlanDataBuilder()
-                .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
-                .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue())
-                .withRefOrderNumber(request.getTransactionId())
-                .withAutoCapture(request.isCaptureNow())
-                .build();
+
+            planData = new PlanData.PlanDataBuilder()
+                    .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
+                    .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue())
+                    .withRefOrderNumber(request.getTransactionId())
+                    .withFirstInstallmentAmount(firstInstallmentAmount)
+                    .withAutoCapture(request.isCaptureNow())
+                    .build();
+        }
 
         BillingAddress billingAddress = new BillingAddress.BillingAddressBuilder()
                 .withAddressLine(request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getStreet1())
@@ -241,5 +255,12 @@ public class PaymentServiceImpl implements PaymentService {
         }
         // delete the last ,
         return chain.substring(0, chain.length() - 1);
+    }
+
+    public BigInteger computeFirstInstallmentAmount(com.payline.pmapi.bean.common.Amount amount, String percent) {
+        // percent is like 20%, we should remove the %
+        double aux = amount.getAmountInSmallestUnit().multiply(BigInteger.valueOf(Integer.parseInt(percent.replace("%", "")))).floatValue();
+        AmountParse.split(aux, amount.getCurrency());
+        return (amount.getAmountInSmallestUnit().multiply(BigInteger.valueOf(Integer.parseInt(percent.replace("%", ""))))).divide(BigInteger.valueOf(100));
     }
 }

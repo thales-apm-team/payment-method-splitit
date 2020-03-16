@@ -370,6 +370,7 @@ public class MockUtils {
         contractProperties.put(Constants.ContractConfigurationKeys.REQUESTEDNUMBEROFINSTALLMENTS2, new ContractProperty("true"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUNDSTRATEGY, new ContractProperty("FutureInstallmentsFirst"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
+        contractProperties.put(Constants.ContractConfigurationKeys.FIRSTINSTALLMENTAMOUNT, new ContractProperty("30%"));
 
         return new ContractConfiguration("SplitIt", contractProperties);
     }
