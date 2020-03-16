@@ -78,6 +78,19 @@ class AmountParseTest {
 
     @Test
     void splitDouble() {
-        AmountParse.split(number, currency);
+        String parse = AmountParse.split(number, currency);
+        Assertions.assertEquals("1.234", parse);
+    }
+
+    @Test
+    void splitDoubleWithoutInt() {
+        String parse = AmountParse.split(0.1234, currency);
+        Assertions.assertEquals("0.001234", parse);
+    }
+
+    @Test
+    void splitDoubleWithoutDot() {
+        String parse = AmountParse.split((double) 1234, currency);
+        Assertions.assertEquals("12.340", parse);
     }
 }

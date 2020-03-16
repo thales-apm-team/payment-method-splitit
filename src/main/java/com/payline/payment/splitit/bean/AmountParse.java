@@ -39,9 +39,16 @@ public class AmountParse {
         String tmp = "";
         int indexDot = chain.indexOf('.');
 
-        return tmp + chain.substring(0, chain.length() - currency.getDefaultFractionDigits() - indexDot + 1)
-        + "." + chain.substring(chain.length() - currency.getDefaultFractionDigits() - indexDot + 1, chain.length() - indexDot + 1)
-        + chain.substring(chain.length() - indexDot + 2);
+        if (indexDot < 3) {
+            while (indexDot < 3) {
+                chain = "0" + chain;
+                indexDot = chain.indexOf('.');
+            }
+        }
+
+        return chain.substring(0,indexDot - currency.getDefaultFractionDigits()) + "." +
+                chain.substring(indexDot - currency.getDefaultFractionDigits(), indexDot) +
+                chain.substring(indexDot + 1);
     }
 
 

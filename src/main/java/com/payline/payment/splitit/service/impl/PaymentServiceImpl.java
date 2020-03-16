@@ -154,7 +154,7 @@ public class PaymentServiceImpl implements PaymentService {
         } else {
             Amount firstInstallmentAmount = new Amount.AmountBuilder()
                     .withCurrency(request.getAmount().getCurrency().toString())
-                    .withValue(AmountParse.split(new com.payline.pmapi.bean.common.Amount(computeFirstInstallmentAmount(request.getAmount(), request.getContractConfiguration().getProperty(FIRSTINSTALLMENTAMOUNT).getValue()), request.getAmount().getCurrency())))
+                    .withValue(AmountParse.split(request.getAmount().getAmountInSmallestUnit().doubleValue(), request.getAmount().getCurrency()))
                     .build();
 
 
@@ -242,14 +242,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public String createChainRequestedNumberOfInstallments(ContractConfiguration configuration) {
-        if(configuration.getProperty(REQUESTEDNUMBEROFINSTALLMENTSDEFAULT).getValue().equals("true")) {
+        if (configuration.getProperty(REQUESTEDNUMBEROFINSTALLMENTSDEFAULT).getValue().equals("true")) {
             return "2,3,4,5,6,7,8,9,10,11,12";
         }
         StringBuilder chain = new StringBuilder();
         List<String> requestedNumberOfInstallmentsList = new ArrayList<>();
         for (int i = 2; i < 13; i++) {
             requestedNumberOfInstallmentsList.add("REQUESTEDNUMBEROFINSTALLMENTS" + i);
-            if(configuration.getProperty(requestedNumberOfInstallmentsList.get(i - 2)).getValue().equals("true")) {
+            if (configuration.getProperty(requestedNumberOfInstallmentsList.get(i - 2)).getValue().equals("true")) {
                 chain.append(i).append(",");
             }
         }

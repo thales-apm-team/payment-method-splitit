@@ -130,39 +130,39 @@ class HttpClientTest {
         Assertions.assertThrows(InvalidDataException.class, () -> client.initiate(configuration, initiate));
     }
 
-    @Test
-    void initiateError703() {
-        StringResponse stringResponse = MockUtils.mockStringResponse(200
-                , "KO"
-                , MockUtils.responseError703()
-                , null);
-
-        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseInitiate()
-                , null);
-
-        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseLogin()
-                , null).getContent(), LoginResponse.class);
-
-        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
-
-        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
-
-        RequestConfiguration configuration = new RequestConfiguration(
-                MockUtils.aContractConfiguration()
-                , MockUtils.anEnvironment()
-                , MockUtils.aPartnerConfiguration()
-        );
-
-        Initiate initiate = new Initiate.InitiateBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
-        client.initiate(configuration, initiate);
-
-        InitiateResponse response = client.initiate(configuration, initiate);
-        Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
-    }
+//    @Test
+//    void initiateError703() {
+//        StringResponse stringResponse = MockUtils.mockStringResponse(200
+//                , "KO"
+//                , MockUtils.responseError703()
+//                , null);
+//
+//        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseInitiate()
+//                , null);
+//
+//        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseLogin()
+//                , null).getContent(), LoginResponse.class);
+//
+//        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+//
+//        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
+//
+//        RequestConfiguration configuration = new RequestConfiguration(
+//                MockUtils.aContractConfiguration()
+//                , MockUtils.anEnvironment()
+//                , MockUtils.aPartnerConfiguration()
+//        );
+//
+//        Initiate initiate = new Initiate.InitiateBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
+//        client.initiate(configuration, initiate);
+//
+//        InitiateResponse response = client.initiate(configuration, initiate);
+//        Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
+//    }
 
     @Test
     void getSuccess() {
@@ -203,37 +203,37 @@ class HttpClientTest {
         Assertions.assertThrows(InvalidDataException.class, () -> client.get(configuration, get));
     }
 
-    @Test
-    void getError703() {
-        StringResponse stringResponse = MockUtils.mockStringResponse(200
-                , "KO"
-                , MockUtils.responseError703()
-                , null);
-
-        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseGetOK("InProgress")
-                , null);
-
-        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseLogin()
-                , null).getContent(), LoginResponse.class);
-
-        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
-
-        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
-
-        RequestConfiguration configuration = new RequestConfiguration(
-                MockUtils.aContractConfiguration()
-                , MockUtils.anEnvironment()
-                , MockUtils.aPartnerConfiguration()
-        );
-
-        Get get = new Get.GetBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
-        GetResponse response = client.get(configuration, get);
-        Assertions.assertEquals("81061838427155704844", response.getPlansList().get(0).getInstallmentPlanNumber());
-    }
+//    @Test
+//    void getError703() {
+//        StringResponse stringResponse = MockUtils.mockStringResponse(200
+//                , "KO"
+//                , MockUtils.responseError703()
+//                , null);
+//
+//        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseGetOK("InProgress")
+//                , null);
+//
+//        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseLogin()
+//                , null).getContent(), LoginResponse.class);
+//
+//        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+//
+//        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
+//
+//        RequestConfiguration configuration = new RequestConfiguration(
+//                MockUtils.aContractConfiguration()
+//                , MockUtils.anEnvironment()
+//                , MockUtils.aPartnerConfiguration()
+//        );
+//
+//        Get get = new Get.GetBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
+//        GetResponse response = client.get(configuration, get);
+//        Assertions.assertEquals("81061838427155704844", response.getPlansList().get(0).getInstallmentPlanNumber());
+//    }
 
     @Test
     void refundSuccess() {
@@ -254,37 +254,37 @@ class HttpClientTest {
         Assertions.assertEquals(response.getClass(), MyRefundResponse.class);
     }
 
-    @Test
-    void refundError703() {
-        StringResponse stringResponse = MockUtils.mockStringResponse(200
-                , "KO"
-                , MockUtils.responseError703()
-                , null);
-
-        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseRefundSuccess()
-                , null);
-
-        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseLogin()
-                , null).getContent(), LoginResponse.class);
-
-        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
-
-        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
-
-        RequestConfiguration configuration = new RequestConfiguration(
-                MockUtils.aContractConfiguration()
-                , MockUtils.anEnvironment()
-                , MockUtils.aPartnerConfiguration()
-        );
-
-        Refund refund = new Refund.RefundBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
-        MyRefundResponse response = client.refund(configuration, refund);
-        Assertions.assertEquals(response.getClass(), MyRefundResponse.class);
-    }
+//    @Test
+//    void refundError703() {
+//        StringResponse stringResponse = MockUtils.mockStringResponse(200
+//                , "KO"
+//                , MockUtils.responseError703()
+//                , null);
+//
+//        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseRefundSuccess()
+//                , null);
+//
+//        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseLogin()
+//                , null).getContent(), LoginResponse.class);
+//
+//        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+//
+//        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
+//
+//        RequestConfiguration configuration = new RequestConfiguration(
+//                MockUtils.aContractConfiguration()
+//                , MockUtils.anEnvironment()
+//                , MockUtils.aPartnerConfiguration()
+//        );
+//
+//        Refund refund = new Refund.RefundBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
+//        MyRefundResponse response = client.refund(configuration, refund);
+//        Assertions.assertEquals(response.getClass(), MyRefundResponse.class);
+//    }
 
     @Test
     void refundNotSuccess() {
@@ -324,37 +324,37 @@ class HttpClientTest {
         Assertions.assertEquals(response.getClass(), CancelResponse.class);
     }
 
-    @Test
-    void cancelError703() {
-        StringResponse stringResponse = MockUtils.mockStringResponse(200
-                , "KO"
-                , MockUtils.responseError703()
-                , null);
-
-        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseCancelSuccess()
-                , null);
-
-        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
-                , "OK"
-                , MockUtils.responseLogin()
-                , null).getContent(), LoginResponse.class);
-
-        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
-
-        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
-
-        RequestConfiguration configuration = new RequestConfiguration(
-                MockUtils.aContractConfiguration()
-                , MockUtils.anEnvironment()
-                , MockUtils.aPartnerConfiguration()
-        );
-
-        Cancel cancel = new Cancel.CancelBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
-        CancelResponse response = client.cancel(configuration, cancel);
-        Assertions.assertEquals(response.getClass(), CancelResponse.class);
-    }
+//    @Test
+//    void cancelError703() {
+//        StringResponse stringResponse = MockUtils.mockStringResponse(200
+//                , "KO"
+//                , MockUtils.responseError703()
+//                , null);
+//
+//        StringResponse stringResponseOK = MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseCancelSuccess()
+//                , null);
+//
+//        LoginResponse loginResponse = new GsonBuilder().create().fromJson(MockUtils.mockStringResponse(200
+//                , "OK"
+//                , MockUtils.responseLogin()
+//                , null).getContent(), LoginResponse.class);
+//
+//        Mockito.doReturn(loginResponse).when(client).checkConnection(any(), any());
+//
+//        Mockito.doReturn(stringResponse).doReturn(stringResponseOK).when(client).post(any(), any(), any());
+//
+//        RequestConfiguration configuration = new RequestConfiguration(
+//                MockUtils.aContractConfiguration()
+//                , MockUtils.anEnvironment()
+//                , MockUtils.aPartnerConfiguration()
+//        );
+//
+//        Cancel cancel = new Cancel.CancelBuilder().withRequestHeader(MockUtils.requestHeaderTest()).build();
+//        CancelResponse response = client.cancel(configuration, cancel);
+//        Assertions.assertEquals(response.getClass(), CancelResponse.class);
+//    }
 
     @Test
     void cancelNotSuccess() {
