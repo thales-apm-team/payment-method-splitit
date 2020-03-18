@@ -1,9 +1,6 @@
 package com.payline.payment.splitit.utils;
 
 
-import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
-import com.payline.payment.splitit.bean.request.Login;
-import com.payline.payment.splitit.bean.response.LoginResponse;
 import com.payline.payment.splitit.utils.http.HttpClient;
 import com.payline.pmapi.bean.common.FailureCause;
 import com.payline.pmapi.bean.payment.response.impl.PaymentResponseFailure;
@@ -52,10 +49,6 @@ public class PluginUtils {
             case "400":
                 cause = FailureCause.INVALID_FIELD_FORMAT;
                 break;
-
-//            case "704":
-//                cause = FailureCause.SESSION_EXPIRED;
-//                break;
 
             default:
                 cause = FailureCause.INVALID_DATA;

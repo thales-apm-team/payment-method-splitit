@@ -72,7 +72,7 @@ class InitiateTest {
     @Test
     void testToString() {
         Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallments());
-        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments());
+        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments(), MockUtils.getFirstChargeDateOneMonth());
 
         Assertions.assertEquals(expected, initiate.toString());
         Assertions.assertEquals(MockUtils.getRequestedNumberOfInstallments(), initiate.getPaymentWizardData().getRequestednumberOfInstallments());
@@ -81,9 +81,27 @@ class InitiateTest {
     @Test
     void testToStringRequestedNumberOfInstallmentDefault() {
         Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallmentsDefault());
-        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallmentsDefault());
+        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallmentsDefault(), MockUtils.getFirstChargeDateOneMonth());
 
         Assertions.assertEquals(expected, initiate.toString());
         Assertions.assertEquals(MockUtils.getRequestedNumberOfInstallmentsDefault(), initiate.getPaymentWizardData().getRequestednumberOfInstallments());
+    }
+
+    @Test
+    void testToStringRequestedNumberOfInstallment() {
+        Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallments());
+        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments(), MockUtils.getFirstChargeDateOneMonth());
+
+        Assertions.assertEquals(expected, initiate.toString());
+        Assertions.assertEquals(MockUtils.getRequestedNumberOfInstallments(), initiate.getPaymentWizardData().getRequestednumberOfInstallments());
+    }
+
+    @Test
+    void testToStringFirstChargeDateOneMonth() {
+        Initiate initiate = creation(MockUtils.getRequestedNumberOfInstallments());
+        String expected = MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments(), MockUtils.getFirstChargeDateOneMonth());
+
+        Assertions.assertEquals(expected, initiate.toString());
+        Assertions.assertEquals(MockUtils.getFirstChargeDateOneMonth(), initiate.getPlanData().getFirstChargeDate());
     }
 }

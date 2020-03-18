@@ -50,12 +50,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         password.setRequired(true);
         parameters.add(password);
 
-        AbstractParameter numberOfInstallments = new ListBoxParameter();
-        numberOfInstallments.setKey(Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS);
-        numberOfInstallments.setLabel(i18n.getMessage("numberOfInstallments.label", locale));
-        numberOfInstallments.setDescription(i18n.getMessage("numberOfInstallments.description", locale));
-        numberOfInstallments.setRequired(false);
-        parameters.add(numberOfInstallments);
+//        AbstractParameter numberOfInstallments = new ListBoxParameter();
+//        numberOfInstallments.setKey(Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS);
+//        numberOfInstallments.setLabel(i18n.getMessage("numberOfInstallments.label", locale));
+//        numberOfInstallments.setDescription(i18n.getMessage("numberOfInstallments.description", locale));
+//        numberOfInstallments.setRequired(false);
+//        parameters.add(numberOfInstallments);
 
         // checkbox for requestedNumberOfInstallment: list between 2 and 12
         List<String> requestedNumberOfInstallmentsList = new ArrayList<>();
@@ -64,7 +64,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         }
 
         for (int i = 2; i < 13; i++) {
-            parameters.add(this.newCheckboxParameter(i, "requestedNumberOfInstallments", requestedNumberOfInstallmentsList.get(i - 2), false, locale));
+            parameters.add(this.newCheckboxParameter(String.valueOf(i), "requestedNumberOfInstallments", requestedNumberOfInstallmentsList.get(i - 2), false, locale));
         }
 
         // if nothing is check, you can pay choose any installment
@@ -75,12 +75,21 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         requestedNumberOfInstallmentsDefault.setRequired(false);
         parameters.add(requestedNumberOfInstallmentsDefault);
 
+        // can the shopper use 3DSecure ?
+        CheckboxParameter attempt3DSecure = new CheckboxParameter();
+        attempt3DSecure.setKey(Constants.ContractConfigurationKeys.ATTEMPT3DSECURE);
+        attempt3DSecure.setLabel(i18n.getMessage("attempt3DSecure.label", locale));
+        attempt3DSecure.setDescription(i18n.getMessage("attempt3DSecure.description", locale));
+        attempt3DSecure.setRequired(true);
+        parameters.add(attempt3DSecure);
+
         Map<String, String> refundStrategyMap = new HashMap<>();
         refundStrategyMap.put(Refund.refundStrategyEnum.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
         refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsFirst.toString(), i18n.getMessage("FutureInstallmentsFirst.value", locale));
         refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsLast.toString(), i18n.getMessage("FutureInstallmentsLast.value", locale));
         refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsNotAllowed.toString(), i18n.getMessage("FutureInstallmentsNotAllowed.value", locale));
 
+        // refund strategy for the refund operation
         ListBoxParameter refundStrategy = new ListBoxParameter();
         refundStrategy.setKey(Constants.ContractConfigurationKeys.REFUNDSTRATEGY);
         refundStrategy.setList(refundStrategyMap);
@@ -89,12 +98,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundStrategy.setRequired(false);
         parameters.add(refundStrategy);
 
+        // create the choice if the first installment is different from the others
         Map<String, String> firstInstallmentAmountMap = new HashMap<>();
         firstInstallmentAmountMap.put("30%", i18n.getMessage("firstInstallmentAmount30.value", locale));
         firstInstallmentAmountMap.put("40%", i18n.getMessage("firstInstallmentAmount40.value", locale));
         firstInstallmentAmountMap.put("50%", i18n.getMessage("firstInstallmentAmount50.value", locale));
         firstInstallmentAmountMap.put("60%", i18n.getMessage("firstInstallmentAmount60.value", locale));
-
 
         ListBoxParameter firstInstallmentAmount = new ListBoxParameter();
         firstInstallmentAmount.setKey(Constants.ContractConfigurationKeys.FIRSTINSTALLMENTAMOUNT);
@@ -104,7 +113,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         firstInstallmentAmount.setRequired(false);
         parameters.add(firstInstallmentAmount);
 
-
+        // refund strategy for the cancel operation
         Map<String, String> refundUnderCancellationMap = new HashMap<>();
         refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
         refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
@@ -116,6 +125,14 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundUnderCancellation.setDescription(i18n.getMessage("refundUnderCancellation.description", locale));
         refundUnderCancellation.setRequired(false);
         parameters.add(refundUnderCancellation);
+
+        // todo generaliser le prefixe !!!
+        // create the choice if the first date charge is different from the time of initialisation
+        parameters.add(this.newCheckboxParameter(null, "firstChargeDateNow", Constants.ContractConfigurationKeys.FIRSTCHARGEDATENOW, false, locale));
+        parameters.add(this.newCheckboxParameter(null, "firstChargeDateOneWeek", Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEWEEK, false, locale));
+        parameters.add(this.newCheckboxParameter(null, "firstChargeDateTwoWeeks", Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOWEEKS, false, locale));
+        parameters.add(this.newCheckboxParameter(null, "firstChargeDateOneMonth", Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEMONTH, false, locale));
+        parameters.add(this.newCheckboxParameter(null, "firstChargeDateTwoMonths", Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOMONTHS, false, locale));
 
         return parameters;
     }
@@ -165,7 +182,20 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return i18n.getMessage("paymentMethod.name", locale);
     }
 
-    private CheckboxParameter newCheckboxParameter(int i, String prefix, String key, boolean required, Locale locale) {
+    /**
+     * Create checkboxes
+     *
+     * @param i        increment if it's the only difference between keys (ex requestedNumberOfInstallments
+     * @param prefix   the name for message.properties
+     * @param key      key in Constants
+     * @param required
+     * @param locale
+     * @return CheckboxParameter
+     */
+    private CheckboxParameter newCheckboxParameter(String i, String prefix, String key, boolean required, Locale locale) {
+        if (i == null) {
+            i = "";
+        }
         CheckboxParameter checkboxParameter = new CheckboxParameter();
         checkboxParameter.setKey(key);
         checkboxParameter.setLabel(i18n.getMessage(prefix + i + ".label", locale));

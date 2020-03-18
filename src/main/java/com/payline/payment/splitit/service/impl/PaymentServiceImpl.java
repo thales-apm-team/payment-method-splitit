@@ -23,11 +23,10 @@ import com.payline.pmapi.logger.LogManager;
 import com.payline.pmapi.service.PaymentService;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static com.payline.payment.splitit.utils.Constants.ContractConfigurationKeys.*;
 
@@ -95,6 +94,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     public Initiate initiateCreate(PaymentRequest request) {
         PlanData planData;
+        String chargeDate = "";
 
         if (request.getPartnerConfiguration() == null || request.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
             throw new InvalidDataException(("Missing or invalid PaymentRequest.PartnerConfiguration"));
@@ -137,6 +137,11 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidDataException("Missing or invalid RedirectionUrl");
         }
 
+        // if there is no date, it's the date of the initialisation
+        if (request.getPaymentFormContext() != null && request.getPaymentFormContext().getPaymentFormParameter() != null) {
+            chargeDate = computeDate(request);
+        }
+
 
         RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
                 .withSessionId(request.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID))
@@ -150,6 +155,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue())
                     .withRefOrderNumber(request.getTransactionId())
                     .withAutoCapture(request.isCaptureNow())
+                    .withFirstChargeDate(chargeDate)
                     .build();
         } else {
             Amount firstInstallmentAmount = new Amount.AmountBuilder()
@@ -164,6 +170,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .withRefOrderNumber(request.getTransactionId())
                     .withFirstInstallmentAmount(firstInstallmentAmount)
                     .withAutoCapture(request.isCaptureNow())
+                    .withFirstChargeDate(chargeDate)
                     .build();
         }
 
@@ -213,8 +220,8 @@ public class PaymentServiceImpl implements PaymentService {
     /**
      * Build the PaymentResponseRedirect if everything is ok
      *
-     * @param initiateResponse
-     * @param sessionId
+     * @param initiateResponse InitiateResponse
+     * @param sessionId        the sessionId
      * @return PaymentResponseRedirect
      */
     public PaymentResponseRedirect initiateResponseSuccess(InitiateResponse initiateResponse, String sessionId) {
@@ -241,6 +248,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
     }
 
+    /**
+     * Create the field requested number of installments
+     *
+     * @param configuration ContractConfiguration
+     * @return String
+     */
     public String createChainRequestedNumberOfInstallments(ContractConfiguration configuration) {
         if (configuration.getProperty(REQUESTEDNUMBEROFINSTALLMENTSDEFAULT).getValue().equals("true")) {
             return "2,3,4,5,6,7,8,9,10,11,12";
@@ -253,14 +266,41 @@ public class PaymentServiceImpl implements PaymentService {
                 chain.append(i).append(",");
             }
         }
-        // delete the last ,
+        // delete the last coma
         return chain.substring(0, chain.length() - 1);
     }
 
-    public BigInteger computeFirstInstallmentAmount(com.payline.pmapi.bean.common.Amount amount, String percent) {
-        // percent is like 20%, we should remove the %
-        double aux = amount.getAmountInSmallestUnit().multiply(BigInteger.valueOf(Integer.parseInt(percent.replace("%", "")))).floatValue();
-        AmountParse.split(aux, amount.getCurrency());
-        return (amount.getAmountInSmallestUnit().multiply(BigInteger.valueOf(Integer.parseInt(percent.replace("%", ""))))).divide(BigInteger.valueOf(100));
+    /**
+     * compute the date of the first charge date
+     * date have format yyyy-MM-jj
+     *
+     * @param request PaymentRequest
+     * @return String
+     */
+    public String computeDate(PaymentRequest request) {
+        final Date date = new Date();
+        final String dateFormat = "yyyy-MM-dd";
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        String chargeDate = "";
+
+        switch (request.getPaymentFormContext().getPaymentFormParameter().get(Constants.FormConfigurationKeys.OPTIONS)) {
+            case FIRSTCHARGEDATEONEWEEK:
+                chargeDate = localDateTime.plusWeeks(1).format(DateTimeFormatter.ofPattern(dateFormat));
+                break;
+            case FIRSTCHARGEDATETWOWEEKS:
+                chargeDate = localDateTime.plusWeeks(2).format(DateTimeFormatter.ofPattern(dateFormat));
+                break;
+            case FIRSTCHARGEDATEONEMONTH:
+                chargeDate = localDateTime.plusMonths(1).format(DateTimeFormatter.ofPattern(dateFormat));
+                break;
+            case FIRSTCHARGEDATETWOMONTHS:
+                chargeDate = localDateTime.plusMonths(2).format(DateTimeFormatter.ofPattern(dateFormat));
+                break;
+            // if nothing is said, we say it's the current date
+            case FIRSTCHARGEDATENOW:
+            default:
+                break;
+        }
+        return chargeDate;
     }
 }

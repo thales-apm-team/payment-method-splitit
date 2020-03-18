@@ -80,44 +80,37 @@ public class PaymentWithRedirectionServiceImpl implements PaymentWithRedirection
 
     @Override
     public PaymentResponse handleSessionExpired(TransactionStatusRequest transactionStatusRequest) {
-//        try {
-//            final RequestConfiguration configuration = RequestConfiguration.build(transactionStatusRequest);
-//
-//            if (transactionStatusRequest.getRequestContext() == null || transactionStatusRequest.getRequestContext().getSensitiveRequestData() == null
-//                    || transactionStatusRequest.getRequestContext().getSensitiveRequestData().get(Constants.RequestContextKeys.SESSION_ID) == null
-//                    || transactionStatusRequest.getRequestContext().getRequestData() == null
-//                    || transactionStatusRequest.getRequestContext().getRequestData().get(Constants.RequestContextKeys.INSTALLMENT_PLAN_NUMBER) == null) {
-//                throw new InvalidDataException("Missing or Invalid RedirectionPaymentRequest.requestContext");
-//            }
-//
-//            // no API-KEY required for the get request
-////            if (redirectionPaymentRequest.getPartnerConfiguration() == null
-////                    || redirectionPaymentRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
-////                throw new InvalidDataException("Missing or Invalid redirectionPaymentRequest.PartnerConfiguration");
-////            }
-//
-//            RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
-//                    .withApiKey(transactionStatusRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY))
-//                    .build();
-//
-//            // TransactionId here is the PartnerTransactionId
-//            Get get = new Get.GetBuilder()
-//                    .withRequestHeader(requestHeader)
-//                    .withQueryCriteria(new QueryCriteria.QueryCriteriaBuilder()
-//                            .withInstallmentPlanNumber(transactionStatusRequest.getTransactionId())
-//                            .build())
-//                    .build();
-//
-//
-//            return genericTransaction(configuration, get);
-//        } catch (RuntimeException e) {
-//            LOGGER.error("unexpected plugin error", e);
-//            return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
-//                    .withErrorCode(PluginException.runtimeErrorCode(e))
-//                    .withFailureCause(FailureCause.INTERNAL_ERROR)
-//                    .build();
-//        }
-        return null;
+        try {
+            final RequestConfiguration configuration = RequestConfiguration.build(transactionStatusRequest);
+
+            // no API-KEY required for the get request
+            if (transactionStatusRequest.getPartnerConfiguration() == null
+                    || transactionStatusRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
+                throw new InvalidDataException("Missing or Invalid redirectionPaymentRequest.PartnerConfiguration");
+            }
+
+            // no sessionId, if we reach this method, it will be expired anyway, the httpClient will ask another one
+            RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
+                    .withApiKey(transactionStatusRequest.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY))
+                    .build();
+
+            // TransactionId here is the PartnerTransactionId
+            Get get = new Get.GetBuilder()
+                    .withRequestHeader(requestHeader)
+                    .withQueryCriteria(new QueryCriteria.QueryCriteriaBuilder()
+                            .withInstallmentPlanNumber(transactionStatusRequest.getTransactionId())
+                            .build())
+                    .build();
+
+
+            return genericTransaction(configuration, get);
+        } catch (RuntimeException e) {
+            LOGGER.error("unexpected plugin error", e);
+            return PaymentResponseFailure.PaymentResponseFailureBuilder.aPaymentResponseFailure()
+                    .withErrorCode(PluginException.runtimeErrorCode(e))
+                    .withFailureCause(FailureCause.INTERNAL_ERROR)
+                    .build();
+        }
     }
 
 

@@ -38,9 +38,9 @@ public class ResetServiceImpl implements ResetService {
             }
 
             if (resetRequest.getContractConfiguration() == null
-                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible
-                    || Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.NoRefunds) {
-
+                    || (Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible
+                    && Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.NoRefunds)) {
+                throw new InvalidDataException("Missing or Invalid ResetService.contractConfiguration");
             }
 
             RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()
@@ -82,11 +82,13 @@ public class ResetServiceImpl implements ResetService {
     }
 
 
+    // you can't reset more than one planData at the same time
     @Override
     public boolean canMultiple() {
         return false;
     }
 
+    // you can't reset only 1 installment
     @Override
     public boolean canPartial() {
         return false;

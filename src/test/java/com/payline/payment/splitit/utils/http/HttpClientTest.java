@@ -89,7 +89,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments()), Initiate.class);
+        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallments(), MockUtils.getFirstChargeDate()), Initiate.class);
         InitiateResponse response = client.initiate(configuration, initiate);
         Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
     }
@@ -108,7 +108,7 @@ class HttpClientTest {
                 , MockUtils.aPartnerConfiguration()
         );
 
-        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallmentsDefault()), Initiate.class);
+        Initiate initiate = new GsonBuilder().create().fromJson(MockUtils.callInitiate(MockUtils.getRequestedNumberOfInstallmentsDefault(), MockUtils.getFirstChargeDate()), Initiate.class);
         InitiateResponse response = client.initiate(configuration, initiate);
         Assertions.assertEquals("36718353567647855177", response.getInstallmentPlan().getInstallmentPlanNumber());
     }

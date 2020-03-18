@@ -26,6 +26,9 @@ import org.mockito.internal.util.reflection.FieldSetter;
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.mockito.Mockito.doReturn;
@@ -44,7 +47,7 @@ public class MockUtils {
 
     private static String amountValue = "1234";
     private static String currency = "EUR";
-    private static Date firstChargeDate = new Date(1582900000);
+    private static String firstChargeDate = "2022-04-15";
     private static String numberOfInstallments = "10";
     private static String requestedNumberOfInstallments = "10";
     private static String requestedNumberOfInstallmentsDefault = "2,3,4,5,6,7,8,9,10,11,12";
@@ -59,6 +62,13 @@ public class MockUtils {
 
     private static String splitItCurrencyCode = "EUR";
     private static String CurrencyCodeYen = "JPY";
+
+    static final Date date = new Date();
+    static final String dateFormat = "yyyy-MM-dd";
+    static LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+    private static String firstChargeDateOneMonth = localDateTime.plusMonths(1).format(DateTimeFormatter.ofPattern(dateFormat));
+//    private static String firstChargeDateOneMonth = localDateTime.plusMonths(1).format(DateTimeFormatter.ofPattern(dateFormat));
 
 
     /**------------------------------------------------------------------------------------------------------------------*/
@@ -106,6 +116,7 @@ public class MockUtils {
                 .withLocale(Locale.FRANCE)
                 .withOrder(aPaylineOrder())
                 .withPartnerConfiguration(aPartnerConfiguration());
+
     }
 
     /**
@@ -230,6 +241,13 @@ public class MockUtils {
      */
     public static PaymentFormContext aPaymentFormContext() {
         Map<String, String> paymentFormParameter = new HashMap<>();
+//        paymentFormParameter.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATENOW, "true");
+//        paymentFormParameter.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEWEEK, "false");
+//        paymentFormParameter.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOWEEKS, "false");
+//        paymentFormParameter.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEMONTH, "false");
+//        paymentFormParameter.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOMONTHS, "false");
+
+        paymentFormParameter.put(Constants.FormConfigurationKeys.OPTIONS, Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEMONTH);
 
         return PaymentFormContext.PaymentFormContextBuilder.aPaymentFormContext()
                 .withPaymentFormParameter(paymentFormParameter)
@@ -371,6 +389,12 @@ public class MockUtils {
         contractProperties.put(Constants.ContractConfigurationKeys.REFUNDSTRATEGY, new ContractProperty("FutureInstallmentsFirst"));
         contractProperties.put(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION, new ContractProperty("OnlyIfAFullRefundIsPossible"));
         contractProperties.put(Constants.ContractConfigurationKeys.FIRSTINSTALLMENTAMOUNT, new ContractProperty("30%"));
+
+        contractProperties.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATENOW, new ContractProperty("true"));
+        contractProperties.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEWEEK, new ContractProperty("false"));
+        contractProperties.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOWEEKS, new ContractProperty("false"));
+        contractProperties.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEMONTH, new ContractProperty("false"));
+        contractProperties.put(Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOMONTHS, new ContractProperty("false"));
 
         return new ContractConfiguration("SplitIt", contractProperties);
     }
@@ -561,7 +585,7 @@ public class MockUtils {
                 .withFirstInstallmentAmount(amountTest())
                 .withAttempt3DSecure(true)
                 .withAutoCapture(true)
-                .withFirstChargeDate(firstChargeDate)
+                .withFirstChargeDate(firstChargeDateOneMonth)
                 .withNumberOfInstallments(numberOfInstallments)
                 .withRefOrderNumber(refOrderNumber)
                 .build();
@@ -1023,7 +1047,7 @@ public class MockUtils {
      *
      * @return Stirng
      */
-    public static final String callInitiate(String requestedNumberOfInstallments) {
+    public static final String callInitiate(String requestedNumberOfInstallments, String date) {
         return "{" +
                 "\"PlanData\":{" +
                 "\"Amount\":{" +
@@ -1039,7 +1063,7 @@ public class MockUtils {
                 "}," +
                 "\"PurchaseMethod\":\"ECommerce\"," +
                 "\"Attempt3DSecure\":true," +
-                "\"FirstChargeDate\":\"Jan 19, 1970, 8:41:40 AM\"" +
+                "\"FirstChargeDate\":\"" + date + "\"" +
                 "}," +
                 "\"BillingAddress\":{" +
                 "\"AddressLine\":\"street1\"," +
@@ -1243,5 +1267,13 @@ public class MockUtils {
 
     public static String getRequestedNumberOfInstallmentsDefault() {
         return requestedNumberOfInstallmentsDefault;
+    }
+
+    public static String getFirstChargeDate() {
+        return firstChargeDate;
+    }
+
+    public static String getFirstChargeDateOneMonth() {
+        return firstChargeDateOneMonth;
     }
 }

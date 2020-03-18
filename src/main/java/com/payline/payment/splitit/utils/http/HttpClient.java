@@ -9,7 +9,6 @@ import com.payline.payment.splitit.bean.response.*;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
 import com.payline.payment.splitit.utils.Constants;
-import com.payline.payment.splitit.utils.PluginUtils;
 import com.payline.payment.splitit.utils.properties.ConfigProperties;
 import com.payline.pmapi.bean.common.FailureCause;
 import com.payline.pmapi.logger.LogManager;
@@ -162,8 +161,8 @@ public class HttpClient {
     /**
      * Login with SplitIt
      *
-     * @param configuration
-     * @param login
+     * @param configuration the requestConfiguration
+     * @param login the login for the merchant api
      * @return LoginResponse
      */
     public LoginResponse checkConnection(RequestConfiguration configuration, Login login) {
@@ -186,7 +185,7 @@ public class HttpClient {
     /**
      * Try to login with the userName and the Password of the merchant
      *
-     * @param configuration
+     * @param configuration the requestConfiguration
      * @return this.checkConnection
      */
     public LoginResponse tryLogin(RequestConfiguration configuration) {
@@ -203,8 +202,8 @@ public class HttpClient {
     /**
      * Initiate a transaction
      *
-     * @param configuration
-     * @param initiate
+     * @param configuration the requestConfiguration
+     * @param initiate the initiate request
      * @return InitiateResponse
      */
     public InitiateResponse initiate(RequestConfiguration configuration, Initiate initiate) {
@@ -249,8 +248,8 @@ public class HttpClient {
     /**
      * Get the informations about an installmentPlan
      *
-     * @param configuration
-     * @param get
+     * @param configuration the requestConfiguration
+     * @param get the get request
      * @return GetResponse
      */
     public GetResponse get(RequestConfiguration configuration, Get get) {
@@ -291,8 +290,8 @@ public class HttpClient {
     /**
      * connect with the refund service
      *
-     * @param configuration
-     * @param refund
+     * @param configuration the requestConfiguration
+     * @param refund the refund request
      * @return RefundResponse
      */
     public MyRefundResponse refund(RequestConfiguration configuration, Refund refund) {
@@ -333,8 +332,8 @@ public class HttpClient {
     /**
      * Cancel an installmentPlan
      *
-     * @param configuration
-     * @param cancel
+     * @param configuration the requestConfiguration
+     * @param cancel the cancel request
      * @return CancelResponse
      */
     public CancelResponse cancel(RequestConfiguration configuration, Cancel cancel) {

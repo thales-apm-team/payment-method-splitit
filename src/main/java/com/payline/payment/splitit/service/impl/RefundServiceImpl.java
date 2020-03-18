@@ -87,6 +87,7 @@ public class RefundServiceImpl implements RefundService {
     }
 
     // you can make as much refund you want, unless you you don't pass the initial amount
+    // but not at the same time
     @Override
     public boolean canMultiple() {
         return false;

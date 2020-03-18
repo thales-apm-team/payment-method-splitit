@@ -2,8 +2,6 @@ package com.payline.payment.splitit.bean.nesteed;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 public class PlanData {
     @SerializedName("Amount")
     private Amount amount;
@@ -18,9 +16,9 @@ public class PlanData {
     @SerializedName("PurchaseMethod")
     private String purchaseMethod = "ECommerce";
     @SerializedName("Attempt3DSecure")
-    private boolean attempt3DSecure = false;
+    private boolean attempt3DSecure;
     @SerializedName("FirstChargeDate")
-    private Date firstChargeDate;
+    private String firstChargeDate;
 
     private PlanData() {
     }
@@ -32,7 +30,7 @@ public class PlanData {
         private boolean autoCapture;
         private Amount firstInstallmentAmount;
         private boolean attempt3DSecure = false;
-        private Date firstChargeDate;
+        private String firstChargeDate;
 
         public PlanDataBuilder withAmount(Amount amount) {
             this.amount = amount;
@@ -64,7 +62,7 @@ public class PlanData {
             return this;
         }
 
-        public PlanDataBuilder withFirstChargeDate(Date firstChargeDate) {
+        public PlanDataBuilder withFirstChargeDate(String firstChargeDate) {
             this.firstChargeDate = firstChargeDate;
             return this;
         }
@@ -110,7 +108,7 @@ public class PlanData {
         return attempt3DSecure;
     }
 
-    public Date getFirstChargeDate() {
+    public String getFirstChargeDate() {
         return firstChargeDate;
     }
 
