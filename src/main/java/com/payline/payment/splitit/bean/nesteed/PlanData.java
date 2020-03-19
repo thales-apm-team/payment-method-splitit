@@ -20,7 +20,14 @@ public class PlanData {
     @SerializedName("FirstChargeDate")
     private String firstChargeDate;
 
-    private PlanData() {
+    private PlanData(PlanDataBuilder builder) {
+        amount = builder.amount;
+        numberOfInstallments = builder.numberOfInstallments;
+        refOrderNumber = builder.refOrderNumber;
+        autoCapture = builder.autoCapture;
+        firstInstallmentAmount = builder.firstInstallmentAmount;
+        attempt3DSecure = builder.attempt3DSecure;
+        firstChargeDate = builder.firstChargeDate;
     }
 
     public static class PlanDataBuilder {
@@ -68,15 +75,7 @@ public class PlanData {
         }
 
         public PlanData build() {
-            PlanData planData = new PlanData();
-            planData.amount = amount;
-            planData.numberOfInstallments = numberOfInstallments;
-            planData.refOrderNumber = refOrderNumber;
-            planData.autoCapture = autoCapture;
-            planData.firstInstallmentAmount = firstInstallmentAmount;
-            planData.attempt3DSecure = attempt3DSecure;
-            planData.firstChargeDate = firstChargeDate;
-            return planData;
+            return new PlanData(this);
         }
     }
 

@@ -4,7 +4,7 @@ import com.payline.payment.splitit.bean.AmountParse;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.nesteed.Amount;
 import com.payline.payment.splitit.bean.request.Refund;
-import com.payline.payment.splitit.bean.request.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.response.MyRefundResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;

@@ -9,7 +9,9 @@ public class PaymentWizardData {
     @SerializedName("IsOpenedInIframe")
     private boolean isOpenedInIframe;
 
-    private PaymentWizardData() {
+    private PaymentWizardData(PaymentWizardDataBuilder builder) {
+        requestednumberOfInstallments = builder.requestednumberOfInstallments;
+        isOpenedInIframe = builder.isOpenedInIframe;
     }
 
     public static class PaymentWizardDataBuilder {
@@ -27,10 +29,7 @@ public class PaymentWizardData {
         }
 
         public PaymentWizardData build() {
-            PaymentWizardData paymentWizardData = new PaymentWizardData();
-            paymentWizardData.requestednumberOfInstallments = requestednumberOfInstallments;
-            paymentWizardData.isOpenedInIframe = isOpenedInIframe;
-            return paymentWizardData;
+            return new PaymentWizardData(this);
         }
     }
 

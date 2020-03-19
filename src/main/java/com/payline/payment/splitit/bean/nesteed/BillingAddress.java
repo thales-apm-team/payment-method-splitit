@@ -16,7 +16,13 @@ public class BillingAddress {
     @SerializedName("Zip")
     private String zip;
 
-    private BillingAddress() {
+    private BillingAddress(BillingAddressBuilder builder) {
+        addressLine = builder.addressLine;
+        addressLine2 = builder.addressLine2;
+        city = builder.city;
+        state = builder.state;
+        country = builder.country;
+        zip = builder.zip;
     }
 
 
@@ -59,14 +65,7 @@ public class BillingAddress {
         }
 
         public BillingAddress build() {
-            BillingAddress billingAddress = new BillingAddress();
-            billingAddress.addressLine = addressLine;
-            billingAddress.addressLine2 = addressLine2;
-            billingAddress.city = city;
-            billingAddress.state = state;
-            billingAddress.country = country;
-            billingAddress.zip = zip;
-            return billingAddress;
+            return new BillingAddress(this);
         }
     }
 

@@ -4,7 +4,7 @@ import com.payline.payment.splitit.bean.AmountParse;
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.nesteed.*;
 import com.payline.payment.splitit.bean.request.Initiate;
-import com.payline.payment.splitit.bean.request.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.response.InitiateResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
@@ -14,6 +14,7 @@ import com.payline.payment.splitit.utils.http.HttpClient;
 import com.payline.pmapi.bean.common.Buyer;
 import com.payline.pmapi.bean.common.FailureCause;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
+import com.payline.pmapi.bean.payment.Environment;
 import com.payline.pmapi.bean.payment.RequestContext;
 import com.payline.pmapi.bean.payment.request.PaymentRequest;
 import com.payline.pmapi.bean.payment.response.PaymentResponse;
@@ -95,6 +96,10 @@ public class PaymentServiceImpl implements PaymentService {
     public Initiate initiateCreate(PaymentRequest request) {
         PlanData planData;
         String chargeDate = "";
+        Amount firstInstallmentAmount = new Amount.AmountBuilder()
+                .withCurrency(request.getAmount().getCurrency().toString())
+                .withValue(String.valueOf(0))
+                .build();
 
         if (request.getPartnerConfiguration() == null || request.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY) == null) {
             throw new InvalidDataException(("Missing or invalid PaymentRequest.PartnerConfiguration"));
@@ -117,13 +122,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidDataException("Missing or invalid PaymentRequest.Buyer");
         }
 
-        if (request.getBuyer().getAddressForType(Buyer.AddressType.BILLING) == null
-                || request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getStreet1() == null
-                || request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getStreet2() == null
-                || request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getCity() == null
-                || request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getState() == null
-                || request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getCountry() == null
-                || request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getZipCode() == null) {
+        if (request.getBuyer().getAddressForType(Buyer.AddressType.BILLING) == null) {
             throw new InvalidDataException("Missing or invalid PaymentRequest.AddressForType");
         }
 
@@ -148,21 +147,10 @@ public class PaymentServiceImpl implements PaymentService {
                 .withApiKey(request.getPartnerConfiguration().getProperty(Constants.PartnerConfigurationKeys.API_KEY))
                 .build();
 
-        // if the FIRSTINSTALLMENTAMOUNT is null
-        if (request.getContractConfiguration().getProperty(FIRSTINSTALLMENTAMOUNT) == null) {
-            planData = new PlanData.PlanDataBuilder()
-                    .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
-                    .withNumberOfInstallments(request.getContractConfiguration().getProperty(NUMBEROFINSTALLMENTS).getValue())
-                    .withRefOrderNumber(request.getTransactionId())
-                    .withAutoCapture(request.isCaptureNow())
-                    .withFirstChargeDate(chargeDate)
-                    .build();
-        } else {
-            Amount firstInstallmentAmount = new Amount.AmountBuilder()
-                    .withCurrency(request.getAmount().getCurrency().toString())
-                    .withValue(AmountParse.split(request.getAmount().getAmountInSmallestUnit().doubleValue(), request.getAmount().getCurrency()))
-                    .build();
-
+        // if the FIRSTINSTALLMENTAMOUNT not null
+        if (request.getContractConfiguration().getProperty(FIRSTINSTALLMENTAMOUNT) != null) {
+            firstInstallmentAmount.setValue(AmountParse.split(request.getAmount().getAmountInSmallestUnit().doubleValue(), request.getAmount().getCurrency()));
+        }
 
             planData = new PlanData.PlanDataBuilder()
                     .withAmount(new Amount.AmountBuilder().withCurrency(request.getAmount().getCurrency().getCurrencyCode()).withValue(AmountParse.split(request.getAmount())).build())
@@ -172,15 +160,17 @@ public class PaymentServiceImpl implements PaymentService {
                     .withAutoCapture(request.isCaptureNow())
                     .withFirstChargeDate(chargeDate)
                     .build();
-        }
+
+        // create an address object for avoid multiple calls when we create a BillingAddress
+        Buyer.Address address = request.getBuyer().getAddressForType(Buyer.AddressType.BILLING);
 
         BillingAddress billingAddress = new BillingAddress.BillingAddressBuilder()
-                .withAddressLine(request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getStreet1())
-                .withAddressLine2(request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getStreet2())
-                .withCity(request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getCity())
-                .withState(request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getState())
-                .withCountry(request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getCountry())
-                .withZip(request.getBuyer().getAddressForType(Buyer.AddressType.BILLING).getZipCode())
+                .withAddressLine(address.getStreet1())
+                .withAddressLine2(address.getStreet2())
+                .withCity(address.getCity())
+                .withState(address.getState())
+                .withCountry(address.getCountry())
+                .withZip(address.getZipCode())
                 .build();
 
         ConsumerData consumerData = new ConsumerData.ConsumerDataBuilder()
@@ -196,14 +186,17 @@ public class PaymentServiceImpl implements PaymentService {
                 .withIsOpenedInIframe(false)
                 .build();
 
+        // create an environment object for avoid multiple calls when we create a redirectUrl
+        Environment environment = request.getEnvironment();
+
         RedirectUrl redirectUrl = new RedirectUrl.RedirectUrlBuilder()
-                .withSucceeded(request.getEnvironment().getRedirectionReturnURL())
-                .withCanceled(request.getEnvironment().getRedirectionReturnURL())
-                .withFailed(request.getEnvironment().getRedirectionReturnURL())
+                .withSucceeded(environment.getRedirectionReturnURL())
+                .withCanceled(environment.getRedirectionReturnURL())
+                .withFailed(environment.getRedirectionReturnURL())
                 .build();
 
         EventsEndpoints eventsEndpoints = new EventsEndpoints.EventEndpointsBuilder()
-                .withCreateSucceeded(request.getEnvironment().getNotificationURL())
+                .withCreateSucceeded(environment.getNotificationURL())
                 .build();
 
         return new Initiate.InitiateBuilder()

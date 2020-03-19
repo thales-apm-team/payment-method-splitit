@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public abstract class Response {
     @SerializedName("ResponseHeader")
-    ResponseHeader responseHeader;
+    private ResponseHeader responseHeader;
 
     public ResponseHeader getResponseHeader() {
         return responseHeader;

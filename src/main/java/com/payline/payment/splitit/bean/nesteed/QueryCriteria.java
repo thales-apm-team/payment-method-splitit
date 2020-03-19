@@ -6,7 +6,8 @@ public class QueryCriteria {
     @SerializedName("InstallmentPlanNumber")
     private String installmentPlanNumber;
 
-    private QueryCriteria() {
+    private QueryCriteria(QueryCriteriaBuilder builder) {
+        installmentPlanNumber = builder.installmentPlanNumber;
     }
 
     public static class QueryCriteriaBuilder {
@@ -18,9 +19,7 @@ public class QueryCriteria {
         }
 
         public QueryCriteria build() {
-            QueryCriteria queryCriteria = new QueryCriteria();
-            queryCriteria.installmentPlanNumber = installmentPlanNumber;
-            return queryCriteria;
+            return new QueryCriteria(this);
         }
     }
 

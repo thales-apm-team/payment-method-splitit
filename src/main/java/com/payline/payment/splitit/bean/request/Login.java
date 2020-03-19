@@ -9,7 +9,9 @@ public class Login {
     @SerializedName("Password")
     private String password;
 
-    private Login() {
+    private Login(LoginBuilder builder) {
+        username = builder.username;
+        password = builder.password;
     }
 
     public static class LoginBuilder {
@@ -27,10 +29,7 @@ public class Login {
         }
 
         public Login build() {
-            Login login = new Login();
-            login.username = username;
-            login.password = password;
-            return login;
+            return new Login(this);
         }
 
     }

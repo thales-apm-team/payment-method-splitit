@@ -50,21 +50,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         password.setRequired(true);
         parameters.add(password);
 
-//        AbstractParameter numberOfInstallments = new ListBoxParameter();
-//        numberOfInstallments.setKey(Constants.ContractConfigurationKeys.NUMBEROFINSTALLMENTS);
-//        numberOfInstallments.setLabel(i18n.getMessage("numberOfInstallments.label", locale));
-//        numberOfInstallments.setDescription(i18n.getMessage("numberOfInstallments.description", locale));
-//        numberOfInstallments.setRequired(false);
-//        parameters.add(numberOfInstallments);
-
         // checkbox for requestedNumberOfInstallment: list between 2 and 12
         List<String> requestedNumberOfInstallmentsList = new ArrayList<>();
         for (int i = 2; i < 13; i++) {
             requestedNumberOfInstallmentsList.add("REQUESTEDNUMBEROFINSTALLMENTS" + i);
-        }
-
-        for (int i = 2; i < 13; i++) {
-            parameters.add(this.newCheckboxParameter(String.valueOf(i), "requestedNumberOfInstallments", requestedNumberOfInstallmentsList.get(i - 2), false, locale));
+            parameters.add(this.newCheckboxParameter("requestedNumberOfInstallments" + String.valueOf(i), requestedNumberOfInstallmentsList.get(i - 2), false, locale));
         }
 
         // if nothing is check, you can pay choose any installment
@@ -84,10 +74,10 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         parameters.add(attempt3DSecure);
 
         Map<String, String> refundStrategyMap = new HashMap<>();
-        refundStrategyMap.put(Refund.refundStrategyEnum.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
-        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsFirst.toString(), i18n.getMessage("FutureInstallmentsFirst.value", locale));
-        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsLast.toString(), i18n.getMessage("FutureInstallmentsLast.value", locale));
-        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsNotAllowed.toString(), i18n.getMessage("FutureInstallmentsNotAllowed.value", locale));
+        refundStrategyMap.put(Refund.refundStrategyEnum.NoRefunds.name(), i18n.getMessage("noRefund.value", locale));
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsFirst.name(), i18n.getMessage("FutureInstallmentsFirst.value", locale));
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsLast.name(), i18n.getMessage("FutureInstallmentsLast.value", locale));
+        refundStrategyMap.put(Refund.refundStrategyEnum.FutureInstallmentsNotAllowed.name(), i18n.getMessage("FutureInstallmentsNotAllowed.value", locale));
 
         // refund strategy for the refund operation
         ListBoxParameter refundStrategy = new ListBoxParameter();
@@ -115,8 +105,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
         // refund strategy for the cancel operation
         Map<String, String> refundUnderCancellationMap = new HashMap<>();
-        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.NoRefunds.toString(), i18n.getMessage("noRefund.value", locale));
-        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible.toString(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
+        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.NoRefunds.name(), i18n.getMessage("noRefund.value", locale));
+        refundUnderCancellationMap.put(Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible.name(), i18n.getMessage("OnlyIfAFullRefundIsPossible.value", locale));
 
         ListBoxParameter refundUnderCancellation = new ListBoxParameter();
         refundUnderCancellation.setKey(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION);
@@ -126,13 +116,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         refundUnderCancellation.setRequired(false);
         parameters.add(refundUnderCancellation);
 
-        // todo generaliser le prefixe !!!
         // create the choice if the first date charge is different from the time of initialisation
-        parameters.add(this.newCheckboxParameter(null, "firstChargeDateNow", Constants.ContractConfigurationKeys.FIRSTCHARGEDATENOW, false, locale));
-        parameters.add(this.newCheckboxParameter(null, "firstChargeDateOneWeek", Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEWEEK, false, locale));
-        parameters.add(this.newCheckboxParameter(null, "firstChargeDateTwoWeeks", Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOWEEKS, false, locale));
-        parameters.add(this.newCheckboxParameter(null, "firstChargeDateOneMonth", Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEMONTH, false, locale));
-        parameters.add(this.newCheckboxParameter(null, "firstChargeDateTwoMonths", Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOMONTHS, false, locale));
+        parameters.add(this.newCheckboxParameter("firstChargeDateNow", Constants.ContractConfigurationKeys.FIRSTCHARGEDATENOW, false, locale));
+        parameters.add(this.newCheckboxParameter("firstChargeDateOneWeek", Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEWEEK, false, locale));
+        parameters.add(this.newCheckboxParameter("firstChargeDateTwoWeeks", Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOWEEKS, false, locale));
+        parameters.add(this.newCheckboxParameter("firstChargeDateOneMonth", Constants.ContractConfigurationKeys.FIRSTCHARGEDATEONEMONTH, false, locale));
+        parameters.add(this.newCheckboxParameter("firstChargeDateTwoMonths", Constants.ContractConfigurationKeys.FIRSTCHARGEDATETWOMONTHS, false, locale));
 
         return parameters;
     }
@@ -141,11 +130,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public Map<String, String> check(ContractParametersCheckRequest request) {
         final Locale locale = request.getLocale();
         final Map<String, String> errors = new HashMap<>();
-        final RequestConfiguration configuration = new RequestConfiguration(
-                request.getContractConfiguration()
-                , request.getEnvironment()
-                , request.getPartnerConfiguration()
-        );
+        final RequestConfiguration configuration = RequestConfiguration.build(request);
+
         try {
             String username = request.getAccountInfo().get(Constants.ContractConfigurationKeys.USERNAME);
             String password = request.getAccountInfo().get(Constants.ContractConfigurationKeys.PASSWORD);
@@ -171,9 +157,21 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Override
     public ReleaseInformation getReleaseInformation() {
+        String date = releaseProperties.get("release.date");
+        String version = releaseProperties.get("release.version");
+
+        if (PluginUtils.isEmpty(date)){
+            LOGGER.error("Date is not defined");
+            throw new PluginException("Plugin error: Date is not defined");
+        }
+
+        if (PluginUtils.isEmpty(version)){
+            LOGGER.error("Version is not defined");
+            throw new PluginException("Plugin error: Version is not defined");
+        }
         return ReleaseInformation.ReleaseBuilder.aRelease()
-                .withDate(LocalDate.parse(releaseProperties.get("release.date"), DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-                .withVersion(releaseProperties.get("release.version"))
+                .withDate(LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .withVersion(version)
                 .build();
     }
 
@@ -185,21 +183,17 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     /**
      * Create checkboxes
      *
-     * @param i        increment if it's the only difference between keys (ex requestedNumberOfInstallments
      * @param prefix   the name for message.properties
      * @param key      key in Constants
      * @param required
      * @param locale
      * @return CheckboxParameter
      */
-    private CheckboxParameter newCheckboxParameter(String i, String prefix, String key, boolean required, Locale locale) {
-        if (i == null) {
-            i = "";
-        }
+    private CheckboxParameter newCheckboxParameter(String prefix, String key, boolean required, Locale locale) {
         CheckboxParameter checkboxParameter = new CheckboxParameter();
         checkboxParameter.setKey(key);
-        checkboxParameter.setLabel(i18n.getMessage(prefix + i + ".label", locale));
-        checkboxParameter.setDescription(i18n.getMessage(prefix + i + ".description", locale));
+        checkboxParameter.setLabel(i18n.getMessage(prefix + ".label", locale));
+        checkboxParameter.setDescription(i18n.getMessage(prefix + ".description", locale));
         checkboxParameter.setRequired(required);
         return checkboxParameter;
     }

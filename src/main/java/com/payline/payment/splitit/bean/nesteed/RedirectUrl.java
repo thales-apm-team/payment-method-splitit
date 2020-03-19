@@ -10,7 +10,10 @@ public class RedirectUrl {
     @SerializedName("Canceled")
     private String canceled;
 
-    private RedirectUrl() {
+    private RedirectUrl(RedirectUrlBuilder builder) {
+        succeeded = builder.succeeded;
+        failed = builder.failed;
+        canceled = builder.canceled;
     }
 
     public static class RedirectUrlBuilder {
@@ -35,11 +38,7 @@ public class RedirectUrl {
         }
 
         public RedirectUrl build() {
-            RedirectUrl redirectUrl = new RedirectUrl();
-            redirectUrl.succeeded = succeeded;
-            redirectUrl.canceled = canceled;
-            redirectUrl.failed = failed;
-            return redirectUrl;
+            return new RedirectUrl(this);
         }
     }
 

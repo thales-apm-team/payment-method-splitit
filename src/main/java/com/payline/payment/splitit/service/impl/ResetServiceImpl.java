@@ -2,7 +2,7 @@ package com.payline.payment.splitit.service.impl;
 
 import com.payline.payment.splitit.bean.configuration.RequestConfiguration;
 import com.payline.payment.splitit.bean.request.Cancel;
-import com.payline.payment.splitit.bean.request.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.bean.response.CancelResponse;
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.payment.splitit.exception.PluginException;
@@ -37,10 +37,8 @@ public class ResetServiceImpl implements ResetService {
                 throw new InvalidDataException("Missing or Invalid ResetService.partnerTransactionId");
             }
 
-            if (resetRequest.getContractConfiguration() == null
-                    || (Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.OnlyIfAFullRefundIsPossible
-                    && Cancel.RefundUnderCancellation.valueOf(resetRequest.getContractConfiguration().getProperty(Constants.ContractConfigurationKeys.REFUNDUNDERCANCELLATION).getValue()) != Cancel.RefundUnderCancellation.NoRefunds)) {
-                throw new InvalidDataException("Missing or Invalid ResetService.contractConfiguration");
+            if (resetRequest.getContractConfiguration() == null) {
+                    throw new InvalidDataException("Missing or Invalid ResetService.contractConfiguration");
             }
 
             RequestHeader requestHeader = new RequestHeader.RequestHeaderBuilder()

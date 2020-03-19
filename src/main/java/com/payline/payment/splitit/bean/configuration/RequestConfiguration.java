@@ -2,6 +2,7 @@ package com.payline.payment.splitit.bean.configuration;
 
 import com.payline.payment.splitit.exception.InvalidDataException;
 import com.payline.pmapi.bean.configuration.PartnerConfiguration;
+import com.payline.pmapi.bean.configuration.request.ContractParametersCheckRequest;
 import com.payline.pmapi.bean.payment.ContractConfiguration;
 import com.payline.pmapi.bean.payment.Environment;
 import com.payline.pmapi.bean.payment.request.PaymentRequest;
@@ -58,6 +59,10 @@ public class RequestConfiguration {
     }
 
     public static RequestConfiguration build(TransactionStatusRequest request) {
+        return new RequestConfiguration(request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration());
+    }
+
+    public static RequestConfiguration build(ContractParametersCheckRequest request) {
         return new RequestConfiguration(request.getContractConfiguration(), request.getEnvironment(), request.getPartnerConfiguration());
     }
 

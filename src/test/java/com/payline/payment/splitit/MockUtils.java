@@ -1,7 +1,7 @@
 package com.payline.payment.splitit;
 
 import com.payline.payment.splitit.bean.nesteed.*;
-import com.payline.payment.splitit.bean.request.RequestHeader;
+import com.payline.payment.splitit.bean.nesteed.RequestHeader;
 import com.payline.payment.splitit.utils.Constants;
 import com.payline.payment.splitit.utils.http.StringResponse;
 import com.payline.pmapi.bean.common.Buyer;
@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.Currency;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.mock;
 public class MockUtils {
     private static String sessionId = "9b358c4a-1237-46a7-8167-b62f66dd4a8d";
     private static String apiKey = "f661600c-5f1a-4d4c-829d-768fbc40be6c";
-    private static String installmentPlanNumber = "70624254133164524312";
+    private static String installmentPlanNumber = "43774485616440604062";
 
     private static String TRANSACTIONID = "123456789012345678901";
     private static String PARTNER_TRANSACTIONID = installmentPlanNumber;

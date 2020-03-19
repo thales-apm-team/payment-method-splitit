@@ -6,7 +6,8 @@ public class EventsEndpoints {
     @SerializedName("CreateSucceeded")
     private String createSucceeded;
 
-    private EventsEndpoints() {
+    private EventsEndpoints(EventEndpointsBuilder builder) {
+        createSucceeded = builder.createSucceeded;
     }
 
     public static class EventEndpointsBuilder {
@@ -18,9 +19,7 @@ public class EventsEndpoints {
         }
 
         public EventsEndpoints build() {
-            EventsEndpoints eventsEndpoints = new EventsEndpoints();
-            eventsEndpoints.createSucceeded = createSucceeded;
-            return eventsEndpoints;
+            return new EventsEndpoints(this);
         }
     }
 

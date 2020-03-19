@@ -57,11 +57,7 @@ public class TestIT extends AbstractPaymentIntegration {
 
             // Go to partner's website
             driver.get(partnerUrl);
-            System.out.println(partnerUrl);
 
-            System.out.println(driver.getPageSource());
-
-            // todo faire passer ces valeur en parametre du lancement de l'appli (voir ce qui est fait sur equens)
             driver.findElement(By.id(".CardNumber")).sendKeys("4111111111111111");
             driver.findElement(By.id(".ExpDate")).sendKeys("03/22");
             driver.findElement(By.id(".CardCvv")).sendKeys("123");

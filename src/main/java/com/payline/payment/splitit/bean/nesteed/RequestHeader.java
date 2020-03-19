@@ -1,4 +1,4 @@
-package com.payline.payment.splitit.bean.request;
+package com.payline.payment.splitit.bean.nesteed;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +12,9 @@ public class RequestHeader {
         this.sessionId = sessionId;
     }
 
-    private RequestHeader() {
+    private RequestHeader(RequestHeaderBuilder builder) {
+        sessionId = builder.sessionId;
+        apiKey = builder.apiKey;
     }
 
     public static class RequestHeaderBuilder {
@@ -30,10 +32,7 @@ public class RequestHeader {
         }
 
         public RequestHeader build() {
-            RequestHeader requestHeader = new RequestHeader();
-            requestHeader.sessionId = sessionId;
-            requestHeader.apiKey = apiKey;
-            return requestHeader;
+            return new RequestHeader(this);
         }
     }
 

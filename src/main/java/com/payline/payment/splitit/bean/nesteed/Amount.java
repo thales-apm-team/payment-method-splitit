@@ -8,7 +8,9 @@ public class Amount {
     @SerializedName("CurrencyCode")
     private String currencyCode;
 
-    private Amount() {
+    private Amount(AmountBuilder builder) {
+        value = builder.value;
+        currencyCode = builder.currencyCode;
     }
 
     public static class AmountBuilder {
@@ -26,10 +28,7 @@ public class Amount {
         }
 
         public Amount build() {
-            Amount amount = new Amount();
-            amount.value = value;
-            amount.currencyCode = currencyCode;
-            return amount;
+            return new Amount(this);
         }
     }
 
@@ -39,6 +38,10 @@ public class Amount {
 
     public String getCurrencyCode() {
         return currencyCode;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override

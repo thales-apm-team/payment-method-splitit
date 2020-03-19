@@ -12,7 +12,11 @@ public class ConsumerData {
     @SerializedName("CultureName")
     private String cultureName;
 
-    private ConsumerData() {
+    private ConsumerData(ConsumerDataBuilder builder) {
+        fullName = builder.fullName;
+        email = builder.email;
+        phoneNumber = builder.phoneNumber;
+        cultureName = builder.cultureName;
     }
 
     public static class ConsumerDataBuilder {
@@ -42,12 +46,7 @@ public class ConsumerData {
         }
 
         public ConsumerData build() {
-            ConsumerData consumerData = new ConsumerData();
-            consumerData.fullName = fullName;
-            consumerData.email = email;
-            consumerData.phoneNumber = phoneNumber;
-            consumerData.cultureName = cultureName;
-            return consumerData;
+            return new ConsumerData(this);
         }
     }
 
