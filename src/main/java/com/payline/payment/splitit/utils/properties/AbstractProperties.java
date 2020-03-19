@@ -45,6 +45,11 @@ public abstract class AbstractProperties {
         } catch (IOException e) {
             throw new PluginException("Unable to load properties files: " + filename, e);
         }
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            throw new PluginException("Unable to close the stream: " + filename, e);
+        }
     }
 
     /**
